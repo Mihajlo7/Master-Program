@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace DataAccess
 {
     // Jak Slab veza Projekat i Zadaci
-    public interface IProjectTasksRepository : IRepository
+    public interface IProjectTasksRepository
     {
         void InsertOne();
         int InsertMany();
