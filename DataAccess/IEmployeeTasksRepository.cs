@@ -3,14 +3,17 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Core.Models.Exp1;
 
 namespace DataAccess
 {
     public interface IEmployeeTasksRepository 
     {
-        public void InsertOne();
-        public int InsertMany();
-        public void InsertBulk();
+        public void InsertOne(TaskModel newTask);
+        public int InsertMany(List<TaskModel> tasks);
+        public void InsertBulk(List<TaskModel> tasks);
+
+        public void InsertEmployeeBulk(List<EmloyeeModel> emloyees);
 
         // Get all with *
         // Get all but with names and join
