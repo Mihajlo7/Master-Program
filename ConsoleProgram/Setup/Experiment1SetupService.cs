@@ -80,7 +80,7 @@ namespace ConsoleProgram.Setup
         protected override void PopulateData(int links)
         {
             var readyTasks= GenerateData(links);
-            employeeTasksRepository.InsertBulk(readyTasks);
+            employeeTasksRepository.InsertMany(readyTasks);
         }
 
         protected override void PrepareData()

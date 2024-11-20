@@ -126,7 +126,146 @@ namespace SqlDataAccess.Implementation
             ExecuteInsertion(connection, newTask, statements);
         }
 
+        public SqlDataReader GetAllTesksWithEmployeesBadWay()
+        {
+            string query = GenerateQueriesFromQuery(Experiment1Sql.Select)[0];
 
+            using var connection = new SqlConnection(_connectionString);
+            using var command = new SqlCommand(query, connection);
+
+            connection.Open();
+            using var reader = command.ExecuteReader();
+            while (reader.Read())
+            {
+                //
+            }
+            return reader;
+        }
+
+        public SqlDataReader GetAllTesksWithEmployees()
+        {
+            string query = GenerateQueriesFromQuery(Experiment1Sql.Select)[1];
+
+            using var connection = new SqlConnection(_connectionString);
+            using var command = new SqlCommand(query, connection);
+
+            connection.Open();
+            using var reader = command.ExecuteReader();
+            while (reader.Read())
+            {
+                //
+            }
+            return reader;
+        }
+        public SqlDataReader GetAllTesksWithEmployeesSorted()
+        {
+            string query = GenerateQueriesFromQuery(Experiment1Sql.Select)[2];
+
+            using var connection = new SqlConnection(_connectionString);
+            using var command = new SqlCommand(query, connection);
+
+            connection.Open();
+            using var reader = command.ExecuteReader();
+            while (reader.Read())
+            {
+                //
+            }
+            return reader;
+        }
+        public SqlDataReader GetAllTesksWithEmployeesById(long taskId)
+        {
+            string query = GenerateQueriesFromQuery(Experiment1Sql.Select)[3];
+
+            using var connection = new SqlConnection(_connectionString);
+            using var command = new SqlCommand(query, connection);
+
+            command.Parameters.AddWithValue("@TaskId",taskId);
+            connection.Open();
+            using var reader = command.ExecuteReader();
+            while (reader.Read())
+            {
+                //
+            }
+            return reader;
+        }
+
+        public SqlDataReader GetAllTesksWithEmployeesByStatusAndPriority()
+        {
+            string query = GenerateQueriesFromQuery(Experiment1Sql.Select)[4];
+
+            using var connection = new SqlConnection(_connectionString);
+            using var command = new SqlCommand(query, connection);
+
+            connection.Open();
+            using var reader = command.ExecuteReader();
+            while (reader.Read())
+            {
+                //
+            }
+            return reader;
+        }
+        public SqlDataReader GetAllTesksByDeadlineAndStatus()
+        {
+            string query = GenerateQueriesFromQuery(Experiment1Sql.Select)[5];
+
+            using var connection = new SqlConnection(_connectionString);
+            using var command = new SqlCommand(query, connection);
+
+            connection.Open();
+            using var reader = command.ExecuteReader();
+            while (reader.Read())
+            {
+                //
+            }
+            return reader;
+        }
+
+        public SqlDataReader GetAllTesksByResponsibleNameAndSupervisorBirthday()
+        {
+            string query = GenerateQueriesFromQuery(Experiment1Sql.Select)[6];
+
+            using var connection = new SqlConnection(_connectionString);
+            using var command = new SqlCommand(query, connection);
+
+            connection.Open();
+            using var reader = command.ExecuteReader();
+            while (reader.Read())
+            {
+                //
+            }
+            return reader;
+        }
+        public SqlDataReader GetEmployeesWithCountTasks()
+        {
+            string query = GenerateQueriesFromQuery(Experiment1Sql.Select)[7];
+
+            using var connection = new SqlConnection(_connectionString);
+            using var command = new SqlCommand(query, connection);
+
+            connection.Open();
+            using var reader = command.ExecuteReader();
+            while (reader.Read())
+            {
+                //
+            }
+            return reader;
+        }
+
+        public SqlDataReader GetEmployeesWithCountTasksHavingAndOrder()
+        {
+            string query = GenerateQueriesFromQuery(Experiment1Sql.Select)[8];
+
+            using var connection = new SqlConnection(_connectionString);
+            using var command = new SqlCommand(query, connection);
+
+            connection.Open();
+            using var reader = command.ExecuteReader();
+            while (reader.Read())
+            {
+                //
+            }
+            return reader;
+        }
         //////////////////
         private DataTable ToDataTableEmployee(List<EmloyeeModel> emloyees)
         {

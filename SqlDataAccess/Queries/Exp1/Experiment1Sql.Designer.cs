@@ -77,6 +77,24 @@ namespace SqlDataAccess.Queries.Exp1 {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to --1. Get All
+        ///SELECT * 
+        ///FROM dbo.Task t 
+        ///INNER JOIN dbo.Employee r ON (r.id=t.responsible)
+        ///LEFT JOIN dbo.Employee s ON (s.id=t.supervisor)
+        ///LEFT JOIN dbo.EmployeeTask et ON (t.id=et.taskId)
+        ///INNER JOIN dbo.Employee em ON (em.id=et.employeeId);
+        ///--2. Get all but with names
+        ///SELECT t.id TaskId, t.name TaskName, t.description TaskDescription, t.priority TaskPriority,t.deadline TaskDeadline, t.status TaskStatus,
+        ///r.Id ResponsibleId, r.email ResponsibleEmail, r.firstName ResponsibleFirstName, r.lastName Respo [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string Select {
+            get {
+                return ResourceManager.GetString("Select", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to DROP TABLE IF EXISTS EmployeeTask;
         ///DROP TABLE IF EXISTS Task;
         ///DROP TABLE IF EXISTS Employee;
