@@ -131,7 +131,11 @@ namespace SqlDataAccess.Implementation
                     commandEmployeeTask.Parameters.AddWithValue("@EmployeeId", employeeTask.EmloyeeId);
 
                     commandEmployeeTask.ExecuteNonQuery();
+
+                    
                 }
+               transaction.Commit();
+
             }
             catch
             {
