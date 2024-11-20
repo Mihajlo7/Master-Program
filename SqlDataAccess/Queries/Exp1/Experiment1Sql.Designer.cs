@@ -62,7 +62,7 @@ namespace SqlDataAccess.Queries.Exp1 {
         
         /// <summary>
         ///   Looks up a localized string similar to INSERT INTO Employee(id,firstName,lastName,email,birthDay,title,phone)
-        ///VALUES(@EmployeeId,@EmployeeFirstName,@EmployeeLastName,@EmployeeEmail,@EmployeeBirthDay,@EmployeeTitle,@EmployeePhone);
+        ///VALUES(@EmployeeId,@EmployeeFirstname,@EmployeeLastname,@EmployeeEmail,@EmployeeBirthday,@EmployeeTitle,@EmployeePhone);
         ///
         ///INSERT INTO Task(id,name,description,priority,deadline,status,responsible,supervisor)
         ///VALUES(@TaskId,@TaskName,@TaskDescription,@TaskPriority,@TaskDeadline,@TaskStatus,@Responsible,@Supervisor);
@@ -77,25 +77,25 @@ namespace SqlDataAccess.Queries.Exp1 {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to DROP TABLE IF EXISTS Employee;
+        ///   Looks up a localized string similar to DROP TABLE IF EXISTS EmployeeTask;
+        ///DROP TABLE IF EXISTS Task;
+        ///DROP TABLE IF EXISTS Employee;
+        ///
         ///CREATE TABLE Employee(
         ///	id BIGINT CONSTRAINT employee_pk PRIMARY KEY,
         ///	firstName NVARCHAR(50) NULL,
         ///	lastName NVARCHAR(50) NULL,
-        ///	email NVARCHAR(20) NULL,
+        ///	email NVARCHAR(80) NULL,
         ///	birthDay DATETIME DEFAULT GETDATE(),
-        ///	title NVARCHAR(20), 
+        ///	title NVARCHAR(100), 
         ///	phone NVARCHAR(20),
         ///);
-        ///
-        ///DROP TABLE IF EXISTS Task;
         ///CREATE TABLE Task(
         ///	id BIGINT CONSTRAINT task_id PRIMARY KEY,
         ///	name NVARCHAR(100) NULL,
-        ///	description NVARCHAR(300) NULL,
+        ///	description NVARCHAR(1000) NULL,
         ///	priority INT DEFAULT 0,
-        ///	deadline DATETIME  DEFAULT GETDATE(),
-        ///	status NVA [rest of string was truncated]&quot;;.
+        ///	deadline DAT [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string Tables {
             get {

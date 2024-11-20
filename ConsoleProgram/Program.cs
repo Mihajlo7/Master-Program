@@ -13,7 +13,7 @@ namespace ConsoleProgram
             Console.WriteLine("Start ...");
             var setup = new Experiment1SetupService("sql",100,1);
             //var res = setup.RunGenerateData(10);
-            //setup.RunCreateTables();
+            setup.RunCreateTables();
             setup.RunPrepareData();
             setup.RunPopulateData(10);
             //string json = JsonSerializer.Serialize(res, new JsonSerializerOptions { WriteIndented = true });
