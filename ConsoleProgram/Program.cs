@@ -1,4 +1,6 @@
-﻿using Generator;
+﻿using ConsoleProgram.Setup;
+using Generator;
+using SqlDataAccess.Implementation;
 using System.Text.Json;
 using System.Threading.Tasks;
 
@@ -9,11 +11,11 @@ namespace ConsoleProgram
         static void Main(string[] args)
         {
             Console.WriteLine("Start ...");
+            SqlEmployeeTasksRepository db = new();
+            var setup = new Experiment1SetupService(db,100,1);
+            var res = setup.RunGenerateData(10);
 
-            var taskFaker = new TaskFaker();
-            var tasks = taskFaker.Generate(10);
-
-            string json = JsonSerializer.Serialize(tasks, new JsonSerializerOptions { WriteIndented = true });
+            string json = JsonSerializer.Serialize(res, new JsonSerializerOptions { WriteIndented = true });
             Console.WriteLine(json);
         }
     }

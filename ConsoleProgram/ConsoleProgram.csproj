@@ -9,6 +9,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Generator\Generator.csproj" />
+    <ProjectReference Include="..\SqlDataAccess\SqlDataAccess.csproj" />
   </ItemGroup>
 
 </Project>

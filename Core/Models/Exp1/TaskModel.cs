@@ -12,5 +12,19 @@ namespace Core.Models.Exp1
         public EmloyeeModel Responsible { get; set; } = new();
         public EmloyeeModel? Supervisor { get; set; }
         public List<EmployeeTaskModel> Employees { get; set; }= new();
+
+        public TaskModel()
+        {
+            
+        }
+        public TaskModel(TaskBase taskBase)
+        {
+            Id = taskBase.Id;
+            Name = taskBase.Name;
+            Deadline = taskBase.Deadline;
+            Description = taskBase.Description;
+            Status = taskBase.Status;
+            Priority = taskBase.Priority;
+        }
     }
 }

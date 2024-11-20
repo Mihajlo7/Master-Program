@@ -12,6 +12,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\DataAccess\DataAccess.csproj" />
+    <ProjectReference Include="..\Generator\Generator.csproj" />
   </ItemGroup>
 
   <ItemGroup>
