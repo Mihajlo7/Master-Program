@@ -48,9 +48,9 @@ namespace SqlDataAccess.Implementation
 
             copy.ColumnMappings.Add(nameof(EmloyeeModel.Id),"id");
             copy.ColumnMappings.Add(nameof(EmloyeeModel.Email),"email");
-            copy.ColumnMappings.Add(nameof(EmloyeeModel.FirstName),"firstname");
-            copy.ColumnMappings.Add(nameof(EmloyeeModel.LastName),"lastname");
-            copy.ColumnMappings.Add(nameof(EmloyeeModel.BirthDay),"birthday");
+            copy.ColumnMappings.Add(nameof(EmloyeeModel.FirstName),"firstName");
+            copy.ColumnMappings.Add(nameof(EmloyeeModel.LastName),"lastName");
+            copy.ColumnMappings.Add(nameof(EmloyeeModel.BirthDay),"birthDay");
             copy.ColumnMappings.Add(nameof(EmloyeeModel.Phone),"phone");
             copy.ColumnMappings.Add(nameof(EmloyeeModel.Title),"title");
 
@@ -87,11 +87,11 @@ namespace SqlDataAccess.Implementation
             DataTable dt= new DataTable();
             dt.Columns.Add("id", typeof(long));
             dt.Columns.Add("email", typeof(string));
-            dt.Columns.Add("firstname", typeof(string));
-            dt.Columns.Add("lastname", typeof(string));
+            dt.Columns.Add("firstName", typeof(string));
+            dt.Columns.Add("lastName", typeof(string));
             dt.Columns.Add("phone", typeof(string));
             dt.Columns.Add("title", typeof(string));
-            dt.Columns.Add("birthday", typeof(DateTime));
+            dt.Columns.Add("birthDay", typeof(DateTime));
 
             foreach (var emloyee in emloyees)
             {
@@ -114,6 +114,7 @@ namespace SqlDataAccess.Implementation
                 commandTask.Parameters.AddWithValue("@TaskDescription", newTask.Description);
                 commandTask.Parameters.AddWithValue("@TaskDeadline", newTask.Deadline);
                 commandTask.Parameters.AddWithValue("@TaskStatus", newTask.Status);
+                commandTask.Parameters.AddWithValue("@TaskPriority", newTask.Priority);
                 commandTask.Parameters.AddWithValue("@Responsible", newTask.Responsible.Id);
                 commandTask.Parameters.AddWithValue("@Supervisor", newTask.Supervisor?.Id ?? (object)DBNull.Value);
 

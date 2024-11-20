@@ -12,12 +12,13 @@ namespace ConsoleProgram.Setup
     internal class Experiment1SetupService : SetupService<TaskModel>
     {
         private SqlEmployeeTasksRepository employeeTasksRepository;
+        private List<EmloyeeModel> _emloyeeModels=new();
 
-        public Experiment1SetupService(object repo,int size,int mode) :base(mode,repo,size)
+        public Experiment1SetupService(string repo,int size,int mode) :base(mode,repo,size)
         {
             employeeTasksRepository = new();
         }
-        public Experiment1SetupService(object repo,string database,int size, int mode) : base(mode, repo, size)
+        public Experiment1SetupService(string repo,string database,int size, int mode) : base(mode, repo, size)
         {
             if (_name == "sql")
             {
@@ -38,17 +39,17 @@ namespace ConsoleProgram.Setup
         protected override List<TaskModel> GenerateData(int links)
         {
             Random rnd = new Random();
-            var employees = new EmployeeFaker().Generate(_size);
+            var employees = _emloyeeModels;
             var tasks= new TaskFaker().Generate(_size);
             List<TaskModel> taskModels = new List<TaskModel>();
             foreach (var task in tasks)
             {
                 TaskModel taskModel = new TaskModel(task);
-                EmloyeeModel responsible = new EmloyeeModel(employees[rnd.Next(employees.Count - 1)]);
+                EmloyeeModel responsible = employees[rnd.Next(employees.Count - 1)];
                 taskModel.Responsible = responsible;
                 if (rnd.Next(1, 3) == 2)
                 {
-                    EmloyeeModel supervisor = new EmloyeeModel(employees[rnd.Next(employees.Count - 1)]);
+                    EmloyeeModel supervisor = employees[rnd.Next(employees.Count - 1)];
                     taskModel.Supervisor = supervisor;
                 }
                 else
@@ -76,11 +77,16 @@ namespace ConsoleProgram.Setup
             return taskModels;
         }
 
-        protected override void PopulateData()
+        protected override void PopulateData(int links)
         {
-            // insert employees
-            var employees = new EmployeeFaker().Generate(_size);
-            
+            var readyTasks= GenerateData(links);
+            employeeTasksRepository.InsertMany(readyTasks);
+        }
+
+        protected override void PrepareData()
+        {
+            _emloyeeModels = new EmployeeFaker().Generate(_size).Select(e=>new EmloyeeModel(e)).ToList();
+            employeeTasksRepository.InsertEmployeeBulk(_emloyeeModels);
         }
     }
 }

@@ -14,18 +14,11 @@ namespace ConsoleProgram.Setup
         protected readonly int _size;
       
 
-        public SetupService(int mode,object repo,int size)
+        public SetupService(int mode,string repo,int size)
         {
             _mode = mode;
             _size= size;
-            if(repo is SqlRepository)
-            {
-                _name = "sql";
-            }
-            else
-            {
-                _name = "mongo";
-            }
+            _name = repo;
         }
         public void RunSetup()
         {
@@ -41,7 +34,7 @@ namespace ConsoleProgram.Setup
                 Console.WriteLine("\n\n");
             }
             //RunGenerateData();
-            RunPopulateData();
+            //RunPopulateData();
             
         }
         public void RunCreateTables()
@@ -59,16 +52,23 @@ namespace ConsoleProgram.Setup
             return res;
         }
 
-        public void RunPopulateData()
+        public void RunPopulateData(int links)
         {
             Console.WriteLine("/// POPULATE DATA ///");
-            PopulateData();
+            PopulateData(links);
             Console.WriteLine("-- Data were populated! successfull!");
+        }
+        public void RunPrepareData()
+        {
+            Console.WriteLine("/// PREPARE DATA ///");
+            PrepareData();
+            Console.WriteLine("-- Data were prepared! successfull!");
         }
 
         protected abstract void CreateTables();
         protected abstract void CreateIndexes();
+        protected abstract void PrepareData();
         protected abstract List<T> GenerateData(int links);
-        protected abstract void PopulateData();
+        protected abstract void PopulateData(int links);
     }
 }
