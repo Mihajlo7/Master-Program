@@ -37,7 +37,53 @@ namespace SqlDataAccess.Implementation
 
         public void InsertBulk(List<TaskModel> tasks)
         {
-            throw new NotImplementedException();
+            // Insert Tasks
+            using var copy= new SqlBulkCopy(_connectionString);
+
+            copy.DestinationTableName = "dbo.Task";
+
+            copy.ColumnMappings.Add(nameof(TaskModel.Id),"id");
+            copy.ColumnMappings.Add(nameof(TaskModel.Name),"name");
+            copy.ColumnMappings.Add(nameof(TaskModel.Description),"description");
+            copy.ColumnMappings.Add(nameof(TaskModel.Priority),"priority");
+            copy.ColumnMappings.Add(nameof(TaskModel.Status),"status");
+            copy.ColumnMappings.Add(nameof(TaskModel.Deadline),"deadline");
+            copy.ColumnMappings.Add(nameof(TaskModel.Responsible.Id), "responsible");
+            copy.ColumnMappings.Add(nameof(TaskModel.Supervisor.Id), "supervisor");
+
+            DataTable dt = new DataTable();
+            dt.Columns.Add("id",typeof(long));
+            dt.Columns.Add("name",typeof(string));
+            dt.Columns.Add("description",typeof(string));
+            dt.Columns.Add("priority",typeof(int));
+            dt.Columns.Add("status",typeof(string));
+            dt.Columns.Add("deadline",typeof(DateTime));
+            dt.Columns.Add("responsible",typeof(long));
+            dt.Columns.Add("supervisor",typeof(long));
+
+            foreach(var task in tasks)
+            {
+                dt.Rows.Add(task.Id, task.Name, task.Description, task.Priority, task.Status, task.Deadline, task.Responsible.Id, task.Supervisor?.Id ?? (object)DBNull.Value);
+
+            }
+
+            copy.WriteToServer(dt);
+            List<EmployeeTaskModel> list = new List<EmployeeTaskModel>();
+            list= tasks.SelectMany(t=>t.Employees).ToList();
+
+            copy.ColumnMappings.Clear();
+
+            copy.DestinationTableName = "dbo.EmployeeTask";
+            copy.ColumnMappings.Add(nameof(EmployeeTaskModel.EmployeeId),"employeeId");
+            copy.ColumnMappings.Add(nameof(EmployeeTaskModel.TaskId),"taskId");
+            DataTable dt2 = new DataTable();
+            dt2.Columns.Add("employeeId", typeof(long));
+            dt2.Columns.Add("taskId",typeof(long));
+            foreach(var l in list)
+            {
+                dt2.Rows.Add(l.EmployeeId, l.TaskId);
+            }
+            copy.WriteToServer(dt2);
         }
 
         public void InsertEmployeeBulk(List<EmloyeeModel> emloyees)
@@ -100,6 +146,8 @@ namespace SqlDataAccess.Implementation
             return dt;
         }
 
+        
+
         private void ExecuteInsertion(SqlConnection connection,TaskModel newTask, string[] statements)
         {
             using var transaction = connection.BeginTransaction();
@@ -128,7 +176,7 @@ namespace SqlDataAccess.Implementation
                 {
                     commandEmployeeTask.Parameters.Clear();
                     commandEmployeeTask.Parameters.AddWithValue("@TaskId", employeeTask.TaskId);
-                    commandEmployeeTask.Parameters.AddWithValue("@EmployeeId", employeeTask.EmloyeeId);
+                    commandEmployeeTask.Parameters.AddWithValue("@EmployeeId", employeeTask.EmployeeId);
 
                     commandEmployeeTask.ExecuteNonQuery();
 

@@ -68,7 +68,7 @@ namespace ConsoleProgram.Setup
                     }
                     EmployeeTaskModel employeeTaskModel = new();
                     employeeTaskModel.TaskId = taskModel.Id;
-                    employeeTaskModel.EmloyeeId = foundEmployeeId;
+                    employeeTaskModel.EmployeeId = foundEmployeeId;
                     employeeTaskModels.Add(employeeTaskModel);
                 }
                 taskModel.Employees=employeeTaskModels;
@@ -80,7 +80,7 @@ namespace ConsoleProgram.Setup
         protected override void PopulateData(int links)
         {
             var readyTasks= GenerateData(links);
-            employeeTasksRepository.InsertMany(readyTasks);
+            employeeTasksRepository.InsertBulk(readyTasks);
         }
 
         protected override void PrepareData()

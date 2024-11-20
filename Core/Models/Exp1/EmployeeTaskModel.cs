@@ -8,7 +8,7 @@ namespace Core.Models.Exp1
 {
     public sealed class EmployeeTaskModel
     {
-        public long EmloyeeId { get; set; }
+        public long EmployeeId { get; set; }
         public long TaskId { get; set; }
         public EmloyeeModel? Emloyee { get; set; }
         public TaskModel? Task { get; set; }
