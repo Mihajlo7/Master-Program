@@ -10,7 +10,7 @@ namespace Core.Models.Exp1
     {
         public long EmployeeId { get; set; }
         public long TaskId { get; set; }
-        public EmloyeeModel? Emloyee { get; set; }
-        public TaskModel? Task { get; set; }
+        public EmloyeeModel? Emloyee { get; set; }=null;
+        public TaskModel? Task { get; set; } = null;
     }
 }

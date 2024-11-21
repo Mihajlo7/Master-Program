@@ -13,6 +13,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Generator\Generator.csproj" />
+    <ProjectReference Include="..\HybridDataAccess\HybridDataAccess.csproj" />
     <ProjectReference Include="..\SqlDataAccess\SqlDataAccess.csproj" />
   </ItemGroup>
 

@@ -1,5 +1,8 @@
 ﻿using ConsoleProgram.Setup;
+using Core.Models.Exp1;
 using Generator;
+using HybridDataAccess.DataSerializator;
+using Microsoft.IdentityModel.JsonWebTokens;
 using SqlDataAccess.Implementation;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -15,8 +18,11 @@ namespace ConsoleProgram
             //var res= setup.RunSetupData();
             //setup.RunPopulateData();
             SqlEmployeeTasksRepository sql = new();
-            var res = sql.GetTaskWithEmployeesById(38);
-            string json = JsonSerializer.Serialize(res, new JsonSerializerOptions { WriteIndented = true });
+            JsonHandler handler = new JsonHandler();
+            var res =
+                sql.GetEmployeesWithCountTasksHavingAndOrder(12);
+                //sql.GetTaskWithEmployeesById(10);
+            var json = handler.SerializeMany<EmployeeWithCountTasksModel>(res);
             Console.WriteLine(json);
         }
     }

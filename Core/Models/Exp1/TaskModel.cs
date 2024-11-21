@@ -10,11 +10,11 @@ namespace Core.Models.Exp1
 {
     public sealed class TaskModel : TaskBase
     {
+
+        public EmloyeeModel? Responsible { get; set; } = null;
+        public EmloyeeModel? Supervisor { get; set; }= null;
         
-        public EmloyeeModel Responsible { get; set; } = new();
-        public EmloyeeModel? Supervisor { get; set; }
-        
-        public List<EmployeeTaskModel> Employees { get; set; }= new();
+        public List<EmployeeTaskModel>? Employees { get; set; }= null;
 
         public TaskModel()
         {

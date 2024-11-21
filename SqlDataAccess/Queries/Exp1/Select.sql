@@ -62,12 +62,12 @@ FROM Task t
 WHERE t.responsible IN (SELECT id FROM Employee e WHERE e.firstName LIKE @Firstname) AND t.supervisor IN (SELECT id FROM Employee WHERE birthDay<@Birthday);
 
 --8. Get Employee And All Tasks
-SELECT e.id,e.email, COUNT(*) TaskCount
+SELECT e.id Id,e.email Email, COUNT(*) TaskCount
 FROM Employee e LEFT JOIN EmployeeTask et ON (e.id=et.employeeId)
 GROUP BY e.id, e.email;
 
 --9. Get Employee and their tasks
-SELECT e.id,e.email, COUNT(*) TaskCount
+SELECT e.id Id,e.email Email, COUNT(*) TaskCount
 FROM Employee e LEFT JOIN EmployeeTask et ON (e.id=et.employeeId)
 GROUP BY e.id, e.email
 HAVING COUNT(*)>@NumOfEmployees

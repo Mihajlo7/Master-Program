@@ -128,68 +128,6 @@ namespace SqlDataAccess.Implementation
         }
 
        
-        public SqlDataReader GetAllTesksByDeadlineAndStatus()
-        {
-            string query = GenerateQueriesFromQuery(Experiment1Sql.Select)[5];
-
-            using var connection = new SqlConnection(_connectionString);
-            using var command = new SqlCommand(query, connection);
-
-            connection.Open();
-            using var reader = command.ExecuteReader();
-            while (reader.Read())
-            {
-                //
-            }
-            return reader;
-        }
-
-        public SqlDataReader GetAllTesksByResponsibleNameAndSupervisorBirthday()
-        {
-            string query = GenerateQueriesFromQuery(Experiment1Sql.Select)[6];
-
-            using var connection = new SqlConnection(_connectionString);
-            using var command = new SqlCommand(query, connection);
-
-            connection.Open();
-            using var reader = command.ExecuteReader();
-            while (reader.Read())
-            {
-                //
-            }
-            return reader;
-        }
-        public SqlDataReader GetEmployeesWithCountTasks()
-        {
-            string query = GenerateQueriesFromQuery(Experiment1Sql.Select)[7];
-
-            using var connection = new SqlConnection(_connectionString);
-            using var command = new SqlCommand(query, connection);
-
-            connection.Open();
-            using var reader = command.ExecuteReader();
-            while (reader.Read())
-            {
-                //
-            }
-            return reader;
-        }
-
-        public SqlDataReader GetEmployeesWithCountTasksHavingAndOrder()
-        {
-            string query = GenerateQueriesFromQuery(Experiment1Sql.Select)[8];
-
-            using var connection = new SqlConnection(_connectionString);
-            using var command = new SqlCommand(query, connection);
-
-            connection.Open();
-            using var reader = command.ExecuteReader();
-            while (reader.Read())
-            {
-                //
-            }
-            return reader;
-        }
         //////////////////
         private DataTable ToDataTableEmployee(List<EmloyeeModel> emloyees)
         {
@@ -320,6 +258,63 @@ namespace SqlDataAccess.Implementation
             using var reader = command.ExecuteReader();
             var tasks = TaskEmployeeHelper.ToTasksFullFromSelect(reader);
             return tasks;
+        }
+
+        public List<TaskModel> GetAllTasksByDeadilineAndNotComplited(int day)
+        {
+            string query = GenerateQueriesFromQuery(Experiment1Sql.Select)[5];
+
+            using var connection = new SqlConnection(_connectionString);
+            using var command = new SqlCommand(query, connection);
+            command.Parameters.AddWithValue("@Day",day);
+
+            connection.Open();
+            using var reader = command.ExecuteReader();
+            var tasks=TaskEmployeeHelper.ToTaskWithResponsible(reader);
+
+            return tasks;
+        }
+        public List<TaskModel> GetAllTasksByResponsibleNameAndSupervisorBirthday(string firstname, DateTime birthday)
+        {
+            string query = GenerateQueriesFromQuery(Experiment1Sql.Select)[6];
+
+            using var connection = new SqlConnection(_connectionString);
+            using var command = new SqlCommand(query, connection);
+            command.Parameters.AddWithValue("@Firstname", $"{firstname}%");
+            command.Parameters.AddWithValue("@Birthday",birthday);
+
+            connection.Open();
+            using var reader = command.ExecuteReader();
+
+            var tasks= TaskEmployeeHelper.ToTaskOnly(reader);
+            return tasks;
+        }
+        
+        public List<EmployeeWithCountTasksModel> GetEmployeesWithCountTasks()
+        {
+            string query = GenerateQueriesFromQuery(Experiment1Sql.Select)[7];
+
+            using var connection = new SqlConnection(_connectionString);
+            using var command = new SqlCommand(query, connection);
+
+            connection.Open();
+            using var reader = command.ExecuteReader();
+            var employeesWithTasks= TaskEmployeeHelper.ToEmployeeWithTasks(reader);
+            return employeesWithTasks;
+        }
+        // Get Employee with count of tasks and order by
+        public List<EmployeeWithCountTasksModel> GetEmployeesWithCountTasksHavingAndOrder(int numOfTasks)
+        {
+            string query = GenerateQueriesFromQuery(Experiment1Sql.Select)[8];
+
+            using var connection = new SqlConnection(_connectionString);
+            using var command = new SqlCommand(query, connection);
+            command.Parameters.AddWithValue("@NumOfEmployees",numOfTasks);
+
+            connection.Open();
+            using var reader = command.ExecuteReader();
+            var employeesWithTasks = TaskEmployeeHelper.ToEmployeeWithTasks(reader);
+            return employeesWithTasks;
         }
     }
 }

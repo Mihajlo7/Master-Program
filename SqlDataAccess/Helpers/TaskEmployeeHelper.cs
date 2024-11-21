@@ -164,5 +164,73 @@ namespace SqlDataAccess.Helpers
 
             return taskModels;
         }
+
+        public static List<TaskModel> ToTaskWithResponsible(SqlDataReader reader)
+        {
+            var taskModels = new List<TaskModel>();
+
+            while (reader.Read())
+            {
+                var taskModel = new TaskModel
+                {
+                    Id = reader.GetInt64(reader.GetOrdinal("TaskId")),
+                    Name = reader.GetString(reader.GetOrdinal("TaskName")),
+                    Description = reader.GetString(reader.GetOrdinal("TaskDescription")),
+                    Priority = reader.GetInt32(reader.GetOrdinal("TaskPriority")),
+                    Deadline = reader.GetDateTime(reader.GetOrdinal("TaskDeadline")),
+                    Status = reader.GetString(reader.GetOrdinal("TaskStatus")),
+                    Responsible = new EmloyeeModel
+                    {
+                        Id = reader.GetInt64(reader.GetOrdinal("ResponsibleId")),
+                        Email = reader.GetString(reader.GetOrdinal("ResponsibleEmail")),
+                        FirstName = reader.GetString(reader.GetOrdinal("ResponsibleFirstName")),
+                        LastName = reader.GetString(reader.GetOrdinal("ResponsibleLastName")),
+                        BirthDay = reader.GetDateTime(reader.GetOrdinal("ResponsibleBirthDay")),
+                        Title = reader.GetString(reader.GetOrdinal("ResponsibleTitle")),
+                        Phone = reader.GetString(reader.GetOrdinal("ResponsiblePhone"))
+                    }
+                };
+
+                taskModels.Add(taskModel);
+            }
+
+            return taskModels;
+        }
+
+        public static List<TaskModel> ToTaskOnly(SqlDataReader reader)
+        {
+            var taskModels = new List<TaskModel>();
+            while (reader.Read())
+            {
+                var model = new TaskModel()
+                {
+
+                    Id = reader.GetInt64(reader.GetOrdinal("TaskId")),
+                    Name = reader.GetString(reader.GetOrdinal("TaskName")),
+                    Description = reader.GetString(reader.GetOrdinal("TaskDescription")),
+                    Priority = reader.GetInt32(reader.GetOrdinal("TaskPriority")),
+                    Deadline = reader.GetDateTime(reader.GetOrdinal("TaskDeadline")),
+                    Status = reader.GetString(reader.GetOrdinal("TaskStatus"))
+                };
+                taskModels.Add(model);
+            }
+            return taskModels;
+        }
+
+        public static List<EmployeeWithCountTasksModel> ToEmployeeWithTasks(SqlDataReader reader)
+        {
+            var employees= new List<EmployeeWithCountTasksModel>();
+            while (reader.Read())
+            {
+                var model = new EmployeeWithCountTasksModel()
+                {
+                    Id = reader.GetInt64(reader.GetOrdinal("Id")),
+                    Email = reader.GetString(reader.GetOrdinal("Email")),
+                    Count = reader.GetInt32(reader.GetOrdinal("TaskCount"))
+                };
+                employees.Add(model);
+            }
+            return employees;
+        }
     }
 }
