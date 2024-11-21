@@ -25,13 +25,20 @@ namespace DataAccess
         public TaskModel GetTaskWithEmployeesById(long id);
         // Get Task by Priority and Status
         public List<TaskModel> GetAllTasksWithEmployeesByPriorityAndStatus(int priority);
+
+        public List<TaskModel> GetAllTasksByDeadilineAndNotComplited(int day);
+        public List<TaskModel> GetAllTasksByResponsibleNameAndSupervisorBirthday(string firstname,DateTime birthday);
         // Get Employee with count of tasks
+        public List<EmployeeWithCountTasksModel> GetEmployeesWithCountTasks();
         // Get Employee with count of tasks and order by
+        public List<EmployeeWithCountTasksModel> GetEmployeesWithCountTasksHavingAndOrder(int numOfTasks);
         // Get tasks and employees with deadline of 7 days
 
         // Azuriraj broj telefona za neki email
         // Azurirajte tasks tako na Task ako je isterkao i ako je Pending
         // Azurirajte zadatak povecaj deadline na 5 dana ako je prioritet veci od 7
+        // Azurirajte zadatke povecaj deadline gde je naziv Responsible first name pocinje na A
+        // Azuirajte zadatak na Canceled ako je Responisble titula sadrzi Engineer i rodjen pre 80
         // Prebacite Zadatke jednog zaposlenog na drugog zaposlenog ako je otvoren
     }
 }
