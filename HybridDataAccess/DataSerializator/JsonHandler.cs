@@ -11,14 +11,7 @@ namespace HybridDataAccess.DataSerializator
     {
         private readonly JsonSerializerOptions _options;
 
-        public JsonHandler()
-        {
-            _options = new JsonSerializerOptions()
-            {
-            DefaultIgnoreCondition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull,
-            WriteIndented = true
-            };
-        }
+        
 
         public JsonHandler(bool viewNull=true)
         {
