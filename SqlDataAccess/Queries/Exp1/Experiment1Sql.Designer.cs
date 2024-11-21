@@ -61,6 +61,25 @@ namespace SqlDataAccess.Queries.Exp1 {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to -- 1. Delete all Tasks
+        ///DELETE FROM dbo.Task;
+        ///-- 2. Delete By Id
+        ///DELETE FROM dbo.Task WHERE id=@Id
+        ///-- 3. Delete By Status
+        ///DELETE FROM dbo.Task WHERE status=@Status;
+        ///-- 4. Delete by Responsible id
+        ///DELETE FROM dbo.Task WHERE responsible= (SELECT id FROM dbo.Employee WHERE id=@Id);
+        ///-- 5. Delete By Supervisor FirstName
+        ///DELETE FROM dbo.Task WHERE responsible= (SELECT id FROM dbo.Employee WHERE firstName LIKE &apos;J%&apos;);
+        ///.
+        /// </summary>
+        internal static string Delete {
+            get {
+                return ResourceManager.GetString("Delete", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to INSERT INTO Employee(id,firstName,lastName,email,birthDay,title,phone)
         ///VALUES(@EmployeeId,@EmployeeFirstname,@EmployeeLastname,@EmployeeEmail,@EmployeeBirthday,@EmployeeTitle,@EmployeePhone);
         ///
@@ -118,6 +137,26 @@ namespace SqlDataAccess.Queries.Exp1 {
         internal static string Tables {
             get {
                 return ResourceManager.GetString("Tables", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to -- 1. Update Task expired and pedning
+        ///UPDATE dbo.Task SET Status = &apos;Cancelled&apos; WHERE Deadline &lt; GETDATE() AND Status = &apos;Pending&apos;;
+        ///-- 2. Update phone by Id,
+        ///UPDATE dbo.Employee SET phone=@Phone WHERE id=@Id;
+        ///-- 3. Update phone by Email,
+        ///UPDATE dbo.Employee SET phone=@Phone WHERE email=@Email;
+        ///-- 4. Update deadline for priority and deadline
+        ///UPDATE dbo.Task
+        ///SET Deadline = DATEADD(DAY, 5, Deadline) 
+        ///WHERE Priority &lt; 4 
+        ///  AND Deadline BETWEEN GETDATE() AND DATEADD(DAY, 3, GETDATE());
+        ///-- 5. Update dead [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string Update {
+            get {
+                return ResourceManager.GetString("Update", resourceCulture);
             }
         }
     }

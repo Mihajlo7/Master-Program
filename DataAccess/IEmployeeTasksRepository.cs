@@ -32,13 +32,20 @@ namespace DataAccess
         public List<EmployeeWithCountTasksModel> GetEmployeesWithCountTasks();
         // Get Employee with count of tasks and order by
         public List<EmployeeWithCountTasksModel> GetEmployeesWithCountTasksHavingAndOrder(int numOfTasks);
-        
 
-        // Azuriraj broj telefona za neki email
-        // Azurirajte tasks tako na Task ako je isterkao 
-        // Azurirajte zadatak povecaj deadline na 5 dana ako je prioritet veci od 7
-        // Azurirajte zadatke povecaj deadline gde je naziv Responsible first name pocinje na A
-        // Azuirajte zadatak na Canceled ako je Responisble titula sadrzi Engineer i rodjen pre 80
-        // Prebacite Zadatke jednog zaposlenog na drugog zaposlenog ako je otvoren
+
+        public int UpdateExpiredTaskByDeadline();
+        public int UpdatePhoneById(string phone,long id);
+        public int UpdatePhoneByEmail(string phone, string email);
+        public int UpdateDeadlineByPriorityByDeadline(int priority, int day);
+        public int UpdateDeadlineByResponsibleLastName(string lastName);
+        public int UpdateDeadlineByResponsibleTitleAndBirthday();
+        public int UpdateTasksFromOneEmployeeToOther();
+
+        public bool DeleteAllTasks();
+        public bool DeleteTaskById(long id);
+        public bool DeleteTasksByStatus(string status);
+        public bool DeleteTasksByResponsibleId(long employeeId);
+        public bool DeleteTasksBySupervisorFirstName();
     }
 }

@@ -316,5 +316,158 @@ namespace SqlDataAccess.Implementation
             var employeesWithTasks = TaskEmployeeHelper.ToEmployeeWithTasks(reader);
             return employeesWithTasks;
         }
+
+        public int UpdateExpiredTaskByDeadline()
+        {
+            string query = GenerateQueriesFromQuery(Experiment1Sql.Update)[0];
+
+            using var connection = new SqlConnection(_connectionString);
+            using var command = new SqlCommand(query, connection);
+
+            connection.Open();
+            var result= command.ExecuteNonQuery();
+            return result;
+        }
+
+        public int UpdatePhoneById(string phone, long id)
+        {
+            string query = GenerateQueriesFromQuery(Experiment1Sql.Update)[1];
+
+            using var connection = new SqlConnection(_connectionString);
+            using var command = new SqlCommand(query, connection);
+            command.Parameters.AddWithValue("@Phone",phone);
+            command.Parameters.AddWithValue("@Id",id);
+
+            connection.Open();
+            var result = command.ExecuteNonQuery();
+            return result;
+        }
+
+        public int UpdatePhoneByEmail(string phone, string email)
+        {
+            string query = GenerateQueriesFromQuery(Experiment1Sql.Update)[2];
+
+            using var connection = new SqlConnection(_connectionString);
+            using var command = new SqlCommand(query, connection);
+            command.Parameters.AddWithValue("@Phone", phone);
+            command.Parameters.AddWithValue("@Email", email);
+
+            connection.Open();
+            var result = command.ExecuteNonQuery();
+            return result;
+
+        }
+
+        public int UpdateDeadlineByPriorityByDeadline(int priority, int day)
+        {
+            string query = GenerateQueriesFromQuery(Experiment1Sql.Update)[3];
+
+            using var connection = new SqlConnection(_connectionString);
+            using var command = new SqlCommand(query, connection);
+
+            connection.Open();
+            var result = command.ExecuteNonQuery();
+            return result;
+        }
+
+        public int UpdateDeadlineByResponsibleLastName(string lastName)
+        {
+            string query = GenerateQueriesFromQuery(Experiment1Sql.Update)[4];
+
+            using var connection = new SqlConnection(_connectionString);
+            using var command = new SqlCommand(query, connection);
+
+            connection.Open();
+            var result = command.ExecuteNonQuery();
+            return result;
+        }
+
+        public int UpdateDeadlineByResponsibleTitleAndBirthday()
+        {
+            string query = GenerateQueriesFromQuery(Experiment1Sql.Update)[5];
+
+            using var connection = new SqlConnection(_connectionString);
+            using var command = new SqlCommand(query, connection);
+
+            connection.Open();
+            var result = command.ExecuteNonQuery();
+            return result;
+        }
+
+        public int UpdateTasksFromOneEmployeeToOther()
+        {
+            string query = GenerateQueriesFromQuery(Experiment1Sql.Update)[6];
+
+            using var connection = new SqlConnection(_connectionString);
+            using var command = new SqlCommand(query, connection);
+
+            connection.Open();
+            var result = command.ExecuteNonQuery();
+            return result;
+        }
+
+        public bool DeleteAllTasks()
+        {
+            string query = GenerateQueriesFromQuery(Experiment1Sql.Delete)[0];
+
+            using var connection = new SqlConnection(_connectionString);
+            using var command = new SqlCommand(query, connection);
+
+            connection.Open();
+            var result = command.ExecuteNonQuery();
+
+            return result > 0;
+        }
+        public bool DeleteTaskById(long id)
+        {
+            string query = GenerateQueriesFromQuery(Experiment1Sql.Delete)[1];
+
+            using var connection = new SqlConnection(_connectionString);
+            using var command = new SqlCommand(query, connection);
+            command.Parameters.AddWithValue("@Id", id);
+
+            connection.Open();
+            var result = command.ExecuteNonQuery();
+
+            return result > 0;
+        }
+        public bool DeleteTasksByStatus(string status)
+        {
+            string query = GenerateQueriesFromQuery(Experiment1Sql.Delete)[2];
+
+            using var connection = new SqlConnection(_connectionString);
+            using var command = new SqlCommand(query, connection);
+            command.Parameters.AddWithValue("@Status", status);
+
+            connection.Open();
+            var result = command.ExecuteNonQuery();
+
+            return result > 0;
+        }
+        public bool DeleteTasksByResponsibleId(long employeeId)
+        {
+            string query = GenerateQueriesFromQuery(Experiment1Sql.Delete)[3];
+
+            using var connection = new SqlConnection(_connectionString);
+            using var command = new SqlCommand(query, connection);
+            command.Parameters.AddWithValue("@Id", employeeId);
+
+            connection.Open();
+            var result = command.ExecuteNonQuery();
+
+            return result > 0;
+        }
+        public bool DeleteTasksBySupervisorFirstName()
+        {
+            string query = GenerateQueriesFromQuery(Experiment1Sql.Delete)[4];
+
+            using var connection = new SqlConnection(_connectionString);
+            using var command = new SqlCommand(query, connection);
+
+            connection.Open();
+            var result = command.ExecuteNonQuery();
+
+            return result > 0;
+        }
     }
 }

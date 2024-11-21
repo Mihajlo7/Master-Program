@@ -25,6 +25,6 @@ CREATE TABLE EmployeeTask(
 	employeeId BIGINT,
 	taskId BIGINT,
 	CONSTRAINT employee_task_pk PRIMARY KEY(employeeId,taskId),
-	CONSTRAINT employee_fk FOREIGN KEY(employeeId) REFERENCES Employee(id) ON DELETE CASCADE,
-	CONSTRAINT taskId FOREIGN KEY(taskId) REFERENCES Task(id) 
+	CONSTRAINT employee_fk FOREIGN KEY(employeeId) REFERENCES Employee(id),
+	CONSTRAINT task_fk FOREIGN KEY(taskId) REFERENCES Task(id) ON DELETE CASCADE 
 );
