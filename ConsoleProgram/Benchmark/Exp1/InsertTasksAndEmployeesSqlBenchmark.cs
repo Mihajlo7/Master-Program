@@ -22,11 +22,7 @@ namespace ConsoleProgram.Benchmark.Exp1
         [GlobalSetup]
         public void Setup() 
         {
-            repository = new();
-            experimentSetupService = new("sql",5000,1);
-            experimentSetupService.RunCreateTables();
-            experimentSetupService.RunPrepareData();
-            experimentSetupService.RunPopulateData(10);
+           
 
         }
     }

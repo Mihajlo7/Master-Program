@@ -16,10 +16,15 @@ namespace DataAccess
         public void InsertEmployeeBulk(List<EmloyeeModel> emloyees);
 
         // Get all with *
+        public List<TaskModel> GetAllTasksWithEmployeesBadWay();
         // Get all but with names and join
-        // Get all but with names and subquery
+        public List<TaskModel> GetAllTasksWithEmployees();
+        // Get all but with names and ordered
+        public List<TaskModel> GetAllTasksWithEmployeesSorted();
         // Get Task by Id 
+        public TaskModel GetTaskWithEmployeesById(long id);
         // Get Task by Priority and Status
+        public List<TaskModel> GetAllTasksWithEmployeesByPriorityAndStatus(int priority);
         // Get Employee with count of tasks
         // Get Employee with count of tasks and order by
         // Get tasks and employees with deadline of 7 days

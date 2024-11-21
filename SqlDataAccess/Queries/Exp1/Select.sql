@@ -48,18 +48,18 @@ INNER JOIN dbo.Employee r ON (r.id=t.responsible)
 LEFT JOIN dbo.Employee s ON (s.id=t.supervisor)
 LEFT JOIN dbo.EmployeeTask et ON (t.id=et.taskId)
 INNER JOIN dbo.Employee em ON (em.id=et.employeeId)
-WHERE t.priority>4 AND t.status IN ('Pending','New');
+WHERE t.priority>@Priority AND t.status IN ('Pending','New');
 --6. Get By Deadline and
 SELECT t.id TaskId, t.name TaskName, t.description TaskDescription, t.priority TaskPriority,t.deadline TaskDeadline, t.status TaskStatus,
 r.Id ResponsibleId, r.email ResponsibleEmail, r.firstName ResponsibleFirstName, r.lastName ResponsibleLastName,r.birthDay ResponsibleBirthDay, r.title ResponsibleTitle,r.phone ResponsiblePhone
 FROM dbo.Task t 
 INNER JOIN dbo.Employee r ON (r.id=t.responsible)
-WHERE t.deadline BETWEEN GETDATE() AND DATEADD(DAY, 10, GETDATE()) AND t.status !='Completed'
+WHERE t.deadline BETWEEN GETDATE() AND DATEADD(DAY, @Day, GETDATE()) AND t.status !='Completed'
 ORDER BY t.deadline ASC;
 --7. Get Task by Name Responisble and Supervisor
 SELECT t.id TaskId, t.name TaskName, t.description TaskDescription, t.priority TaskPriority,t.deadline TaskDeadline, t.status TaskStatus
 FROM Task t
-WHERE t.responsible IN (SELECT id FROM Employee e WHERE e.firstName LIKE 'M%') AND t.supervisor IN (SELECT id FROM Employee WHERE birthDay<'01-01-2000');
+WHERE t.responsible IN (SELECT id FROM Employee e WHERE e.firstName LIKE @Firstname) AND t.supervisor IN (SELECT id FROM Employee WHERE birthDay<@Birthday);
 
 --8. Get Employee And All Tasks
 SELECT e.id,e.email, COUNT(*) TaskCount
@@ -70,5 +70,5 @@ GROUP BY e.id, e.email;
 SELECT e.id,e.email, COUNT(*) TaskCount
 FROM Employee e LEFT JOIN EmployeeTask et ON (e.id=et.employeeId)
 GROUP BY e.id, e.email
-HAVING COUNT(*)>5
+HAVING COUNT(*)>@NumOfEmployees
 ORDER BY  COUNT(*) DESC;

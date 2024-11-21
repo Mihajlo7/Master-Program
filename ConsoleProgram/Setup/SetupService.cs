@@ -20,22 +20,12 @@ namespace ConsoleProgram.Setup
             _size= size;
             _name = repo;
         }
-        public void RunSetup()
+        
+        public List<T> RunSetupData() 
         {
-            Console.WriteLine("///////////////////");
-            Console.WriteLine("//// RUN SETUP //// ");
-            Console.WriteLine("\n\n");
             RunCreateTables();
-            if(_mode==2)
-            {
-                Console.WriteLine("/// INDEX CREATION ///");
-                CreateIndexes();
-                Console.WriteLine("-- Indexes were created succefull");
-                Console.WriteLine("\n\n");
-            }
-            //RunGenerateData();
-            //RunPopulateData();
-            
+            RunPrepareData();
+            return RunGenerateData();
         }
         public void RunCreateTables()
         {
@@ -44,18 +34,18 @@ namespace ConsoleProgram.Setup
             Console.WriteLine("/--/ Tables were created successfull");
             Console.WriteLine("\n\n");
         }
-        public List<T> RunGenerateData(int links)
+        public List<T> RunGenerateData()
         {
             Console.WriteLine("/// GENERATE DATA ///");
-            var res = GenerateData(links);
+            var res = GenerateData();
             Console.WriteLine("/--/ Data were generated successfull!");
             return res;
         }
 
-        public void RunPopulateData(int links)
+        public void RunPopulateData()
         {
             Console.WriteLine("/// POPULATE DATA ///");
-            PopulateData(links);
+            PopulateData();
             Console.WriteLine("-- Data were populated! successfull!");
         }
         public void RunPrepareData()
@@ -68,7 +58,7 @@ namespace ConsoleProgram.Setup
         protected abstract void CreateTables();
         protected abstract void CreateIndexes();
         protected abstract void PrepareData();
-        protected abstract List<T> GenerateData(int links);
-        protected abstract void PopulateData(int links);
+        protected abstract List<T> GenerateData();
+        protected abstract void PopulateData();
     }
 }

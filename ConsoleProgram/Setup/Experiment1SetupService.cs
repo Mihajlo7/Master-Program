@@ -12,19 +12,44 @@ namespace ConsoleProgram.Setup
     internal class Experiment1SetupService : SetupService<TaskModel>
     {
         private SqlEmployeeTasksRepository employeeTasksRepository;
+
         private List<EmloyeeModel> _emloyeeModels=new();
+        private List<TaskModel> _taskModels=new();
+        private int _min; private int _max;
 
         public Experiment1SetupService(string repo,int size,int mode) :base(mode,repo,size)
         {
             employeeTasksRepository = new();
-        }
-        public Experiment1SetupService(string repo,string database,int size, int mode) : base(mode, repo, size)
-        {
-            if (_name == "sql")
+            if (_size==SetSizeInterface.SMALL_SET)
             {
-                employeeTasksRepository = new(database);
+                _min = 5; _max=15;
             }
+            else if (_size == SetSizeInterface.MEDIUM_SET)
+            {
+                _min=25; _max=45;
+            }
+            else if (size == SetSizeInterface.LARGE_SET)
+            {
+                _min = 40; _max=70;
+            }
+            
+        }
+        public Experiment1SetupService(string repo,string database, int size, int mode) : base(mode, repo, size)
+        {
+            
             employeeTasksRepository = new(database);
+            if (_size == SetSizeInterface.SMALL_SET)
+            {
+                _min = 5; _max = 15;
+            }
+            else if (_size == SetSizeInterface.MEDIUM_SET)
+            {
+                _min = 25; _max = 45;
+            }
+            else if (size == SetSizeInterface.LARGE_SET)
+            {
+                _min = 40; _max = 70;
+            }
         }
         protected override void CreateIndexes()
         {
@@ -36,7 +61,7 @@ namespace ConsoleProgram.Setup
             employeeTasksRepository.ExecuteCreationTable();
         }
 
-        protected override List<TaskModel> GenerateData(int links)
+        protected override List<TaskModel> GenerateData()
         {
             Random rnd = new Random();
             var employees = _emloyeeModels;
@@ -58,6 +83,7 @@ namespace ConsoleProgram.Setup
                 }
                 List<EmployeeTaskModel> employeeTaskModels = new List<EmployeeTaskModel>();
                 Dictionary<long,bool> lookUp= new Dictionary<long,bool>();
+                int links = rnd.Next(_min,_max);
                 for(int i=0;i<links;i++)
                 {
                     long foundEmployeeId;
@@ -74,13 +100,14 @@ namespace ConsoleProgram.Setup
                 taskModel.Employees=employeeTaskModels;
                 taskModels.Add(taskModel);
             }
+            _taskModels = taskModels;
             return taskModels;
         }
 
-        protected override void PopulateData(int links)
+        protected override void PopulateData()
         {
-            var readyTasks= GenerateData(links);
-            employeeTasksRepository.InsertMany(readyTasks);
+            
+            employeeTasksRepository.InsertMany(_taskModels);
         }
 
         protected override void PrepareData()

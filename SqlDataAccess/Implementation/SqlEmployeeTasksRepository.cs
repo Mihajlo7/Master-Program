@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Core.Models.Exp1;
 using DataAccess;
 using Microsoft.Data.SqlClient;
+using SqlDataAccess.Helpers;
 using SqlDataAccess.Queries.Exp1;
 
 namespace SqlDataAccess.Implementation
@@ -126,84 +127,7 @@ namespace SqlDataAccess.Implementation
             ExecuteInsertion(connection, newTask, statements);
         }
 
-        public SqlDataReader GetAllTesksWithEmployeesBadWay()
-        {
-            string query = GenerateQueriesFromQuery(Experiment1Sql.Select)[0];
-
-            using var connection = new SqlConnection(_connectionString);
-            using var command = new SqlCommand(query, connection);
-
-            connection.Open();
-            using var reader = command.ExecuteReader();
-            while (reader.Read())
-            {
-                //
-            }
-            return reader;
-        }
-
-        public SqlDataReader GetAllTesksWithEmployees()
-        {
-            string query = GenerateQueriesFromQuery(Experiment1Sql.Select)[1];
-
-            using var connection = new SqlConnection(_connectionString);
-            using var command = new SqlCommand(query, connection);
-
-            connection.Open();
-            using var reader = command.ExecuteReader();
-            while (reader.Read())
-            {
-                //
-            }
-            return reader;
-        }
-        public SqlDataReader GetAllTesksWithEmployeesSorted()
-        {
-            string query = GenerateQueriesFromQuery(Experiment1Sql.Select)[2];
-
-            using var connection = new SqlConnection(_connectionString);
-            using var command = new SqlCommand(query, connection);
-
-            connection.Open();
-            using var reader = command.ExecuteReader();
-            while (reader.Read())
-            {
-                //
-            }
-            return reader;
-        }
-        public SqlDataReader GetAllTesksWithEmployeesById(long taskId)
-        {
-            string query = GenerateQueriesFromQuery(Experiment1Sql.Select)[3];
-
-            using var connection = new SqlConnection(_connectionString);
-            using var command = new SqlCommand(query, connection);
-
-            command.Parameters.AddWithValue("@TaskId",taskId);
-            connection.Open();
-            using var reader = command.ExecuteReader();
-            while (reader.Read())
-            {
-                //
-            }
-            return reader;
-        }
-
-        public SqlDataReader GetAllTesksWithEmployeesByStatusAndPriority()
-        {
-            string query = GenerateQueriesFromQuery(Experiment1Sql.Select)[4];
-
-            using var connection = new SqlConnection(_connectionString);
-            using var command = new SqlCommand(query, connection);
-
-            connection.Open();
-            using var reader = command.ExecuteReader();
-            while (reader.Read())
-            {
-                //
-            }
-            return reader;
-        }
+       
         public SqlDataReader GetAllTesksByDeadlineAndStatus()
         {
             string query = GenerateQueriesFromQuery(Experiment1Sql.Select)[5];
@@ -329,6 +253,73 @@ namespace SqlDataAccess.Implementation
                 transaction.Rollback();
                 throw;
             }
+        }
+
+        public List<TaskModel> GetAllTasksWithEmployeesBadWay()
+        {
+            string query = GenerateQueriesFromQuery(Experiment1Sql.Select)[0];
+
+            using var connection = new SqlConnection(_connectionString);
+            using var command = new SqlCommand(query, connection);
+
+            connection.Open();
+            using var reader= command.ExecuteReader();
+            var tasks= TaskEmployeeHelper.ToTasksFullFromSelectBadWay(reader);
+            return tasks;
+        }
+
+        public List<TaskModel> GetAllTasksWithEmployees()
+        {
+            string query = GenerateQueriesFromQuery(Experiment1Sql.Select)[1];
+
+            using var connection = new SqlConnection(_connectionString);
+            using var command = new SqlCommand(query, connection);
+
+            connection.Open();
+            using var reader = command.ExecuteReader();
+            var tasks = TaskEmployeeHelper.ToTasksFullFromSelect(reader);
+            return tasks;
+        }
+
+        public List<TaskModel> GetAllTasksWithEmployeesSorted()
+        {
+            string query = GenerateQueriesFromQuery(Experiment1Sql.Select)[2];
+
+            using var connection = new SqlConnection(_connectionString);
+            using var command = new SqlCommand(query, connection);
+
+            connection.Open();
+            using var reader = command.ExecuteReader();
+            var tasks = TaskEmployeeHelper.ToTasksFullFromSelect(reader);
+            return tasks;
+        }
+
+        public TaskModel GetTaskWithEmployeesById(long id)
+        {
+            string query = GenerateQueriesFromQuery(Experiment1Sql.Select)[3];
+
+            using var connection = new SqlConnection(_connectionString);
+            using var command = new SqlCommand(query, connection);
+            command.Parameters.AddWithValue("@TaskId", id);
+
+            connection.Open();
+            using var reader = command.ExecuteReader();
+            var tasks = TaskEmployeeHelper.ToTasksFullFromSelect(reader);
+            return tasks.First();
+        }
+
+        public List<TaskModel> GetAllTasksWithEmployeesByPriorityAndStatus(int priority)
+        {
+            string query = GenerateQueriesFromQuery(Experiment1Sql.Select)[4];
+
+            using var connection = new SqlConnection(_connectionString);
+            using var command = new SqlCommand(query, connection);
+            command.Parameters.AddWithValue("@Priority", priority);
+
+            connection.Open();
+            using var reader = command.ExecuteReader();
+            var tasks = TaskEmployeeHelper.ToTasksFullFromSelect(reader);
+            return tasks;
         }
     }
 }
