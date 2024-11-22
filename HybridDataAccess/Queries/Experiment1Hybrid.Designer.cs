@@ -61,6 +61,17 @@ namespace HybridDataAccess.Queries {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to INSERT INTO Task(id,name,description,priority,deadline,status,responsible,supervisor,employees)
+        ///VALUES(@TaskId,@TaskName,@TaskDescription,@TaskPriority,@TaskDeadline,@TaskStatus,@Responsible,@Supervisor,@Employees);
+        ///.
+        /// </summary>
+        internal static string Insert {
+            get {
+                return ResourceManager.GetString("Insert", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to DROP TABLE IF EXISTS Task;
         ///
         ///CREATE TABLE Task(

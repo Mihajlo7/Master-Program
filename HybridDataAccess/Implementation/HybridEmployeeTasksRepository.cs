@@ -4,6 +4,7 @@ using HybridDataAccess.Queries;
 using Microsoft.Data.SqlClient;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -110,7 +111,37 @@ namespace HybridDataAccess.Implementation
 
         public void InsertBulk(List<TaskModel> tasks)
         {
-            throw new NotImplementedException();
+            using var copy = new SqlBulkCopy(_connectionString);
+
+            copy.DestinationTableName = "dbo.Task";
+
+            copy.ColumnMappings.Add(nameof(TaskModel.Id), "id");
+            copy.ColumnMappings.Add(nameof(TaskModel.Name), "name");
+            copy.ColumnMappings.Add(nameof(TaskModel.Description), "description");
+            copy.ColumnMappings.Add(nameof(TaskModel.Priority), "priority");
+            copy.ColumnMappings.Add(nameof(TaskModel.Status), "status");
+            copy.ColumnMappings.Add(nameof(TaskModel.Deadline), "deadline");
+            copy.ColumnMappings.Add(nameof(TaskModel.Responsible), "responsible");
+            copy.ColumnMappings.Add(nameof(TaskModel.Supervisor), "supervisor");
+            copy.ColumnMappings.Add(nameof(TaskModel.Employees), "employees");
+
+            DataTable dt = new DataTable();
+            dt.Columns.Add("id", typeof(long));
+            dt.Columns.Add("name", typeof(string));
+            dt.Columns.Add("description", typeof(string));
+            dt.Columns.Add("priority", typeof(int));
+            dt.Columns.Add("status", typeof(string));
+            dt.Columns.Add("deadline", typeof(DateTime));
+            dt.Columns.Add("responsible", typeof(string));
+            dt.Columns.Add("supervisor", typeof(string));
+            dt.Columns.Add("employees", typeof(string));
+
+            foreach (var task in tasks)
+            {
+                dt.Rows.Add(task.Id, task.Name, task.Description, task.Priority, task.Status, task.Deadline, task.Responsible ?? (object)DBNull.Value, task.Supervisor ?? (object)DBNull.Value, task.Employees ?? (object)DBNull.Value);
+
+            }
+            copy.WriteToServer(dt);
         }
 
         public void InsertEmployeeBulk(List<EmloyeeModel> emloyees)
@@ -120,14 +151,50 @@ namespace HybridDataAccess.Implementation
 
         public int InsertMany(List<TaskModel> tasks)
         {
-            throw new NotImplementedException();
+            string query = GenerateQueriesFromQuery(Experiment1Hybrid.Insert)[0];
+            using var connection = new SqlConnection(_connectionString);
+            using var commandTask = new SqlCommand(query, connection);
+            int count = 0;
+
+            connection.Open();
+            foreach (var newTask in tasks)
+            {
+                commandTask.Parameters.Clear();
+                commandTask.Parameters.AddWithValue("@TaskId", newTask.Id);
+                commandTask.Parameters.AddWithValue("@TaskName", newTask.Name);
+                commandTask.Parameters.AddWithValue("@TaskDescription", newTask.Description);
+                commandTask.Parameters.AddWithValue("@TaskDeadline", newTask.Deadline);
+                commandTask.Parameters.AddWithValue("@TaskStatus", newTask.Status);
+                commandTask.Parameters.AddWithValue("@TaskPriority", newTask.Priority);
+                commandTask.Parameters.AddWithValue("@Responsible", newTask.Responsible != null ? _jsonHandler.SerializeOne<EmloyeeModel>(newTask.Responsible) : (object)DBNull.Value);
+                commandTask.Parameters.AddWithValue("@Supervisor", newTask.Supervisor != null ? _jsonHandler.SerializeOne<EmloyeeModel>(newTask.Supervisor) : (object)DBNull.Value);
+                commandTask.Parameters.AddWithValue("@Employees", newTask.Employees != null ? _jsonHandler.SerializeMany<EmployeeTaskModel>(newTask.Employees) : (object)DBNull.Value);
+
+                commandTask.ExecuteNonQuery();
+                count++;
+            }
+            return count;
         }
 
         public void InsertOne(TaskModel newTask)
         {
-            string query = GenerateQueriesFromQuery(Exp1HQueries.Tables)[0];
+            string query = GenerateQueriesFromQuery(Experiment1Hybrid.Insert)[0];
             using var connection = new SqlConnection(_connectionString);
-            using var command = new SqlCommand();
+            using var commandTask = new SqlCommand(query,connection);
+
+            commandTask.Parameters.Clear();
+            commandTask.Parameters.AddWithValue("@TaskId", newTask.Id);
+            commandTask.Parameters.AddWithValue("@TaskName", newTask.Name);
+            commandTask.Parameters.AddWithValue("@TaskDescription", newTask.Description);
+            commandTask.Parameters.AddWithValue("@TaskDeadline", newTask.Deadline);
+            commandTask.Parameters.AddWithValue("@TaskStatus", newTask.Status);
+            commandTask.Parameters.AddWithValue("@TaskPriority", newTask.Priority);
+            commandTask.Parameters.AddWithValue("@Responsible", newTask.Responsible != null ? _jsonHandler.SerializeOne<EmloyeeModel>(newTask.Responsible) : (object)DBNull.Value);
+            commandTask.Parameters.AddWithValue("@Supervisor", newTask.Supervisor != null ? _jsonHandler.SerializeOne<EmloyeeModel>(newTask.Supervisor) : (object)DBNull.Value);
+            commandTask.Parameters.AddWithValue("@Employees", newTask.Employees != null ? _jsonHandler.SerializeMany<EmployeeTaskModel>(newTask.Employees) : (object)DBNull.Value);
+            
+            connection.Open();
+            commandTask.ExecuteNonQuery();
         }
 
         public int UpdateDeadlineByPriorityByDeadline(int priority, int day)
