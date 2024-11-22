@@ -52,7 +52,7 @@ namespace HybridDataAccess.Implementation
 
         public override void ExecuteCreationTable()
         {
-            string[] statements = GenerateQueriesFromQuery(Exp1HQueries.Tables);
+            string[] statements = GenerateQueriesFromQuery(Experiment1Hybrid.Tables);
 
             using var connection = new SqlConnection(_connectionString);
             connection.Open();
