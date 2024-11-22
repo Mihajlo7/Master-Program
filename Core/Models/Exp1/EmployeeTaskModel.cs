@@ -8,8 +8,8 @@ namespace Core.Models.Exp1
 {
     public sealed class EmployeeTaskModel
     {
-        public long EmployeeId { get; set; }
-        public long TaskId { get; set; }
+        public long? EmployeeId { get; set; } = null;
+        public long? TaskId { get; set; }= null;
         public EmloyeeModel? Emloyee { get; set; }=null;
         public TaskModel? Task { get; set; } = null;
     }

@@ -93,8 +93,9 @@ namespace ConsoleProgram.Setup
                         if (lookUp.TryAdd(foundEmployeeId, true)) { break; }
                     }
                     EmployeeTaskModel employeeTaskModel = new();
-                    employeeTaskModel.TaskId = taskModel.Id;
-                    employeeTaskModel.EmployeeId = foundEmployeeId;
+                    //employeeTaskModel.TaskId = taskModel.Id;
+                    //employeeTaskModel.EmployeeId = foundEmployeeId;
+                    employeeTaskModel.Emloyee = _emloyeeModels.First(e=>e.Id==foundEmployeeId);
                     employeeTaskModels.Add(employeeTaskModel);
                 }
                 taskModel.Employees=employeeTaskModels;

@@ -72,6 +72,20 @@ namespace HybridDataAccess.Queries {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to -- 1. All With Serialization in code
+        ///SELECT t.id TaskId,t.name TaskName, t.description TaskDescription, t.priority TaskPriority,t.deadline TaskDeadline,t.status TaskStatus, t.responsible TaskResponsible,t.supervisor TaskSupervisor,t.employees TaskEmployees
+        ///FROM dbo.Task t;
+        ///-- 2. All With Serialization on database
+        ///SELECT t.id TaskId,t.name TaskName, t.description TaskDescription, t.priority TaskPriority,t.deadline TaskDeadline,t.status TaskStatus,
+        ///r.Id ResponsibleId, r.email ResponsibleEmail, r.firstNam [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string Select {
+            get {
+                return ResourceManager.GetString("Select", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to DROP TABLE IF EXISTS Task;
         ///
         ///CREATE TABLE Task(
