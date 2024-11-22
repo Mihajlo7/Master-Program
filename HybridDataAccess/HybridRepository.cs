@@ -20,8 +20,7 @@ namespace HybridDataAccess
             _jsonHandler = new JsonHandler();
         }
 
-        public abstract void ExecuteCreationTable();
-        public abstract void ExecuteCreationAdditional();
+        
 
         protected string[] GenerateQueriesFromQuery(string query)
         {

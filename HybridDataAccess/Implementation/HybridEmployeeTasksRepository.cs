@@ -46,12 +46,12 @@ namespace HybridDataAccess.Implementation
             throw new NotImplementedException();
         }
 
-        public override void ExecuteCreationAdditional()
+        public void ExecuteCreationAdditional()
         {
             throw new NotImplementedException();
         }
 
-        public override void ExecuteCreationTable()
+        public void ExecuteCreationTable()
         {
             string[] statements = GenerateQueriesFromQuery(Experiment1Hybrid.Tables);
 
@@ -138,7 +138,10 @@ namespace HybridDataAccess.Implementation
 
             foreach (var task in tasks)
             {
-                dt.Rows.Add(task.Id, task.Name, task.Description, task.Priority, task.Status, task.Deadline, task.Responsible ?? (object)DBNull.Value, task.Supervisor ?? (object)DBNull.Value, task.Employees ?? (object)DBNull.Value);
+                dt.Rows.Add(task.Id, task.Name, task.Description, task.Priority, task.Status, task.Deadline, 
+                    task.Responsible!= null ?_jsonHandler.SerializeOne<EmloyeeModel>(task.Responsible) : (object)DBNull.Value, 
+                    task.Supervisor !=null ? _jsonHandler.SerializeOne<EmloyeeModel>(task.Supervisor) : (object)DBNull.Value, 
+                    task.Employees !=null ? _jsonHandler.SerializeMany<EmployeeTaskModel>(task.Employees) :(object)DBNull.Value);
 
             }
             copy.WriteToServer(dt);
@@ -146,7 +149,7 @@ namespace HybridDataAccess.Implementation
 
         public void InsertEmployeeBulk(List<EmloyeeModel> emloyees)
         {
-            throw new NotImplementedException();
+            Console.WriteLine("Insertion Employees is not required!");
         }
 
         public int InsertMany(List<TaskModel> tasks)

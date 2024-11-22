@@ -4,52 +4,52 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Core.Models.Exp1;
+using DataAccess;
 using Generator;
+using HybridDataAccess.Implementation;
 using SqlDataAccess.Implementation;
 
 namespace ConsoleProgram.Setup
 {
     internal class Experiment1SetupService : SetupService<TaskModel>
     {
-        private SqlEmployeeTasksRepository employeeTasksRepository;
+        private IEmployeeTasksRepository employeeTasksRepository;
 
         private List<EmloyeeModel> _emloyeeModels=new();
         private List<TaskModel> _taskModels=new();
+
         private int _min; private int _max;
 
-        public Experiment1SetupService(string repo,int size,int mode) :base(mode,repo,size)
+        public Experiment1SetupService(string repo, int size, int mode)
+       : base(mode, repo, size)
         {
-            employeeTasksRepository = new();
-            if (_size==SetSizeInterface.SMALL_SET)
-            {
-                _min = 5; _max=15;
-            }
-            else if (_size == SetSizeInterface.MEDIUM_SET)
-            {
-                _min=25; _max=45;
-            }
-            else if (size == SetSizeInterface.LARGE_SET)
-            {
-                _min = 40; _max=70;
-            }
-            
+            employeeTasksRepository = CreateRepository(repo);
+            SetMinMax(size);
         }
-        public Experiment1SetupService(string repo,string database, int size, int mode) : base(mode, repo, size)
+
+        public Experiment1SetupService(string repo, string database, int size, int mode)
+            : base(mode, repo, size)
         {
-            
-            employeeTasksRepository = new(database);
-            if (_size == SetSizeInterface.SMALL_SET)
+            employeeTasksRepository = new HybridEmployeeTasksRepository(database);
+            SetMinMax(size);
+        }
+
+        private IEmployeeTasksRepository CreateRepository(string repo)
+        {
+            return repo == "sql"
+                ? new SqlEmployeeTasksRepository()
+                : new HybridEmployeeTasksRepository();
+        }
+
+        private void SetMinMax(int size)
+        {
+            (_min, _max) = size switch
             {
-                _min = 5; _max = 15;
-            }
-            else if (_size == SetSizeInterface.MEDIUM_SET)
-            {
-                _min = 25; _max = 45;
-            }
-            else if (size == SetSizeInterface.LARGE_SET)
-            {
-                _min = 40; _max = 70;
-            }
+                SetSizeInterface.SMALL_SET => (5, 15),
+                SetSizeInterface.MEDIUM_SET => (25, 45),
+                SetSizeInterface.LARGE_SET => (40, 70),
+                _ => throw new ArgumentOutOfRangeException(nameof(size), "Invalid set size")
+            };
         }
         protected override void CreateIndexes()
         {
@@ -107,7 +107,7 @@ namespace ConsoleProgram.Setup
         protected override void PopulateData()
         {
             
-            employeeTasksRepository.InsertMany(_taskModels);
+            employeeTasksRepository.InsertBulk(_taskModels);
         }
 
         protected override void PrepareData()

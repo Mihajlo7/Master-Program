@@ -18,12 +18,12 @@ namespace SqlDataAccess.Implementation
         public SqlEmployeeTasksRepository(string database) : base(database) { }
 
 
-        public override void ExecuteCreationAdditional()
+        public  void ExecuteCreationAdditional()
         {
             throw new NotImplementedException();
         }
 
-        public override void ExecuteCreationTable()
+        public  void ExecuteCreationTable()
         {
             string[] statements = GenerateQueriesFromQuery(Experiment1Sql.Tables);
 

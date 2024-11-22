@@ -15,17 +15,17 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Update="Queries\Exp1HQueries.Designer.cs">
+    <Compile Update="Queries\Experiment1Hybrid.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
-      <DependentUpon>Exp1HQueries.resx</DependentUpon>
+      <DependentUpon>Experiment1Hybrid.resx</DependentUpon>
     </Compile>
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Update="Queries\Exp1HQueries.resx">
+    <EmbeddedResource Update="Queries\Experiment1Hybrid.resx">
       <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Exp1HQueries.Designer.cs</LastGenOutput>
+      <LastGenOutput>Experiment1Hybrid.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
 

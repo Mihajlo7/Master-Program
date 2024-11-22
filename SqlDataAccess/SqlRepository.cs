@@ -16,8 +16,7 @@ namespace SqlDataAccess
             _database = database;
             _connectionString = $"Data Source=.;Initial Catalog={_database};Integrated Security=True;TrustServerCertificate=True;";
         }
-        public abstract void ExecuteCreationTable();
-        public abstract void ExecuteCreationAdditional();
+        
 
         protected string[] GenerateQueriesFromQuery(string query) 
         {

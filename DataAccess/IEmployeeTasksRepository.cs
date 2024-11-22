@@ -9,6 +9,8 @@ namespace DataAccess
 {
     public interface IEmployeeTasksRepository 
     {
+        public abstract void ExecuteCreationTable();
+        public abstract void ExecuteCreationAdditional();
         public void InsertOne(TaskModel newTask);
         public int InsertMany(List<TaskModel> tasks);
         public void InsertBulk(List<TaskModel> tasks);

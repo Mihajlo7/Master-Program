@@ -27,12 +27,19 @@ namespace ConsoleProgram.Setup
             RunPrepareData();
             return RunGenerateData();
         }
+        public void RunSetupDatabase()
+        {
+            RunCreateTables();
+            RunPrepareData();
+            RunGenerateData();
+            RunPopulateData();
+        }
         public void RunCreateTables()
         {
             Console.WriteLine("/// TABLE CREATION ///");
             CreateTables();
             Console.WriteLine("/--/ Tables were created successfull");
-            Console.WriteLine("\n\n");
+            
         }
         public List<T> RunGenerateData()
         {
