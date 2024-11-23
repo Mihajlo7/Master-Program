@@ -95,7 +95,7 @@ namespace ConsoleProgram.Setup
                     EmployeeTaskModel employeeTaskModel = new();
                     //employeeTaskModel.TaskId = taskModel.Id;
                     //employeeTaskModel.EmployeeId = foundEmployeeId;
-                    employeeTaskModel.Emloyee = _emloyeeModels.First(e=>e.Id==foundEmployeeId);
+                    employeeTaskModel.Employee = _emloyeeModels.First(e=>e.Id==foundEmployeeId);
                     employeeTaskModels.Add(employeeTaskModel);
                 }
                 taskModel.Employees=employeeTaskModels;

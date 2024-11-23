@@ -42,7 +42,7 @@ namespace DataAccess
         public int UpdateDeadlineByPriorityByDeadline(int priority, int day);
         public int UpdateDeadlineByResponsibleLastName(string lastName);
         public int UpdateDeadlineByResponsibleTitleAndBirthday();
-        public int UpdateTasksFromOneEmployeeToOther();
+        public int UpdateTasksFromOneEmployeeToOther(long fromEmployee,long toEmployee);
 
         public bool DeleteAllTasks();
         public bool DeleteTaskById(long id);

@@ -72,7 +72,7 @@ namespace SqlDataAccess.Helpers
                     {
                         EmployeeId = reader.GetInt64(22), // "employeeId"
                         TaskId = taskId,
-                        Emloyee = new EmloyeeModel
+                        Employee = new EmloyeeModel
                         {
                             Id = reader.GetInt64(22), // "employeeId"
                             FirstName = reader.GetString(25), // "firstName"
@@ -147,7 +147,7 @@ namespace SqlDataAccess.Helpers
                 {
                     EmployeeId = reader.GetInt64(reader.GetOrdinal("EmployeeId")),
                     TaskId = taskId,
-                    Emloyee = new EmloyeeModel
+                    Employee = new EmloyeeModel
                     {
                         Id = reader.GetInt64(reader.GetOrdinal("EmployeeId")),
                         FirstName = reader.GetString(reader.GetOrdinal("EmployeeFirstName")),

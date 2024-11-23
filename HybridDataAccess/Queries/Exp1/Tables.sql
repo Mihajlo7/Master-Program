@@ -1,5 +1,10 @@
 ﻿DROP TABLE IF EXISTS Task;
 
+DROP PROC IF EXISTS UpdateTasksFromOneEmployeeToAnother;
+DROP PROC IF EXISTS UpdateEmployeePhoneById;
+DROP PROC IF EXISTS UpdateEmployeePhoneByEmail;
+
+
 CREATE TABLE Task(
 	id BIGINT CONSTRAINT task_id PRIMARY KEY,
 	name NVARCHAR(100) NULL,
@@ -11,3 +16,5 @@ CREATE TABLE Task(
 	supervisor NVARCHAR(MAX) NULL,
 	employees NVARCHAR(MAX) NULL
 );
+
+

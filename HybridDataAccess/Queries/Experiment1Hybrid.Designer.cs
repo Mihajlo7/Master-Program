@@ -72,6 +72,35 @@ namespace HybridDataAccess.Queries {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to -- 1. Proecure for update Employee Tasks
+        ///CREATE  PROC UpdateTasksFromOneEmployeeToAnother
+        ///	@FromEmployee BIGINT,
+        ///	@ToEmployee BIGINT
+        ///AS
+        ///BEGIN
+        ///	DECLARE @TaskId BIGINT;
+        ///	
+        ///	
+        ///	DECLARE id_cursor CURSOR FOR 
+        ///	SELECT id FROM Task
+        ///	WHERE id IN (SELECT id FROM Task t1 CROSS APPLY OPENJSON(t1.employees) t1e WHERE JSON_VALUE(t1e.value,&apos;$.Employee.Id&apos;)=@FromEmployee)
+        ///
+        ///	OPEN id_cursor
+        ///	FETCH NEXT FROM id_cursor INTO @TaskId;
+        ///
+        ///	WHILE @@FETCH_STATUS=0
+        ///		BEGIN
+        ///		-- Part 1 --
+        ///			UPDATE Task
+        ///			SET employ [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string Procedures {
+            get {
+                return ResourceManager.GetString("Procedures", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to -- 1. All With Serialization in code
         ///SELECT t.id TaskId,t.name TaskName, t.description TaskDescription, t.priority TaskPriority,t.deadline TaskDeadline,t.status TaskStatus, t.responsible TaskResponsible,t.supervisor TaskSupervisor,t.employees TaskEmployees
         ///FROM dbo.Task t;
@@ -88,6 +117,11 @@ namespace HybridDataAccess.Queries {
         /// <summary>
         ///   Looks up a localized string similar to DROP TABLE IF EXISTS Task;
         ///
+        ///DROP PROC IF EXISTS UpdateTasksFromOneEmployeeToAnother;
+        ///DROP PROC IF EXISTS UpdateEmployeePhoneById;
+        ///DROP PROC IF EXISTS UpdateEmployeePhoneByEmail;
+        ///
+        ///
         ///CREATE TABLE Task(
         ///	id BIGINT CONSTRAINT task_id PRIMARY KEY,
         ///	name NVARCHAR(100) NULL,
@@ -97,9 +131,7 @@ namespace HybridDataAccess.Queries {
         ///	status NVARCHAR(10) DEFAULT &apos;Unknown&apos;,
         ///	responsible NVARCHAR(MAX) NULL,
         ///	supervisor NVARCHAR(MAX) NULL,
-        ///	employees NVARCHAR(MAX) NULL
-        ///);
-        ///.
+        ///	employees NVARCHAR(MAX)  [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string Tables {
             get {

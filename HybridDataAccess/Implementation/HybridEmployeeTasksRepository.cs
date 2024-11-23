@@ -53,8 +53,9 @@ namespace HybridDataAccess.Implementation
 
         public void ExecuteCreationTable()
         {
-            string[] statements = GenerateQueriesFromQuery(Experiment1Hybrid.Tables);
-
+            string[] statements = GenerateQueriesFromQuery(Experiment1Hybrid.Tables)
+                .Concat(GenerateProceduresFromQuery(Experiment1Hybrid.Procedures)).ToArray();
+            
             using var connection = new SqlConnection(_connectionString);
             connection.Open();
             foreach (var statement in statements)
@@ -230,7 +231,7 @@ namespace HybridDataAccess.Implementation
             throw new NotImplementedException();
         }
 
-        public int UpdateTasksFromOneEmployeeToOther()
+        public int UpdateTasksFromOneEmployeeToOther(long fromEmployee, long toEmployee)
         {
             throw new NotImplementedException();
         }

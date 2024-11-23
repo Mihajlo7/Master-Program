@@ -129,12 +129,12 @@ OUTER APPLY OPENJSON(supervisor) WITH(
 )AS  s
 CROSS APPLY OPENJSON(employees) WITH(
 	id BIGINT '$.Emloyee.Id',
-	firstname NVARCHAR(100) '$.Emloyee.FirstName',
-	lastname NVARCHAR(100) '$.Emloyee.LastName',
-	email NVARCHAR(100) '$.Emloyee.Email',
-	birthday NVARCHAR(100) '$.Emloyee.BirthDay',
-	title NVARCHAR(200) '$.Emloyee.Title',
-	phone NVARCHAR(100) '$.Emloyee.Phone'
+	firstname NVARCHAR(100) '$.Employee.FirstName',
+	lastname NVARCHAR(100) '$.Employee.LastName',
+	email NVARCHAR(100) '$.Employee.Email',
+	birthday NVARCHAR(100) '$.Employee.BirthDay',
+	title NVARCHAR(200) '$.Employee.Title',
+	phone NVARCHAR(100) '$.Employee.Phone'
 ) AS em
 WHERE t.priority>@Priority AND t.status IN ('Pending','New');
 -- 6. Get By Deadline and Sorted
@@ -160,13 +160,13 @@ WHERE JSON_VALUE(t.responsible,'$.FirstName') LIKE @FirstName
 AND JSON_VALUE(t.supervisor,'$.BirthDay')<@Birthday;
 
 -- 8. Get Employee And All Tasks
-SELECT JSON_VALUE(em.value,'$.Emloyee.Id') Id,JSON_VALUE(em.value,'$.Emloyee.Email') Email, COUNT (t.id) TaskCount
+SELECT JSON_VALUE(em.value,'$.Employee.Id') Id,JSON_VALUE(em.value,'$.Employee.Email') Email, COUNT (t.id) TaskCount
 FROM dbo.Task t CROSS APPLY OPENJSON(t.employees) em
-GROUP BY JSON_VALUE(em.value,'$.Emloyee.Id') ,JSON_VALUE(em.value,'$.Emloyee.Email');
+GROUP BY JSON_VALUE(em.value,'$.Employee.Id') ,JSON_VALUE(em.value,'$.Employee.Email');
 
 -- 9. Get Employee and their tasks having and order
-SELECT JSON_VALUE(em.value,'$.Emloyee.Id') Id,JSON_VALUE(em.value,'$.Emloyee.Email') Email, COUNT (t.id) TaskCount
+SELECT JSON_VALUE(em.value,'$.Employee.Id') Id,JSON_VALUE(em.value,'$.Employee.Email') Email, COUNT (t.id) TaskCount
 FROM dbo.Task t CROSS APPLY OPENJSON(t.employees) em
-GROUP BY JSON_VALUE(em.value,'$.Emloyee.Id') ,JSON_VALUE(em.value,'$.Emloyee.Email')
+GROUP BY JSON_VALUE(em.value,'$.Employee.Id') ,JSON_VALUE(em.value,'$.Employee.Email')
 HAVING COUNT (t.id)>@NumOfEmployees
 ORDER BY COUNT (t.id) DESC;

@@ -30,5 +30,13 @@ namespace HybridDataAccess
                 .ToArray();
             return queries;
         }
+        protected string[] GenerateProceduresFromQuery(string query)
+        {
+            string[] queries = query.Split('?')
+                .Select(line => line.Trim())
+                .Where(line => !string.IsNullOrWhiteSpace(line))
+                .ToArray();
+            return queries;
+        }
     }
 }

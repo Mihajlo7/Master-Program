@@ -394,12 +394,16 @@ namespace SqlDataAccess.Implementation
             return result;
         }
 
-        public int UpdateTasksFromOneEmployeeToOther()
+        public int UpdateTasksFromOneEmployeeToOther(long fromEmployee, long toEmployee)
         {
             string query = GenerateQueriesFromQuery(Experiment1Sql.Update)[6];
 
             using var connection = new SqlConnection(_connectionString);
             using var command = new SqlCommand(query, connection);
+
+            command.Parameters.Clear();
+            command.Parameters.AddWithValue("@NewId",toEmployee);
+            command.Parameters.AddWithValue("@Id",fromEmployee);
 
             connection.Open();
             var result = command.ExecuteNonQuery();
