@@ -3,6 +3,8 @@ using Core.Models.Exp1;
 using Generator;
 using HybridDataAccess.DataSerializator;
 using Microsoft.IdentityModel.JsonWebTokens;
+using MongoDataAccess;
+using MongoDataAccess.Implementation;
 using SqlDataAccess.Implementation;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -15,8 +17,8 @@ namespace ConsoleProgram
         {
             Console.WriteLine("Start ...");
             var setup = new Experiment1SetupService("hybrid",SetSizeInterface.SMALL_SET,1);
-            setup.RunSetupDatabase();
-            //var res= setup.RunSetupData();
+            //setup.RunSetupDatabase();
+            var res= setup.RunSetupData();
             //setup.RunPopulateData();
             /*
             SqlEmployeeTasksRepository sql = new();
@@ -27,6 +29,10 @@ namespace ConsoleProgram
             var json = handler.SerializeMany<EmployeeWithCountTasksModel>(res);
             Console.WriteLine(json);
             */
+
+            MongoEmployeeTasksRepository mongo = new();
+            mongo.InsertBulk(res);
+            //mongo.DeleteAllTasks();
         }
     }
 }

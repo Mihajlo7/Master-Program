@@ -13,7 +13,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DataAccess", "DataAccess\Da
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SqlDataAccess", "SqlDataAccess\SqlDataAccess.csproj", "{E561B99C-3A69-4943-90A6-F3CF172B7F77}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HybridDataAccess", "HybridDataAccess\HybridDataAccess.csproj", "{9C755D8E-B4BE-4F66-919C-155CE458AC16}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HybridDataAccess", "HybridDataAccess\HybridDataAccess.csproj", "{9C755D8E-B4BE-4F66-919C-155CE458AC16}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MongoDataAccess", "MongoDataAccess\MongoDataAccess.csproj", "{251194A5-EF03-4111-AC19-D00A8CE532AF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -45,6 +47,10 @@ Global
 		{9C755D8E-B4BE-4F66-919C-155CE458AC16}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9C755D8E-B4BE-4F66-919C-155CE458AC16}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9C755D8E-B4BE-4F66-919C-155CE458AC16}.Release|Any CPU.Build.0 = Release|Any CPU
+		{251194A5-EF03-4111-AC19-D00A8CE532AF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{251194A5-EF03-4111-AC19-D00A8CE532AF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{251194A5-EF03-4111-AC19-D00A8CE532AF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{251194A5-EF03-4111-AC19-D00A8CE532AF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
