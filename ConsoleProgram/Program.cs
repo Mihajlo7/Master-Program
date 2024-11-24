@@ -32,9 +32,9 @@ namespace ConsoleProgram
 
             MongoEmployeeTasksRepository mongo = new();
             JsonHandler handler = new JsonHandler();
-            var result = mongo.GetEmployeesWithCountTasksHavingAndOrder(10);
-            var json = handler.SerializeMany<EmployeeWithCountTasksModel>(result);
-            Console.WriteLine(json);
+            var result = mongo.UpdatePhoneById("Novi broj",23);
+            //var json = handler.SerializeMany<EmployeeWithCountTasksModel>(result);
+            Console.WriteLine(result);
             //mongo.DeleteAllTasks();
         }
     }

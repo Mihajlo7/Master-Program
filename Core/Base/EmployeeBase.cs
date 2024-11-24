@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MongoDB.Bson.Serialization.Attributes;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,6 +9,8 @@ namespace Core.Base
 {
     public class EmployeeBase
     {
+        [BsonId]
+        [BsonElement("_id")]
         public long Id { get; set; }
         public string FirstName { get; set; }=string.Empty;
         public string LastName { get; set; } = string.Empty;

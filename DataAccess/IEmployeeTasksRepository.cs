@@ -15,7 +15,7 @@ namespace DataAccess
         public int InsertMany(List<TaskModel> tasks);
         public void InsertBulk(List<TaskModel> tasks);
 
-        public void InsertEmployeeBulk(List<EmloyeeModel> emloyees);
+        public void InsertEmployeeBulk(List<EmployeeModel> emloyees);
 
         // Get all with *
         public List<TaskModel> GetAllTasksWithEmployeesBadWay();

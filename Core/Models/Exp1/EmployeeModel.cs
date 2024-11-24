@@ -7,9 +7,9 @@ using Core.Base;
 
 namespace Core.Models.Exp1
 {
-    public sealed class EmloyeeModel : EmployeeBase
+    public sealed class EmployeeModel : EmployeeBase
     {
-        public EmloyeeModel(EmployeeBase employeeBase)
+        public EmployeeModel(EmployeeBase employeeBase)
         {
             Id = employeeBase.Id;
             Email = employeeBase.Email;
@@ -20,7 +20,7 @@ namespace Core.Models.Exp1
             BirthDay = employeeBase.BirthDay;
         }
 
-        public EmloyeeModel()
+        public EmployeeModel()
         {
             
         }

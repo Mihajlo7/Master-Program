@@ -140,15 +140,15 @@ namespace HybridDataAccess.Implementation
             foreach (var task in tasks)
             {
                 dt.Rows.Add(task.Id, task.Name, task.Description, task.Priority, task.Status, task.Deadline, 
-                    task.Responsible!= null ?_jsonHandler.SerializeOne<EmloyeeModel>(task.Responsible) : (object)DBNull.Value, 
-                    task.Supervisor !=null ? _jsonHandler.SerializeOne<EmloyeeModel>(task.Supervisor) : (object)DBNull.Value, 
+                    task.Responsible!= null ?_jsonHandler.SerializeOne<EmployeeModel>(task.Responsible) : (object)DBNull.Value, 
+                    task.Supervisor !=null ? _jsonHandler.SerializeOne<EmployeeModel>(task.Supervisor) : (object)DBNull.Value, 
                     task.Employees !=null ? _jsonHandler.SerializeMany<EmployeeTaskModel>(task.Employees) :(object)DBNull.Value);
 
             }
             copy.WriteToServer(dt);
         }
 
-        public void InsertEmployeeBulk(List<EmloyeeModel> emloyees)
+        public void InsertEmployeeBulk(List<EmployeeModel> emloyees)
         {
             Console.WriteLine("Insertion Employees is not required!");
         }
@@ -170,8 +170,8 @@ namespace HybridDataAccess.Implementation
                 commandTask.Parameters.AddWithValue("@TaskDeadline", newTask.Deadline);
                 commandTask.Parameters.AddWithValue("@TaskStatus", newTask.Status);
                 commandTask.Parameters.AddWithValue("@TaskPriority", newTask.Priority);
-                commandTask.Parameters.AddWithValue("@Responsible", newTask.Responsible != null ? _jsonHandler.SerializeOne<EmloyeeModel>(newTask.Responsible) : (object)DBNull.Value);
-                commandTask.Parameters.AddWithValue("@Supervisor", newTask.Supervisor != null ? _jsonHandler.SerializeOne<EmloyeeModel>(newTask.Supervisor) : (object)DBNull.Value);
+                commandTask.Parameters.AddWithValue("@Responsible", newTask.Responsible != null ? _jsonHandler.SerializeOne<EmployeeModel>(newTask.Responsible) : (object)DBNull.Value);
+                commandTask.Parameters.AddWithValue("@Supervisor", newTask.Supervisor != null ? _jsonHandler.SerializeOne<EmployeeModel>(newTask.Supervisor) : (object)DBNull.Value);
                 commandTask.Parameters.AddWithValue("@Employees", newTask.Employees != null ? _jsonHandler.SerializeMany<EmployeeTaskModel>(newTask.Employees) : (object)DBNull.Value);
 
                 commandTask.ExecuteNonQuery();
@@ -193,8 +193,8 @@ namespace HybridDataAccess.Implementation
             commandTask.Parameters.AddWithValue("@TaskDeadline", newTask.Deadline);
             commandTask.Parameters.AddWithValue("@TaskStatus", newTask.Status);
             commandTask.Parameters.AddWithValue("@TaskPriority", newTask.Priority);
-            commandTask.Parameters.AddWithValue("@Responsible", newTask.Responsible != null ? _jsonHandler.SerializeOne<EmloyeeModel>(newTask.Responsible) : (object)DBNull.Value);
-            commandTask.Parameters.AddWithValue("@Supervisor", newTask.Supervisor != null ? _jsonHandler.SerializeOne<EmloyeeModel>(newTask.Supervisor) : (object)DBNull.Value);
+            commandTask.Parameters.AddWithValue("@Responsible", newTask.Responsible != null ? _jsonHandler.SerializeOne<EmployeeModel>(newTask.Responsible) : (object)DBNull.Value);
+            commandTask.Parameters.AddWithValue("@Supervisor", newTask.Supervisor != null ? _jsonHandler.SerializeOne<EmployeeModel>(newTask.Supervisor) : (object)DBNull.Value);
             commandTask.Parameters.AddWithValue("@Employees", newTask.Employees != null ? _jsonHandler.SerializeMany<EmployeeTaskModel>(newTask.Employees) : (object)DBNull.Value);
             
             connection.Open();

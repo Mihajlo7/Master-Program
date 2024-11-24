@@ -50,7 +50,7 @@ namespace MongoDataAccess.Implementation
             _collection.BulkWrite(bulkWriteInsert);
         }
 
-        public void InsertEmployeeBulk(List<EmloyeeModel> emloyees)
+        public void InsertEmployeeBulk(List<EmployeeModel> emloyees)
         {
             Console.WriteLine("Insertion Employees is not required!");
         }
@@ -181,22 +181,102 @@ namespace MongoDataAccess.Implementation
 
         public int UpdateExpiredTaskByDeadline()
         {
-            throw new NotImplementedException();
+            var filterForUpdating = Builders<TaskModel>.Filter.And
+                (
+                    Builders<TaskModel>.Filter.Eq(t=>t.Status,"Pending"),
+                    Builders<TaskModel>.Filter.Lt(t=>t.Deadline,DateTime.UtcNow)
+                );
+            var update = Builders<TaskModel>.Update.Set(t => t.Status, "Cancelled");
+
+            var result= _collection.UpdateMany(filterForUpdating, update);
+
+            return (int)result.MatchedCount;
         }
 
         public int UpdatePhoneById(string phone, long id)
         {
-            throw new NotImplementedException();
+            int result= 0;
+
+            // Update Responsible
+            var filterResponsible = Builders<TaskModel>.Filter.Eq(t => t.Responsible.Id, id);
+            var updateResponsible = Builders<TaskModel>.Update.Set(t=>t.Responsible.Phone, phone);
+            result += (int)_collection.UpdateMany(filterResponsible, updateResponsible).MatchedCount;
+            //Update Supervisor
+            var filterSupervisor = Builders<TaskModel>.Filter.And(
+                    Builders<TaskModel>.Filter.Ne(t=>t.Supervisor,null),
+                    Builders<TaskModel>.Filter.Eq(t => t.Supervisor.Id, id)
+                );
+            var updateSupervisor = Builders<TaskModel>.Update.Set(t => t.Supervisor.Phone, phone);
+            result += (int)_collection.UpdateMany(filterSupervisor, updateSupervisor).MatchedCount;
+            // Update Employees
+            var filter = Builders<TaskModel>.Filter.Eq("Employees.Employee._id", id);
+
+            var update = Builders<TaskModel>.Update
+                .Set("Employees.$[elem].Employee.Phone", phone);
+
+            var arrayFilters = new[]
+            {
+                new BsonDocumentArrayFilterDefinition<BsonDocument>(
+                    new BsonDocument("elem.Employee._id", id))
+            };
+
+            var updateOptions = new UpdateOptions { ArrayFilters = arrayFilters };
+
+            result+=(int) _collection.UpdateMany(filter, update, updateOptions).MatchedCount;
+
+            return result;
         }
 
         public int UpdatePhoneByEmail(string phone, string email)
         {
-            throw new NotImplementedException();
+            int result = 0;
+
+            // Update Responsible
+            var filterResponsible = Builders<TaskModel>.Filter.Eq(t => t.Responsible.Email, email);
+            var updateResponsible = Builders<TaskModel>.Update.Set(t => t.Responsible.Phone, phone);
+            result += (int)_collection.UpdateMany(filterResponsible, updateResponsible).MatchedCount;
+            //Update Supervisor
+            var filterSupervisor = Builders<TaskModel>.Filter.And(
+                    Builders<TaskModel>.Filter.Ne(t => t.Supervisor, null),
+                    Builders<TaskModel>.Filter.Eq(t => t.Supervisor.Email, email)
+                );
+            var updateSupervisor = Builders<TaskModel>.Update.Set(t => t.Supervisor.Phone, phone);
+            result += (int)_collection.UpdateMany(filterSupervisor, updateSupervisor).MatchedCount;
+            // Update Employees
+            var filter = Builders<TaskModel>.Filter.Eq("Employees.Employee.Email", email);
+
+            var update = Builders<TaskModel>.Update
+                .Set("Employees.$[elem].Employee.Phone", phone);
+
+            var arrayFilters = new[]
+            {
+                new BsonDocumentArrayFilterDefinition<BsonDocument>(
+                    new BsonDocument("elem.Employee.Email", email))
+            };
+
+            var updateOptions = new UpdateOptions { ArrayFilters = arrayFilters };
+
+            result += (int)_collection.UpdateMany(filter, update, updateOptions).MatchedCount;
+
+            return result;
         }
 
         public int UpdateDeadlineByPriorityByDeadline(int priority, int day)
         {
-            throw new NotImplementedException();
+            var filter = Builders<TaskModel>.Filter.And(
+                    Builders<TaskModel>.Filter.Lt(t=>t.Priority,priority),
+                    Builders<TaskModel>.Filter.Lt(t => t.Deadline, DateTime.UtcNow)
+                );
+            var update = Builders<TaskModel>.Update.Set(
+                "Deadline",
+                new BsonDocument("$dateAdd", new BsonDocument
+                {
+                    { "startDate", "$Deadline" },
+                    { "unit", "day" },
+                    { "amount", 5 }
+                })
+            );
+            return (int) _collection.UpdateMany(filter,update).MatchedCount;
         }
 
         public int UpdateDeadlineByResponsibleLastName(string lastName)
@@ -211,7 +291,52 @@ namespace MongoDataAccess.Implementation
 
         public int UpdateTasksFromOneEmployeeToOther(long fromEmployee, long toEmployee)
         {
-            throw new NotImplementedException();
+           
+            var aggPipeline = new[]
+            {
+                // Unwind the Employees array
+                new BsonDocument("$unwind", "$Employees"),
+
+                // Match the employee with the specified ID
+                new BsonDocument("$match", new BsonDocument
+                {
+                    { "Employees.Employee._id", toEmployee }
+                }),
+
+                // Project the Employee fields into EmployeeModel structure
+                new BsonDocument("$project", new BsonDocument
+                {
+                    { "_id", 0 },  // Exclude the Task _id
+                    { "Id", "$Employees.Employee.Id" },
+                    { "FirstName", "$Employees.Employee.FirstName" },
+                    { "LastName", "$Employees.Employee.LastName" },
+                    { "Email", "$Employees.Employee.Email" },
+                    { "BirthDay", "$Employees.Employee.BirthDay" },
+                    { "Title", "$Employees.Employee.Title" },
+                    { "Phone", "$Employees.Employee.Phone" }
+                }),
+
+                // Limit to one result
+                new BsonDocument("$limit", 1)
+            };
+
+            var employeeToAdd= _collection.Aggregate<EmployeeModel>(aggPipeline).First();
+            // Updating all tasks
+            var filterTasksForAdding = Builders<TaskModel>.Filter.ElemMatch(t => t.Employees, e => e.Employee.Id == fromEmployee);
+            var updateAdded = Builders<TaskModel>.Update.Combine(
+                    Builders<TaskModel>.Update.Push(t => t.Employees, new EmployeeTaskModel
+                    {
+                        Employee = employeeToAdd,
+                    })
+                    //Builders<TaskModel>.Update.PullFilter(t=>t.Employees,e=>e.Employee.Id==fromEmployee)
+            );
+            var resultAdded= _collection.UpdateMany(filterTasksForAdding, updateAdded);
+            //Deleting employees
+            var updateTasksForDeleting = Builders<TaskModel>.Update
+                .PullFilter(t => t.Employees, e => e.Employee.Id == fromEmployee);
+            var resultUpdated = _collection.UpdateMany(filterTasksForAdding, updateTasksForDeleting);
+
+            return (int)resultAdded.MatchedCount+ (int) resultUpdated.MatchedCount;
         }
 
         public bool DeleteAllTasks()

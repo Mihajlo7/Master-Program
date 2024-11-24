@@ -15,7 +15,7 @@ namespace ConsoleProgram.Setup
     {
         private IEmployeeTasksRepository employeeTasksRepository;
 
-        private List<EmloyeeModel> _emloyeeModels=new();
+        private List<EmployeeModel> _emloyeeModels=new();
         private List<TaskModel> _taskModels=new();
 
         private int _min; private int _max;
@@ -70,11 +70,11 @@ namespace ConsoleProgram.Setup
             foreach (var task in tasks)
             {
                 TaskModel taskModel = new TaskModel(task);
-                EmloyeeModel responsible = employees[rnd.Next(employees.Count - 1)];
+                EmployeeModel responsible = employees[rnd.Next(employees.Count - 1)];
                 taskModel.Responsible = responsible;
                 if (rnd.Next(1, 3) == 2)
                 {
-                    EmloyeeModel supervisor = employees[rnd.Next(employees.Count - 1)];
+                    EmployeeModel supervisor = employees[rnd.Next(employees.Count - 1)];
                     taskModel.Supervisor = supervisor;
                 }
                 else
@@ -113,7 +113,7 @@ namespace ConsoleProgram.Setup
 
         protected override void PrepareData()
         {
-            _emloyeeModels = new EmployeeFaker().Generate(_size).Select(e=>new EmloyeeModel(e)).ToList();
+            _emloyeeModels = new EmployeeFaker().Generate(_size).Select(e=>new EmployeeModel(e)).ToList();
             employeeTasksRepository.InsertEmployeeBulk(_emloyeeModels);
         }
     }

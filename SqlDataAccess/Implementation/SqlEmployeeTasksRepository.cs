@@ -87,19 +87,19 @@ namespace SqlDataAccess.Implementation
             copy.WriteToServer(dt2);
         }
 
-        public void InsertEmployeeBulk(List<EmloyeeModel> emloyees)
+        public void InsertEmployeeBulk(List<EmployeeModel> emloyees)
         {
             using var copy= new SqlBulkCopy(_connectionString);
 
             copy.DestinationTableName = "dbo.Employee";
 
-            copy.ColumnMappings.Add(nameof(EmloyeeModel.Id),"id");
-            copy.ColumnMappings.Add(nameof(EmloyeeModel.Email),"email");
-            copy.ColumnMappings.Add(nameof(EmloyeeModel.FirstName),"firstName");
-            copy.ColumnMappings.Add(nameof(EmloyeeModel.LastName),"lastName");
-            copy.ColumnMappings.Add(nameof(EmloyeeModel.BirthDay),"birthDay");
-            copy.ColumnMappings.Add(nameof(EmloyeeModel.Phone),"phone");
-            copy.ColumnMappings.Add(nameof(EmloyeeModel.Title),"title");
+            copy.ColumnMappings.Add(nameof(EmployeeModel.Id),"id");
+            copy.ColumnMappings.Add(nameof(EmployeeModel.Email),"email");
+            copy.ColumnMappings.Add(nameof(EmployeeModel.FirstName),"firstName");
+            copy.ColumnMappings.Add(nameof(EmployeeModel.LastName),"lastName");
+            copy.ColumnMappings.Add(nameof(EmployeeModel.BirthDay),"birthDay");
+            copy.ColumnMappings.Add(nameof(EmployeeModel.Phone),"phone");
+            copy.ColumnMappings.Add(nameof(EmployeeModel.Title),"title");
 
             copy.WriteToServer(ToDataTableEmployee(emloyees));
         }
@@ -129,7 +129,7 @@ namespace SqlDataAccess.Implementation
 
        
         //////////////////
-        private DataTable ToDataTableEmployee(List<EmloyeeModel> emloyees)
+        private DataTable ToDataTableEmployee(List<EmployeeModel> emloyees)
         {
             DataTable dt= new DataTable();
             dt.Columns.Add("id", typeof(long));

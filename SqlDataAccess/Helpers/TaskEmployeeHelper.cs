@@ -32,7 +32,7 @@ namespace SqlDataAccess.Helpers
                         Status = reader.GetString(5), // "status"
 
                         // Mapiranje Responsible (sledeće kolone)
-                        Responsible = new EmloyeeModel
+                        Responsible = new EmployeeModel
                         {
                             Id = reader.GetInt64(6), // "id" Responsible-a
                             FirstName = reader.GetString(9), // "firstName"
@@ -49,7 +49,7 @@ namespace SqlDataAccess.Helpers
                     // Mapiranje Supervisor (ako postoji)
                     if (!reader.IsDBNull(15)) // "id" Supervisor-a
                     {
-                        taskModel.Supervisor = new EmloyeeModel
+                        taskModel.Supervisor = new EmployeeModel
                         {
                             Id = reader.GetInt64(15), // "id"
                             FirstName = reader.GetString(16), // "firstName"
@@ -72,7 +72,7 @@ namespace SqlDataAccess.Helpers
                     {
                         EmployeeId = reader.GetInt64(22), // "employeeId"
                         TaskId = taskId,
-                        Employee = new EmloyeeModel
+                        Employee = new EmployeeModel
                         {
                             Id = reader.GetInt64(22), // "employeeId"
                             FirstName = reader.GetString(25), // "firstName"
@@ -111,7 +111,7 @@ namespace SqlDataAccess.Helpers
                         Priority = reader.GetInt32(reader.GetOrdinal("TaskPriority")),
                         Deadline = reader.GetDateTime(reader.GetOrdinal("TaskDeadline")),
                         Status = reader.GetString(reader.GetOrdinal("TaskStatus")),
-                        Responsible = new EmloyeeModel
+                        Responsible = new EmployeeModel
                         {
                             Id = reader.GetInt64(reader.GetOrdinal("ResponsibleId")),
                             FirstName = reader.GetString(reader.GetOrdinal("ResponsibleFirstName")),
@@ -126,7 +126,7 @@ namespace SqlDataAccess.Helpers
 
                     if (!reader.IsDBNull(reader.GetOrdinal("SupervisorId")))
                     {
-                        taskModel.Supervisor = new EmloyeeModel
+                        taskModel.Supervisor = new EmployeeModel
                         {
                             Id = reader.GetInt64(reader.GetOrdinal("SupervisorId")),
                             FirstName = reader.GetString(reader.GetOrdinal("SupervisorFirstName")),
@@ -147,7 +147,7 @@ namespace SqlDataAccess.Helpers
                 {
                     EmployeeId = reader.GetInt64(reader.GetOrdinal("EmployeeId")),
                     TaskId = taskId,
-                    Employee = new EmloyeeModel
+                    Employee = new EmployeeModel
                     {
                         Id = reader.GetInt64(reader.GetOrdinal("EmployeeId")),
                         FirstName = reader.GetString(reader.GetOrdinal("EmployeeFirstName")),
@@ -179,7 +179,7 @@ namespace SqlDataAccess.Helpers
                     Priority = reader.GetInt32(reader.GetOrdinal("TaskPriority")),
                     Deadline = reader.GetDateTime(reader.GetOrdinal("TaskDeadline")),
                     Status = reader.GetString(reader.GetOrdinal("TaskStatus")),
-                    Responsible = new EmloyeeModel
+                    Responsible = new EmployeeModel
                     {
                         Id = reader.GetInt64(reader.GetOrdinal("ResponsibleId")),
                         Email = reader.GetString(reader.GetOrdinal("ResponsibleEmail")),

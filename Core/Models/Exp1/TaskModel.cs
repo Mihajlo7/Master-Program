@@ -11,8 +11,8 @@ namespace Core.Models.Exp1
     public sealed class TaskModel : TaskBase
     {
 
-        public EmloyeeModel? Responsible { get; set; } = null;
-        public EmloyeeModel? Supervisor { get; set; }= null;
+        public EmployeeModel? Responsible { get; set; } = null;
+        public EmployeeModel? Supervisor { get; set; }= null;
         
         public List<EmployeeTaskModel>? Employees { get; set; }= null;
 
