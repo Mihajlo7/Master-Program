@@ -31,7 +31,10 @@ namespace ConsoleProgram
             */
 
             MongoEmployeeTasksRepository mongo = new();
-            mongo.InsertBulk(res);
+            JsonHandler handler = new JsonHandler();
+            var result = mongo.GetEmployeesWithCountTasksHavingAndOrder(10);
+            var json = handler.SerializeMany<EmployeeWithCountTasksModel>(result);
+            Console.WriteLine(json);
             //mongo.DeleteAllTasks();
         }
     }

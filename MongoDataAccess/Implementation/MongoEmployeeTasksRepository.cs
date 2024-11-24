@@ -1,5 +1,6 @@
 ﻿using Core.Models.Exp1;
 using DataAccess;
+using MongoDB.Bson;
 using MongoDB.Driver;
 using System;
 using System.Collections.Generic;
@@ -51,52 +52,131 @@ namespace MongoDataAccess.Implementation
 
         public void InsertEmployeeBulk(List<EmloyeeModel> emloyees)
         {
-            throw new NotImplementedException();
+            Console.WriteLine("Insertion Employees is not required!");
         }
 
         public List<TaskModel> GetAllTasksWithEmployeesBadWay()
         {
-            throw new NotImplementedException();
+            return _collection.Find(FilterDefinition<TaskModel>.Empty).ToList();
         }
 
         public List<TaskModel> GetAllTasksWithEmployees()
         {
-            throw new NotImplementedException();
+            var projection =
+                Builders<TaskModel>.Projection.Expression(t => new TaskModel
+                {
+                    Id = t.Id,
+                    Name = t.Name,
+                    Deadline = t.Deadline,
+                    Description = t.Description,
+                    Priority = t.Priority,
+                    Status = t.Status,
+                    Responsible = t.Responsible,
+                    Supervisor = t.Supervisor,
+                    Employees = t.Employees,
+                });
+            return _collection.Find(FilterDefinition<TaskModel>.Empty).Project(projection).ToList();
         }
 
         public List<TaskModel> GetAllTasksWithEmployeesSorted()
         {
-            throw new NotImplementedException();
+            return _collection.Find(FilterDefinition<TaskModel>.Empty)
+                .Sort(Builders<TaskModel>.Sort.Ascending(t=>t.Id))
+                .ToList();
         }
 
         public TaskModel GetTaskWithEmployeesById(long id)
         {
-            throw new NotImplementedException();
+            var filter=Builders<TaskModel>.Filter.Eq("_id", id);
+            return _collection.Find(filter).FirstOrDefault();
         }
 
         public List<TaskModel> GetAllTasksWithEmployeesByPriorityAndStatus(int priority)
         {
-            throw new NotImplementedException();
+            var filter = Builders<TaskModel>.Filter.And(
+                    Builders<TaskModel>.Filter.Gt(t=>t.Priority,priority),
+                    Builders<TaskModel>.Filter.In(t => t.Status, new[] {"Pending","New"})
+                );
+            return _collection.Find(filter).ToList();
         }
 
         public List<TaskModel> GetAllTasksByDeadilineAndNotComplited(int day)
         {
-            throw new NotImplementedException();
+            var dateTime= DateTime.UtcNow.AddDays(day);
+            var projection =
+                Builders<TaskModel>.Projection.Expression(t => new TaskModel
+                {
+                    Id = t.Id,
+                    Name = t.Name,
+                    Deadline = t.Deadline,
+                    Description = t.Description,
+                    Priority = t.Priority,
+                    Status = t.Status,
+                    Responsible = t.Responsible,
+                });
+            var filter = Builders<TaskModel>.Filter.And(
+                    Builders<TaskModel>.Filter.Lt(t => t.Deadline, dateTime),
+                    Builders<TaskModel>.Filter.Nin(t => t.Status, new[] {"Complited"})
+                );
+            return _collection.Find(filter).Project(projection).ToList();
         }
 
         public List<TaskModel> GetAllTasksByResponsibleNameAndSupervisorBirthday(string firstname, DateTime birthday)
         {
-            throw new NotImplementedException();
+            var filter = Builders<TaskModel>.Filter.And(
+                    Builders<TaskModel>.Filter.Regex(t=>t.Responsible.FirstName,
+                    new MongoDB.Bson.BsonRegularExpression($"^{firstname}","i"))
+                    ,Builders<TaskModel>.Filter.Exists(t => t.Supervisor, true)
+                    ,Builders<TaskModel>.Filter.Lt(t=>t.Supervisor.BirthDay, birthday)
+                );
+            var projection =
+                Builders<TaskModel>.Projection.Expression(t => new TaskModel
+                {
+                    Id = t.Id,
+                    Name = t.Name,
+                    Deadline = t.Deadline,
+                    Description = t.Description,
+                    Priority = t.Priority,
+                    Status = t.Status
+                });
+            return _collection.Find(filter).Project(projection).ToList();
         }
 
         public List<EmployeeWithCountTasksModel> GetEmployeesWithCountTasks()
         {
-            throw new NotImplementedException();
+            var aggPipeline = new[]
+            {
+                new BsonDocument("$unwind","$Employees"),
+                new BsonDocument("$group",new BsonDocument
+                {
+                    {"_id","$Employees.Employee._id"},
+                    { "Email", new BsonDocument("$first", "$Employees.Employee.Email")},
+                    { "Count", new BsonDocument("$sum", 1) }
+                }),
+            };
+            var result =  _collection.Aggregate<EmployeeWithCountTasksModel>(aggPipeline).ToList();
+            return result;
         }
 
         public List<EmployeeWithCountTasksModel> GetEmployeesWithCountTasksHavingAndOrder(int numOfTasks)
         {
-            throw new NotImplementedException();
+            var aggPipeline = new[]
+            {
+                new BsonDocument("$unwind","$Employees"),
+                new BsonDocument("$group",new BsonDocument
+                {
+                    {"_id","$Employees.Employee._id"},
+                    { "Email", new BsonDocument("$first", "$Employees.Employee.Email")},
+                    { "Count", new BsonDocument("$sum", 1) }
+                }),
+                new BsonDocument ("$match",new BsonDocument
+                {
+                    {"Count",new BsonDocument("$gt",numOfTasks)}
+                }),
+                new BsonDocument("$sort", new BsonDocument("Count",-1))
+            };
+            var result = _collection.Aggregate<EmployeeWithCountTasksModel>(aggPipeline).ToList();
+            return result;
         }
 
         public int UpdateExpiredTaskByDeadline()
