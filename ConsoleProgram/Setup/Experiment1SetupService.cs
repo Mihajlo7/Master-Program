@@ -45,9 +45,9 @@ namespace ConsoleProgram.Setup
         {
             (_min, _max) = size switch
             {
-                SetSizeInterface.SMALL_SET => (5, 15),
-                SetSizeInterface.MEDIUM_SET => (25, 45),
-                SetSizeInterface.LARGE_SET => (40, 70),
+                SetSizeInterface.SMALL_SET => (1, 4),
+                SetSizeInterface.MEDIUM_SET => (1, 4),
+                SetSizeInterface.LARGE_SET => (1, 4),
                 _ => throw new ArgumentOutOfRangeException(nameof(size), "Invalid set size")
             };
         }
