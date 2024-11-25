@@ -281,12 +281,42 @@ namespace MongoDataAccess.Implementation
 
         public int UpdateDeadlineByResponsibleLastName(string lastName)
         {
-            throw new NotImplementedException();
+            var filter = Builders<TaskModel>.Filter.And(
+                    Builders<TaskModel>.Filter.Regex(t=>t.Responsible.LastName,
+                    new MongoDB.Bson.BsonRegularExpression($"^{lastName}", "i"))
+                   
+                );
+            var update = Builders<TaskModel>.Update.Set(
+                "Deadline",
+                new BsonDocument("$dateAdd", new BsonDocument
+                {
+                    { "startDate", "$Deadline" },
+                    { "unit", "day" },
+                    { "amount", 3 }
+                })
+            );
+            return (int)_collection.UpdateMany(filter, update).MatchedCount;
         }
 
         public int UpdateDeadlineByResponsibleTitleAndBirthday()
         {
-            throw new NotImplementedException();
+            var filter = Builders<TaskModel>.Filter.And(
+                    Builders<TaskModel>.Filter.Regex(t => t.Responsible.Title,
+                    new MongoDB.Bson.BsonRegularExpression($"engineer", "i")),
+                    Builders<TaskModel>.Filter.Lt(t=>t.Supervisor.BirthDay,new DateTime(1980,1,1)),
+                    Builders<TaskModel>.Filter.Ne(t=>t.Supervisor,null)
+
+                );
+            var update = Builders<TaskModel>.Update.Set(
+                "Deadline",
+                new BsonDocument("$dateAdd", new BsonDocument
+                {
+                    { "startDate", "$Deadline" },
+                    { "unit", "day" },
+                    { "amount", 3 }
+                })
+            );
+            return (int)_collection.UpdateMany(filter, update).MatchedCount;
         }
 
         public int UpdateTasksFromOneEmployeeToOther(long fromEmployee, long toEmployee)
