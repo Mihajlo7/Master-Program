@@ -7,7 +7,7 @@ using Core.Base;
 
 namespace Core.Models.Exp1
 {
-    public sealed class EmployeeModel : EmployeeBase
+    public  class EmployeeModel : EmployeeBase
     {
         public EmployeeModel(EmployeeBase employeeBase)
         {
