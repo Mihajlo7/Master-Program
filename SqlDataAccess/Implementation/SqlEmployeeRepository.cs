@@ -70,7 +70,27 @@ namespace SqlDataAccess.Implementation
 
         public void InsertManySoftwareDeveloper(List<SoftwareDeveloperModel> softwareDevelopers)
         {
-            throw new NotImplementedException();
+            string employeeQuery = GenerateQueriesFromQuery(Experiment3Sql.Insert)[0];
+            string developerQuery = GenerateQueriesFromQuery(Experiment3Sql.Insert)[1];
+            string softwareDeveloperQuery = GenerateQueriesFromQuery(Experiment3Sql.Insert)[4];
+
+            using var connection = new SqlConnection(_connectionString);
+            var commandEmp = new SqlCommand(employeeQuery, connection);
+            var commandDev = new SqlCommand(developerQuery, connection);
+            var commandSoftDev = new SqlCommand(softwareDeveloperQuery, connection);
+
+            connection.Open();
+
+            foreach(var softwareDeveloper in softwareDevelopers)
+            {
+                commandEmp.ToCommandSoftwareDeveloper(softwareDeveloper);
+                commandDev.ToCommandSoftwareDeveloper(softwareDeveloper);
+                commandSoftDev.ToCommandSoftwareDeveloper(softwareDeveloper);
+
+                commandEmp.ExecuteNonQuery();
+                commandDev.ExecuteNonQuery();
+                commandSoftDev.ExecuteNonQuery();
+            }
         }
 
         public void InsertSoftwareDeveloper(SoftwareDeveloperModel softwareDeveloper)
@@ -88,6 +108,7 @@ namespace SqlDataAccess.Implementation
             commandDev.ToCommandSoftwareDeveloper(softwareDeveloper);
             commandSoftDev.ToCommandSoftwareDeveloper(softwareDeveloper);
 
+            connection.Open();
             commandEmp.ExecuteNonQuery();
             commandDev.ExecuteNonQuery();
             commandSoftDev.ExecuteNonQuery();

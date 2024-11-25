@@ -29,8 +29,8 @@ namespace ConsoleProgram
             };
 
             var sql = new SqlEmployeeRepository();
-            sql.InsertManager(manager);
-            //sql.ExecuteCreationTable();
+            //sql.InsertManager(manager);
+            sql.ExecuteCreationTable();
         }
     }
 }
