@@ -1,5 +1,6 @@
 ﻿using ConsoleProgram.Setup;
 using Core.Models.Exp1;
+using Core.Models.Exp3;
 using Generator;
 using HybridDataAccess.DataSerializator;
 using Microsoft.IdentityModel.JsonWebTokens;
@@ -15,27 +16,21 @@ namespace ConsoleProgram
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Start ...");
-            var setup = new Experiment1SetupService("hybrid",SetSizeInterface.SMALL_SET,1);
-            //setup.RunSetupDatabase();
-            var res= setup.RunSetupData();
-            //setup.RunPopulateData();
-            /*
-            SqlEmployeeTasksRepository sql = new();
-            JsonHandler handler = new JsonHandler();
-            var res =
-                sql.GetEmployeesWithCountTasksHavingAndOrder(12);
-                //sql.GetTaskWithEmployeesById(10);
-            var json = handler.SerializeMany<EmployeeWithCountTasksModel>(res);
-            Console.WriteLine(json);
-            */
+            var manager= new ManagerModel()
+            {
+                Id=1,
+                FirstName="A",
+                LastName="B",
+                BirthDay=DateTime.Now,
+                Email="C",
+                Phone="D",
+                RealisedProject=2,
+                Method="E"
+            };
 
-            MongoEmployeeTasksRepository mongo = new();
-            JsonHandler handler = new JsonHandler();
-            var result = mongo.UpdatePhoneById("Novi broj",23);
-            //var json = handler.SerializeMany<EmployeeWithCountTasksModel>(result);
-            Console.WriteLine(result);
-            //mongo.DeleteAllTasks();
+            var sql = new SqlEmployeeRepository();
+            sql.InsertManager(manager);
+            //sql.ExecuteCreationTable();
         }
     }
 }

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Core.Models.Exp3
 {
-    public sealed class SoftwareDeveloper : DeveloperModel
+    public sealed class SoftwareDeveloperModel : DeveloperModel
     {
         public string ProgrammingLanguage { get; set; }= string .Empty;
         public string IDE {  get; set; }=string .Empty;

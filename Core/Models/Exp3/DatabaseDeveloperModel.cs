@@ -10,6 +10,6 @@ namespace Core.Models.Exp3
     {
         public string Provider {  get; set; }=string.Empty;
         public bool IsAdmin { get; set; }
-        public bool KnownNoSql { get; set; }
+        public bool KnowNoSql { get; set; }
     }
 }
