@@ -35,6 +35,135 @@ namespace SqlDataAccess.Implementation
             }
         }
 
+        public List<EmployeeModel3> GetAllEmployees()
+        {
+            string query = GenerateQueriesFromQuery(Experiment3Sql.Select)[0];
+
+            using var connection = new SqlConnection(_connectionString);
+            using var command = new SqlCommand(query, connection);
+
+            connection.Open();
+            using var reader= command.ExecuteReader();
+            return reader.GetEmployees3();
+        }
+
+        public List<ManagerModel> GetAllManagers()
+        {
+            string query = GenerateQueriesFromQuery(Experiment3Sql.Select)[1];
+
+            using var connection = new SqlConnection(_connectionString);
+            using var command = new SqlCommand(query, connection);
+
+            connection.Open();
+            using var reader = command.ExecuteReader();
+            return reader.GetManagers();
+        }
+
+        public List<ManagerAggModel> GetAllMethodsWithCountManagers()
+        {
+            string query = GenerateQueriesFromQuery(Experiment3Sql.Select)[7];
+
+            using var connection = new SqlConnection(_connectionString);
+            using var command = new SqlCommand(query, connection);
+
+            connection.Open();
+            using var reader = command.ExecuteReader();
+            var result= new List<ManagerAggModel>();
+            while (reader.Read())
+            {
+                var res= new ManagerAggModel()
+                {
+                    Method = reader.GetString(1),
+                    ManagerCount=reader.GetInt32(2)
+                };
+                result.Add(res);
+            }
+            return result;
+        }
+
+        public List<SoftwareDeveloperModel> GetAllSoftwareDevelopers()
+        {
+            string query = GenerateQueriesFromQuery(Experiment3Sql.Select)[2];
+
+            using var connection = new SqlConnection(_connectionString);
+            using var command = new SqlCommand(query, connection);
+
+            connection.Open();
+            using var reader = command.ExecuteReader();
+            return reader.GetSoftwareDevelopers();
+        }
+
+        public EmployeeModel3 GetEmployeeById(long id)
+        {
+            string query = GenerateQueriesFromQuery(Experiment3Sql.Select)[3];
+
+            using var connection = new SqlConnection(_connectionString);
+            using var command = new SqlCommand(query, connection);
+            command.Parameters.AddWithValue("@Id", id);
+            connection.Open();
+            using var reader = command.ExecuteReader();
+            return reader.GetEmployees3().First();
+        }
+
+        public List<ManagerModel> GetManagersYoungerThan30AndAgileMethodSorted()
+        {
+            string query = GenerateQueriesFromQuery(Experiment3Sql.Select)[4];
+
+            using var connection = new SqlConnection(_connectionString);
+            using var command = new SqlCommand(query, connection);
+
+            connection.Open();
+            using var reader = command.ExecuteReader();
+            return reader.GetManagers();
+        }
+
+        public List<SoftwareDevelopersAggModel> GetProgrammingLanguagesCountDevelopersAndAvgYearsExp()
+        {
+            string query = GenerateQueriesFromQuery(Experiment3Sql.Select)[7];
+
+            using var connection = new SqlConnection(_connectionString);
+            using var command = new SqlCommand(query, connection);
+
+            connection.Open();
+            using var reader = command.ExecuteReader();
+            var list = new List<SoftwareDevelopersAggModel>();
+            while (reader.Read())
+            {
+                var result= new SoftwareDevelopersAggModel() 
+                { 
+                    ProgrammingLanguage=reader.GetString(0),
+                    DeveloperCount=reader.GetInt32(1),
+                    AvgExperience=reader.GetDouble(2),
+                };
+                list.Add(result);
+            }
+            return list;
+        }
+
+        public List<SoftwareDeveloperModel> GetSoftwareDevelopersOlderThan25AndMediorAndJavaAndC()
+        {
+            string query = GenerateQueriesFromQuery(Experiment3Sql.Select)[6];
+
+            using var connection = new SqlConnection(_connectionString);
+            using var command = new SqlCommand(query, connection);
+
+            connection.Open();
+            using var reader = command.ExecuteReader();
+            return reader.GetSoftwareDevelopers();
+        }
+
+        public List<SoftwareDeveloperModel> GetSoftwareDevelopersRemoteAndUseVisualStudio()
+        {
+            string query = GenerateQueriesFromQuery(Experiment3Sql.Select)[5];
+
+            using var connection = new SqlConnection(_connectionString);
+            using var command = new SqlCommand(query, connection);
+
+            connection.Open();
+            using var reader = command.ExecuteReader();
+            return reader.GetSoftwareDevelopers();
+        }
+
         public void InsertBulkManager(List<ManagerModel> managers)
         {
             using var bulkCopy = new SqlBulkCopy(_connectionString);

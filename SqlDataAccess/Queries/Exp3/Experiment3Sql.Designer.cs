@@ -82,12 +82,29 @@ namespace SqlDataAccess.Queries.Exp3 {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to DROP TABLE IF EXISTS Employee;
+        ///   Looks up a localized string similar to SELECT * FROM Employee;
+        ///
+        ///SELECT e.id, e.firstname, e.lastname, e.email, e.birthday, e.title, e.phone, m.department, m.realisedProject, m.method 
+        ///FROM Employee e INNER JOIN Manager m ON e.id = m.id;
+        ///
+        ///SELECT e.id, e.firstname, e.lastname, e.email, e.birthday, e.title, e.phone, d.seniority, d.yearsOfExperience, d.isRemote, sd.programmingLanguage, sd.ide, sd.isFullStack 
+        ///FROM Employee e INNER JOIN Developer d ON e.id = d.id INNER JOIN SoftwareDeveloper sd ON d.id = sd.id;
+        ///
+        ///SELECT * FROM Employee WHERE i [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string Select {
+            get {
+                return ResourceManager.GetString("Select", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to DROP TABLE IF EXISTS SoftwareDeveloper;
+        ///DROP TABLE IF EXISTS DatabaseDeveloper;
+        ///DROP TABLE IF EXISTS Developer;
         ///DROP TABLE IF EXISTS Intern;
         ///DROP TABLE IF EXISTS Manager;
-        ///DROP TABLE IF EXISTS Developer;
-        ///DROP TABLE IF EXISTS SoftwareDeveloper;
-        ///DROP TABLE IF EXISTS DatabaseDeveloper;
+        ///DROP TABLE IF EXISTS Employee;
         ///
         ///CREATE TABLE Employee (
         ///    id BIGINT PRIMARY KEY,
@@ -105,6 +122,29 @@ namespace SqlDataAccess.Queries.Exp3 {
         internal static string Tables {
             get {
                 return ResourceManager.GetString("Tables", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to UPDATE Employee SET phone = @Phone WHERE id = @EmployeeId;
+        ///
+        ///UPDATE Manager SET method = @Method WHERE id = @ManagerId;
+        ///
+        ///UPDATE SoftwareDeveloper SET isFullStack = 1 WHERE id = @SoftwareDeveloperId;
+        ///
+        ///UPDATE Manager 
+        ///SET method = &apos;Lean&apos;
+        ///WHERE department IN (&apos;IT&apos;,&apos;Logistics&apos;)
+        ///AND id IN (SELECT id FROM Employee WHERE DATEDIFF(YEAR, e.birthday, GETDATE()) BETWEEN 40 AND 50);
+        ///
+        ///UPDATE SoftwareDeveloper
+        ///SET isFullStack = 1
+        ///WHERE id IN(SELECT id FROM Developer WHERE yearsOfExperience &gt; 10)
+        ///AND id IN(SE [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string Update {
+            get {
+                return ResourceManager.GetString("Update", resourceCulture);
             }
         }
     }
