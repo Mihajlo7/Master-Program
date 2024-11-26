@@ -2,6 +2,7 @@
 using Microsoft.Data.SqlClient;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Numerics;
 using System.Runtime.CompilerServices;
@@ -51,6 +52,87 @@ namespace SqlDataAccess.Helpers
             command.Parameters.AddWithValue("@IsFullStack", softwareDeveloperModel.IsFullStack);
 
             return command;
+        }
+
+        public static DataTable CreateDataTableFromManagaers(this List<ManagerModel> managers)
+        {
+            var managerTable = new DataTable("Manager");
+            managerTable.Columns.Add("id", typeof(long));
+            managerTable.Columns.Add("department", typeof(string));
+            managerTable.Columns.Add("realisedProject", typeof(int));
+            managerTable.Columns.Add("method", typeof(string));
+
+            foreach (var manager in managers)
+            {
+                managerTable.Rows.Add(
+                     manager.Id,
+                     manager.Department,
+                     manager.RealisedProject,
+                     manager.Method);
+            }
+            return managerTable;
+        }
+
+        public static DataTable CreateDataTableFromEmployees(this List<EmployeeModel3> employees)
+        {
+            var employeeTable = new DataTable("Employee");
+            employeeTable.Columns.Add("id", typeof(long));
+            employeeTable.Columns.Add("firstname", typeof(string));
+            employeeTable.Columns.Add("lastname", typeof(string));
+            employeeTable.Columns.Add("email", typeof(string));
+            employeeTable.Columns.Add("birthday", typeof(DateTime));
+            employeeTable.Columns.Add("title", typeof(string));
+            employeeTable.Columns.Add("phone", typeof(string));
+
+            foreach(var manager in employees)
+            {
+                employeeTable.Rows.Add(
+                   manager.Id,
+                   manager.FirstName,
+                   manager.LastName,
+                   manager.Email,
+                   manager.BirthDay,
+                   manager.Title,
+                   manager.Phone);
+            }
+            return employeeTable;
+        }
+        public static DataTable CreateDataTableFromDevelopers(this List<DeveloperModel> developers)
+        {
+            var developerTable = new DataTable("Developer");
+            developerTable.Columns.Add("id", typeof(long));
+            developerTable.Columns.Add("seniority", typeof(string));
+            developerTable.Columns.Add("yearsOfExperience", typeof(int));
+            developerTable.Columns.Add("isRemote", typeof(bool));
+
+            foreach(var developer in developers)
+            {
+                developerTable.Rows.Add(
+                    developer.Id,
+                    developer.Seniority,
+                    developer.YearsOfExperience,
+                    developer.IsRemote);
+            }
+            return developerTable;
+        }
+
+        public static DataTable CreateDataTableFromSoftwareDevelopers(this List<SoftwareDeveloperModel> softwareDevelopers)
+        {
+            var softwareDeveloperTable = new DataTable("SoftwareDeveloper");
+            softwareDeveloperTable.Columns.Add("id", typeof(long));
+            softwareDeveloperTable.Columns.Add("programmingLanguage", typeof(string));
+            softwareDeveloperTable.Columns.Add("ide", typeof(string));
+            softwareDeveloperTable.Columns.Add("isFullStack", typeof(bool));
+
+            foreach (var softwareDeveloper in softwareDevelopers)
+            {
+                softwareDeveloperTable.Rows.Add(
+                   softwareDeveloper.Id,
+                   softwareDeveloper.ProgrammingLanguage,
+                   softwareDeveloper.IDE,
+                   softwareDeveloper.IsFullStack);
+            }
+            return softwareDeveloperTable;
         }
     }
 }

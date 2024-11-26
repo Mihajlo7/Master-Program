@@ -37,12 +37,36 @@ namespace SqlDataAccess.Implementation
 
         public void InsertBulkManager(List<ManagerModel> managers)
         {
-            throw new NotImplementedException();
+            using var bulkCopy = new SqlBulkCopy(_connectionString);
+            bulkCopy.DestinationTableName = "Employee";
+            bulkCopy.ColumnMappings.Add("id", "id");
+            bulkCopy.ColumnMappings.Add("firstname", "firstname");
+            bulkCopy.ColumnMappings.Add("lastname", "lastname");
+            bulkCopy.ColumnMappings.Add("email", "email");
+            bulkCopy.ColumnMappings.Add("birthday", "birthday");
+            bulkCopy.ColumnMappings.Add("title", "title");
+            bulkCopy.ColumnMappings.Add("phone", "phone");
+            var employees= managers.Select(m=> (EmployeeModel3) m).ToList();
+            bulkCopy.WriteToServer(employees.CreateDataTableFromEmployees());
+
+            using var bulkCopyM= new SqlBulkCopy(_connectionString);
+            bulkCopyM.DestinationTableName = "Manager";
+            bulkCopyM.ColumnMappings.Add("id", "id");
+            bulkCopyM.ColumnMappings.Add("department", "department");
+            bulkCopyM.ColumnMappings.Add("realisedProject", "realisedProject");
+            bulkCopyM.ColumnMappings.Add("method", "method");
+
+            bulkCopyM.WriteToServer(managers.CreateDataTableFromManagaers());
         }
 
         public void InsertBulkSoftwareDeveloper(List<SoftwareDeveloperModel> softwareDevelopers)
         {
-            throw new NotImplementedException();
+            var employees=softwareDevelopers.Select(s=>(EmployeeModel3)s).ToList();
+            var developers = softwareDevelopers.Select(d=>(DeveloperModel)d).ToList();
+
+            InsertBulkPriv("Employee", employees.CreateDataTableFromEmployees());
+            InsertBulkPriv("Developer", developers.CreateDataTableFromDevelopers());
+            InsertBulkPriv("SoftwareDeveloper",softwareDevelopers.CreateDataTableFromSoftwareDevelopers());
         }
 
         public void InsertManager(ManagerModel manager)
@@ -65,7 +89,22 @@ namespace SqlDataAccess.Implementation
 
         public void InsertManyManager(List<ManagerModel> managers)
         {
-            throw new NotImplementedException();
+            string employeeQuery = GenerateQueriesFromQuery(Experiment3Sql.Insert)[0];
+            string managerQuery = GenerateQueriesFromQuery(Experiment3Sql.Insert)[3];
+
+            using var connection = new SqlConnection(_connectionString);
+            var commandEmp = new SqlCommand(employeeQuery, connection);
+            var commandManager = new SqlCommand(managerQuery, connection);
+
+            connection.Open();
+            foreach (var manager in managers)
+            {
+                commandManager.ToCommandManagerEmployeer(manager);
+                commandEmp.ToCommandManagerEmployeer(manager);
+
+                commandEmp.ExecuteNonQuery();
+                commandManager.ExecuteNonQuery();
+            }
         }
 
         public void InsertManySoftwareDeveloper(List<SoftwareDeveloperModel> softwareDevelopers)
