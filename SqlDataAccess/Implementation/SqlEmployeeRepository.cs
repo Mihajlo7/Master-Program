@@ -73,8 +73,8 @@ namespace SqlDataAccess.Implementation
             {
                 var res= new ManagerAggModel()
                 {
-                    Method = reader.GetString(1),
-                    ManagerCount=reader.GetInt32(2)
+                    Method = reader.GetString(0),
+                    ManagerCount=reader.GetInt32(1)
                 };
                 result.Add(res);
             }
@@ -99,7 +99,7 @@ namespace SqlDataAccess.Implementation
 
             using var connection = new SqlConnection(_connectionString);
             using var command = new SqlCommand(query, connection);
-            command.Parameters.AddWithValue("@Id", id);
+            command.Parameters.AddWithValue("@EmployeeId", id);
             connection.Open();
             using var reader = command.ExecuteReader();
             return reader.GetEmployees3().First();
@@ -119,7 +119,7 @@ namespace SqlDataAccess.Implementation
 
         public List<SoftwareDevelopersAggModel> GetProgrammingLanguagesCountDevelopersAndAvgYearsExp()
         {
-            string query = GenerateQueriesFromQuery(Experiment3Sql.Select)[7];
+            string query = GenerateQueriesFromQuery(Experiment3Sql.Select)[8];
 
             using var connection = new SqlConnection(_connectionString);
             using var command = new SqlCommand(query, connection);
@@ -129,11 +129,11 @@ namespace SqlDataAccess.Implementation
             var list = new List<SoftwareDevelopersAggModel>();
             while (reader.Read())
             {
-                var result= new SoftwareDevelopersAggModel() 
-                { 
-                    ProgrammingLanguage=reader.GetString(0),
-                    DeveloperCount=reader.GetInt32(1),
-                    AvgExperience=reader.GetDouble(2),
+                var result = new SoftwareDevelopersAggModel
+                {
+                    ProgrammingLanguage = reader.GetString(reader.GetOrdinal("programmingLanguage")), // Preporuka: Korišćenje naziva kolona
+                    DeveloperCount = reader.GetInt32(reader.GetOrdinal("DeveloperCount")),
+                    AvgExperience = reader.GetInt32(reader.GetOrdinal("AvgExperience"))
                 };
                 list.Add(result);
             }

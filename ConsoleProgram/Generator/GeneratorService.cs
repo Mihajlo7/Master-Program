@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Core.Models.Exp1;
+using Core.Models.Exp3;
 using Generator;
 
 namespace ConsoleProgram.Generator
@@ -56,6 +57,11 @@ namespace ConsoleProgram.Generator
             }
             //_taskModels = taskModels;
             return (employees,taskModels);
+        }
+
+        public (List<ManagerModel>,List<SoftwareDeveloperModel>) GenerateDataManagersAndDevelopers(int size)
+        {
+            return(new ManagerFaker().Generate(size / 2),new SoftwareDeveloperFaker().Generate(size / 2));
         }
     }
 }

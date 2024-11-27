@@ -1,4 +1,5 @@
-﻿using ConsoleProgram.Setup;
+﻿using ConsoleProgram.Generator;
+using ConsoleProgram.Setup;
 using Core.Models.Exp1;
 using Core.Models.Exp3;
 using Generator;
@@ -16,21 +17,19 @@ namespace ConsoleProgram
     {
         static void Main(string[] args)
         {
-            var manager= new ManagerModel()
-            {
-                Id=1,
-                FirstName="A",
-                LastName="B",
-                BirthDay=DateTime.Now,
-                Email="C",
-                Phone="D",
-                RealisedProject=2,
-                Method="E"
-            };
-
-            var sql = new SqlEmployeeRepository();
-            //sql.InsertManager(manager);
-            sql.ExecuteCreationTable();
+            GeneratorService generatorService = new GeneratorService();
+            JsonHandler jsonHandler = new JsonHandler();
+            SqlEmployeeRepository sqlEmployeeRepository = new SqlEmployeeRepository();
+            /*
+            Console.WriteLine("Creating tables ...");
+            sqlEmployeeRepository.ExecuteCreationTable();
+            Console.WriteLine("Generating data ...");
+            var (menagers, developers) = generatorService.GenerateDataManagersAndDevelopers(5000);
+            */
+            Console.WriteLine("Reading data ...");
+            string json = jsonHandler.SerializeMany<SoftwareDevelopersAggModel>
+                (sqlEmployeeRepository.GetProgrammingLanguagesCountDevelopersAndAvgYearsExp());
+            Console.WriteLine(json);
         }
     }
 }

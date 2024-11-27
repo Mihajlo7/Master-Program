@@ -10,7 +10,7 @@ namespace Generator
 {
     public sealed class SoftwareDeveloperFaker : Faker<SoftwareDeveloperModel>
     {
-        private static long id = 1;
+        private static long id = 250_001;
         private string[] seniority = { "Junior", "Medior", "Senior" };
         private string[] pls = {"C#","Java","PHP","Python","Ruby","Go" };
         private string[] ides = {"Visual Studio","Visual Studio Code","Intelij","Web Storm","Eclipse"};

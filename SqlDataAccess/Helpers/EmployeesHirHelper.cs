@@ -122,7 +122,7 @@ namespace SqlDataAccess.Helpers
             softwareDeveloperTable.Columns.Add("id", typeof(long));
             softwareDeveloperTable.Columns.Add("programmingLanguage", typeof(string));
             softwareDeveloperTable.Columns.Add("ide", typeof(string));
-            softwareDeveloperTable.Columns.Add("isFullStack", typeof(bool));
+            softwareDeveloperTable.Columns.Add("isfullstack", typeof(bool));
 
             foreach (var softwareDeveloper in softwareDevelopers)
             {
