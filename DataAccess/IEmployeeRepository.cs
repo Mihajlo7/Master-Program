@@ -38,10 +38,16 @@ namespace DataAccess
         public List<SoftwareDevelopersAggModel> GetProgrammingLanguagesCountDevelopersAndAvgYearsExp();
 
         // Update phone po Id
+        public void UpdatePhoneById(long id,string newPhone);
         // Update method po Id
+        public void UpdateMethodById(long id,string newMethod);
         // Update fullstack po Id
+        public void UpdateFullstackById(long id);
         // Update method na Lean gde su izmedju 40 i 50 g i rade u It ili Logistici
+        public void UpdateMethodByYearsAndDepartment();
         // Update fullstack true gde su godina experience veca 10 i gde titula sadryi engineer
+        public void UpdateFullStackByExpYearsAndTitle();
         // Update title dodaj na pocetak title Principe ako je fullstack i ako je senior i radi duye od 20 godina
+        public void UpdateTitleByFullstackAndSeniorityAndYearsExp();
     }
 }

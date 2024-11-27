@@ -281,5 +281,72 @@ namespace SqlDataAccess.Implementation
             commandDev.ExecuteNonQuery();
             commandSoftDev.ExecuteNonQuery();
         }
+
+        public void UpdateFullStackByExpYearsAndTitle()
+        {
+            string query = GenerateQueriesFromQuery(Experiment3Sql.Update)[4];
+
+            using var connection = new SqlConnection(_connectionString);
+            using var command = new SqlCommand(query, connection);
+            connection.Open();
+            command.ExecuteNonQuery();
+        }
+
+        public void UpdateFullstackById(long id)
+        {
+            string query = GenerateQueriesFromQuery(Experiment3Sql.Update)[2];
+
+            using var connection = new SqlConnection(_connectionString);
+            using var command = new SqlCommand(query, connection);
+            command.Parameters.AddWithValue("@SoftwareDeveloperId", id);
+            connection.Open();
+            command.ExecuteNonQuery();
+        }
+
+        public void UpdateMethodById(long id,string newMethod)
+        {
+            string query = GenerateQueriesFromQuery(Experiment3Sql.Update)[1];
+
+            using var connection = new SqlConnection(_connectionString);
+            using var command = new SqlCommand(query, connection);
+            command.Parameters.AddWithValue("@ManagerId", id);
+            command.Parameters.AddWithValue("@Method", newMethod);
+
+            connection.Open();
+            command.ExecuteNonQuery();
+        }
+
+        public void UpdateMethodByYearsAndDepartment()
+        {
+            string query = GenerateQueriesFromQuery(Experiment3Sql.Update)[3];
+
+            using var connection = new SqlConnection(_connectionString);
+            using var command = new SqlCommand(query, connection);
+            connection.Open();
+            command.ExecuteNonQuery();
+        }
+
+        public void UpdatePhoneById(long id,string newPhone)
+        {
+            string query = GenerateQueriesFromQuery(Experiment3Sql.Update)[0];
+
+            using var connection = new SqlConnection(_connectionString);
+            using var command = new SqlCommand(query,connection);
+            command.Parameters.AddWithValue("@EmployeeId",id);
+            command.Parameters.AddWithValue("@Phone",newPhone);
+
+            connection.Open();
+            command.ExecuteNonQuery();
+        }
+
+        public void UpdateTitleByFullstackAndSeniorityAndYearsExp()
+        {
+            string query = GenerateQueriesFromQuery(Experiment3Sql.Update)[5];
+
+            using var connection = new SqlConnection(_connectionString);
+            using var command = new SqlCommand(query, connection);
+            connection.Open();
+            command.ExecuteNonQuery();
+        }
     }
 }
