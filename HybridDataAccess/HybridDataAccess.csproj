@@ -15,6 +15,11 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Update="Queries\Exp3\Experiment3Hybrid.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Experiment3Hybrid.resx</DependentUpon>
+    </Compile>
     <Compile Update="Queries\Experiment1Hybrid.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
@@ -23,6 +28,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <EmbeddedResource Update="Queries\Exp3\Experiment3Hybrid.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Experiment3Hybrid.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
     <EmbeddedResource Update="Queries\Experiment1Hybrid.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Experiment1Hybrid.Designer.cs</LastGenOutput>

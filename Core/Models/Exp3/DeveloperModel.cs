@@ -9,8 +9,8 @@ namespace Core.Models.Exp3
 {
     public class DeveloperModel : EmployeeModel3
     {
-        public string Seniority { get; set; }= string.Empty;
-        public int YearsOfExperience { get; set; }
-        public bool IsRemote { get; set; }
+        public string? Seniority { get; set; }= null;
+        public int? YearsOfExperience { get; set; } = null;
+        public bool? IsRemote { get; set; } = null;
     }
 }
