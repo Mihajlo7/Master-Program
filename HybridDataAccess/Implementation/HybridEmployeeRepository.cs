@@ -37,12 +37,26 @@ namespace HybridDataAccess.Implementation
 
         public List<EmployeeModel3> GetAllEmployees()
         {
-            throw new NotImplementedException();
+            string query = GenerateQueriesFromQuery(Experiment3Hybrid.Select)[0];
+
+            using var connection= new SqlConnection(_connectionString);
+            using var command = new SqlCommand(query, connection);
+
+            connection.Open();
+            using var reader = command.ExecuteReader();
+            return reader.GetEmployees3();
         }
 
         public List<ManagerModel> GetAllManagers()
         {
-            throw new NotImplementedException();
+            string query = GenerateQueriesFromQuery(Experiment3Hybrid.Select)[1];
+
+            using var connection = new SqlConnection(_connectionString);
+            using var command = new SqlCommand(query, connection);
+
+            connection.Open();
+            using var reader = command.ExecuteReader();
+            return reader.GetManagers();
         }
 
         public List<ManagerAggModel> GetAllMethodsWithCountManagers()
@@ -52,7 +66,14 @@ namespace HybridDataAccess.Implementation
 
         public List<SoftwareDeveloperModel> GetAllSoftwareDevelopers()
         {
-            throw new NotImplementedException();
+            string query = GenerateQueriesFromQuery(Experiment3Hybrid.Select)[2];
+
+            using var connection = new SqlConnection(_connectionString);
+            using var command = new SqlCommand(query, connection);
+
+            connection.Open();
+            using var reader = command.ExecuteReader();
+            return reader.GetSoftwareDevelopers();
         }
 
         public EmployeeModel3 GetEmployeeById(long id)
@@ -103,7 +124,7 @@ namespace HybridDataAccess.Implementation
                    manager.Title,
                    manager.Phone,
                    new JsonHandler().SerializeOne(
-                       new ManagerModel() { Department=manager.Department,Method=manager.Method,RealisedProject=manager.RealisedProject}));
+                       new ManagerModel() {Id=manager.Id, Department=manager.Department,Method=manager.Method,RealisedProject=manager.RealisedProject}));
             }
 
             InsertBulkPriv("Employee",employeeTable);
@@ -147,7 +168,7 @@ namespace HybridDataAccess.Implementation
                     developer.Seniority,
                     developer.YearsOfExperience,
                     developer.IsRemote,
-                    new JsonHandler().SerializeOne(new SoftwareDeveloperModel() { ProgrammingLanguage=developer.ProgrammingLanguage,IDE=developer.IDE,IsFullStack=developer.IsFullStack}));
+                    new JsonHandler().SerializeOne(new SoftwareDeveloperModel() {Id=developer.Id,ProgrammingLanguage=developer.ProgrammingLanguage,IDE=developer.IDE,IsFullStack=developer.IsFullStack}));
             }
 
             InsertBulkPriv("Employee", employeeTable);

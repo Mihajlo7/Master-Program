@@ -5,7 +5,8 @@ FROM Employee e CROSS APPLY OPENJSON(manager) WITH(
 	Department NVARCHAR(100) '$.Department',
 	RealisedProject INT '$.RealisedProject',
 	Method NVARCHAR(20) '$.Method'
-)AS m;
+)AS m
+WHERE manager is not null;
 
 SELECT e.id, e.firstname, e.lastname, e.email, e.birthday, e.title, e.phone, d.seniority, d.yearsOfExperience, d.isRemote, sd.programmingLanguage, sd.ide, sd.isFullStack 
 FROM Employee e 

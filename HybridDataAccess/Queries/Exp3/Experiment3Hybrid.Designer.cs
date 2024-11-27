@@ -74,6 +74,25 @@ namespace HybridDataAccess.Queries.Exp3 {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to SELECT * FROM Employee;
+        ///
+        ///SELECT  e.id, e.firstname, e.lastname, e.email, e.birthday, e.title, e.phone, m.department, m.realisedProject, m.method
+        ///FROM Employee e CROSS APPLY OPENJSON(manager) WITH(
+        ///	Department NVARCHAR(100) &apos;$.Department&apos;,
+        ///	RealisedProject INT &apos;$.RealisedProject&apos;,
+        ///	Method NVARCHAR(20) &apos;$.Method&apos;
+        ///)AS m
+        ///WHERE manager is not null;
+        ///
+        ///SELECT e.id, e.firstname, e.lastname, e.email, e.birthday, e.title, e.phone, d.seniority, d.yearsOfExperience, d.isRemote, sd.programmingLanguage, sd.ide,  [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string Select {
+            get {
+                return ResourceManager.GetString("Select", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to DROP TABLE IF EXISTS Developer;
         ///DROP TABLE IF EXISTS Employee;
         ///
@@ -85,16 +104,35 @@ namespace HybridDataAccess.Queries.Exp3 {
         ///    birthday DATE NOT NULL,
         ///    title NVARCHAR(255) NOT NULL,
         ///    phone NVARCHAR(50) NOT NULL,
-        ///    manager NVARCHAR(MAX) NOT NULL
+        ///    manager NVARCHAR(MAX) NULL
         ///);
         ///
         ///CREATE TABLE Developer (
         ///    id BIGINT PRIMARY KEY FOREIGN KEY REFERENCES employee(id) ON DELETE CASCADE,
-        ///    seniority NVARCHAR(255) NOT  [rest of string was truncated]&quot;;.
+        ///    seniority NVARCHAR(255) NOT NULL [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string Tables {
             get {
                 return ResourceManager.GetString("Tables", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to UPDATE Employee SET phone = @Phone WHERE id = @EmployeeId;
+        ///
+        ///UPDATE Employee SET method = JSON_MODIFY(manager,@Method,&apos;$.Method&apos;) WHERE id = @ManagerId AND manager is not null;
+        ///
+        ///UPDATE Developer SET isFullStack = JSON_MODIFY(softwareDeveloper,1,&apos;$.IsFullStack&apos;) 
+        ///WHERE id = @SoftwareDeveloperId AND softwareDeveloper is not null;
+        ///
+        ///UPDATE Employee 
+        ///SET method = JSON_MODIFY(manager,&apos;Lean&apos;,&apos;$.Method&apos;)
+        ///WHERE JSON_VALUE(manager,&apos;$.Department&apos;) IN (&apos;IT&apos;,&apos;Logistics&apos;) AND
+        ///DATEDIFF(YEAR, e.birthday, GETDATE() [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string Update {
+            get {
+                return ResourceManager.GetString("Update", resourceCulture);
             }
         }
     }

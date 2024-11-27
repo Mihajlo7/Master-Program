@@ -41,15 +41,95 @@ namespace HybridDataAccess.Helper
             command.Parameters.AddWithValue("@Birthday", softwareDeveloperModel.BirthDay);
             command.Parameters.AddWithValue("@Title", softwareDeveloperModel.Title);
             command.Parameters.AddWithValue("@Phone", softwareDeveloperModel.Phone);
-
+            command.Parameters.AddWithValue("@Manager", DBNull.Value);
             command.Parameters.AddWithValue("@Seniority", softwareDeveloperModel.Seniority);
             command.Parameters.AddWithValue("@YearsOfExperience", softwareDeveloperModel.YearsOfExperience);
             command.Parameters.AddWithValue("@IsRemote", softwareDeveloperModel.IsRemote);
             JsonHandler jsonHandler = new JsonHandler();
             string json = jsonHandler
-                .SerializeOne<SoftwareDeveloperModel>(new SoftwareDeveloperModel() { ProgrammingLanguage=softwareDeveloperModel.ProgrammingLanguage,IDE=softwareDeveloperModel.IDE,IsFullStack=softwareDeveloperModel.IsFullStack});
+                .SerializeOne<SoftwareDeveloperModel>(new SoftwareDeveloperModel() {Id=softwareDeveloperModel.Id ,ProgrammingLanguage=softwareDeveloperModel.ProgrammingLanguage,IDE=softwareDeveloperModel.IDE,IsFullStack=softwareDeveloperModel.IsFullStack});
             command.Parameters.AddWithValue("@SoftwareDeveloper", json);
             return command;
+        }
+        public static List<EmployeeModel3> GetEmployees3(this SqlDataReader reader)
+        {
+            var employees = new List<EmployeeModel3>();
+
+            while (reader.Read())
+            {
+                // Mapiranje osnovnih podataka u EmployeeModel3
+                var employee = new EmployeeModel3
+                {
+                    Id = reader.GetInt64(reader.GetOrdinal("id")),
+                    FirstName = reader.GetString(reader.GetOrdinal("firstname")),
+                    LastName = reader.GetString(reader.GetOrdinal("lastname")),
+                    Email = reader.GetString(reader.GetOrdinal("email")),
+                    BirthDay = reader.GetDateTime(reader.GetOrdinal("birthday")),
+                    Title = reader.GetString(reader.GetOrdinal("title")),
+                    Phone = reader.GetString(reader.GetOrdinal("phone"))
+                };
+
+                employees.Add(employee);
+            }
+
+            return employees;
+        }
+
+        public static List<SoftwareDeveloperModel> GetSoftwareDevelopers(this SqlDataReader reader)
+        {
+            var developers = new List<SoftwareDeveloperModel>();
+
+            while (reader.Read())
+            {
+                // Mapiranje podataka u SoftwareDeveloperModel
+                var developer = new SoftwareDeveloperModel
+                {
+                    Id = reader.GetInt64(reader.GetOrdinal("id")),
+                    FirstName = reader.GetString(reader.GetOrdinal("firstname")),
+                    LastName = reader.GetString(reader.GetOrdinal("lastname")),
+                    Email = reader.GetString(reader.GetOrdinal("email")),
+                    BirthDay = reader.GetDateTime(reader.GetOrdinal("birthday")),
+                    Title = reader.GetString(reader.GetOrdinal("title")),
+                    Phone = reader.GetString(reader.GetOrdinal("phone")),
+                    Seniority = reader.GetString(reader.GetOrdinal("seniority")),
+                    YearsOfExperience = reader.GetInt32(reader.GetOrdinal("yearsOfExperience")),
+                    IsRemote = reader.GetBoolean(reader.GetOrdinal("isRemote")),
+                    ProgrammingLanguage = reader.GetString(reader.GetOrdinal("programmingLanguage")),
+                    IDE = reader.GetString(reader.GetOrdinal("ide")),
+                    IsFullStack = reader.GetBoolean(reader.GetOrdinal("isFullStack"))
+                };
+
+                developers.Add(developer);
+            }
+
+            return developers;
+        }
+
+        public static List<ManagerModel> GetManagers(this SqlDataReader reader)
+        {
+            var managers = new List<ManagerModel>();
+
+            while (reader.Read())
+            {
+                // Mapiranje podataka u ManagerModel
+                var manager = new ManagerModel
+                {
+                    Id = reader.GetInt64(reader.GetOrdinal("id")),
+                    FirstName = reader.GetString(reader.GetOrdinal("firstname")),
+                    LastName = reader.GetString(reader.GetOrdinal("lastname")),
+                    Email = reader.GetString(reader.GetOrdinal("email")),
+                    BirthDay = reader.GetDateTime(reader.GetOrdinal("birthday")),
+                    Title = reader.GetString(reader.GetOrdinal("title")),
+                    Phone = reader.GetString(reader.GetOrdinal("phone")),
+                    Department = reader.GetString(reader.GetOrdinal("department")),
+                    RealisedProject = reader.GetInt32(reader.GetOrdinal("realisedProject")),
+                    Method = reader.GetString(reader.GetOrdinal("method"))
+                };
+
+                managers.Add(manager);
+            }
+
+            return managers;
         }
     }
 }

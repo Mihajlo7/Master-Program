@@ -4,6 +4,7 @@ using Core.Models.Exp1;
 using Core.Models.Exp3;
 using Generator;
 using HybridDataAccess.DataSerializator;
+using HybridDataAccess.Implementation;
 using Microsoft.IdentityModel.JsonWebTokens;
 using MongoDataAccess;
 using MongoDataAccess.Implementation;
@@ -19,17 +20,18 @@ namespace ConsoleProgram
         {
             GeneratorService generatorService = new GeneratorService();
             JsonHandler jsonHandler = new JsonHandler();
-            SqlEmployeeRepository sqlEmployeeRepository = new SqlEmployeeRepository();
-            /*
+            HybridEmployeeRepository sqlEmployeeRepository = new HybridEmployeeRepository();
+            
             Console.WriteLine("Creating tables ...");
             sqlEmployeeRepository.ExecuteCreationTable();
             Console.WriteLine("Generating data ...");
             var (menagers, developers) = generatorService.GenerateDataManagersAndDevelopers(5000);
-            */
-            Console.WriteLine("Reading data ...");
-            string json = jsonHandler.SerializeMany<SoftwareDevelopersAggModel>
-                (sqlEmployeeRepository.GetProgrammingLanguagesCountDevelopersAndAvgYearsExp());
-            Console.WriteLine(json);
+            Console.WriteLine("Inserting managers ...");
+            sqlEmployeeRepository.InsertManyManager(menagers);
+            Console.WriteLine("Inserting developers ...");
+            sqlEmployeeRepository.InsertManySoftwareDeveloper(developers);
+            
+            
         }
     }
 }
