@@ -30,6 +30,17 @@ SELECT e.id Id, e.firstname Firstname, e.lastname Lastname, e.email Email, e.bir
 FROM Employee e
 WHERE e.id=@EmployeeId;
 --vrati sve departmenta sa timovima koji su u status Active i sort po nazivu
+SELECT d.id DepartementId,d.name DepartmentName,d.location DepartmentLocation,
+t.id TeamId, t.name TeamName, t.status TeamStatus, t.description TeamDescription
+FROM Department d 
+LEFT JOIN Team t ON t.id=d.team_id
+WHERE t.status='Active'
+ORDER BY t.name ASC;
 --vrati sve department sa timovima u kojima je sef mladji od 35 g i imaju Engineer
+SELECT d.id DepartementId,d.name DepartmentName,d.location DepartmentLocation,
+t.id TeamId, t.name TeamName, t.status TeamStatus, t.description TeamDescription
+FROM Department d 
+LEFT JOIN Team t ON t.id=d.team_id
+
 --vrati department i broj zaposlenih koji su izmedju 30 i 40 godina
 --vrati za svaki departemnt vrati timove koje broje zaposlene koji su Engineer i ima vise od 40 i sort
