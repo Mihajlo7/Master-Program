@@ -78,27 +78,73 @@ namespace HybridDataAccess.Implementation
 
         public EmployeeModel3 GetEmployeeById(long id)
         {
-            throw new NotImplementedException();
+            string query = GenerateQueriesFromQuery(Experiment3Hybrid.Select)[3];
+
+            using var connection = new SqlConnection(_connectionString);
+            using var command = new SqlCommand(query, connection);
+            command.Parameters.AddWithValue("@EmployeeId", id);
+            connection.Open();
+            using var reader = command.ExecuteReader();
+            return reader.GetEmployees3().First();
         }
 
         public List<ManagerModel> GetManagersYoungerThan30AndAgileMethodSorted()
         {
-            throw new NotImplementedException();
+            string query = GenerateQueriesFromQuery(Experiment3Hybrid.Select)[4];
+
+            using var connection = new SqlConnection(_connectionString);
+            using var command = new SqlCommand(query, connection);
+
+            connection.Open();
+            using var reader = command.ExecuteReader();
+            return reader.GetManagers();
         }
 
         public List<SoftwareDevelopersAggModel> GetProgrammingLanguagesCountDevelopersAndAvgYearsExp()
         {
-            throw new NotImplementedException();
+            string query = GenerateQueriesFromQuery(Experiment3Hybrid.Select)[8];
+
+            using var connection = new SqlConnection(_connectionString);
+            using var command = new SqlCommand(query, connection);
+
+            connection.Open();
+            using var reader = command.ExecuteReader();
+            var list = new List<SoftwareDevelopersAggModel>();
+            while (reader.Read())
+            {
+                var result = new SoftwareDevelopersAggModel
+                {
+                    ProgrammingLanguage = reader.GetString(reader.GetOrdinal("programmingLanguage")), // Preporuka: Korišćenje naziva kolona
+                    DeveloperCount = reader.GetInt32(reader.GetOrdinal("DeveloperCount")),
+                    AvgExperience = reader.GetInt32(reader.GetOrdinal("AvgExperience"))
+                };
+                list.Add(result);
+            }
+            return list;
         }
 
         public List<SoftwareDeveloperModel> GetSoftwareDevelopersOlderThan25AndMediorAndJavaAndC()
         {
-            throw new NotImplementedException();
+            string query = GenerateQueriesFromQuery(Experiment3Hybrid.Select)[6];
+
+            using var connection = new SqlConnection(_connectionString);
+            using var command = new SqlCommand(query, connection);
+
+            connection.Open();
+            using var reader = command.ExecuteReader();
+            return reader.GetSoftwareDevelopers();
         }
 
         public List<SoftwareDeveloperModel> GetSoftwareDevelopersRemoteAndUseVisualStudio()
         {
-            throw new NotImplementedException();
+            string query = GenerateQueriesFromQuery(Experiment3Hybrid.Select)[5];
+
+            using var connection = new SqlConnection(_connectionString);
+            using var command = new SqlCommand(query, connection);
+
+            connection.Open();
+            using var reader = command.ExecuteReader();
+            return reader.GetSoftwareDevelopers();
         }
 
         public async void InsertBulkManager(List<ManagerModel> managers)
@@ -240,32 +286,69 @@ namespace HybridDataAccess.Implementation
 
         public void UpdateFullStackByExpYearsAndTitle()
         {
-            throw new NotImplementedException();
+            string query = GenerateQueriesFromQuery(Experiment3Hybrid.Update)[4];
+
+            using var connection = new SqlConnection(_connectionString);
+            using var command = new SqlCommand(query, connection);
+            connection.Open();
+            command.ExecuteNonQuery();
         }
 
         public void UpdateFullstackById(long id)
         {
-            throw new NotImplementedException();
+            string query = GenerateQueriesFromQuery(Experiment3Hybrid.Update)[2];
+
+            using var connection = new SqlConnection(_connectionString);
+            using var command = new SqlCommand(query, connection);
+            command.Parameters.AddWithValue("@SoftwareDeveloperId", id);
+            connection.Open();
+            command.ExecuteNonQuery();
         }
 
         public void UpdateMethodById(long id, string newMethod)
         {
-            throw new NotImplementedException();
+            string query = GenerateQueriesFromQuery(Experiment3Hybrid.Update)[1];
+
+            using var connection = new SqlConnection(_connectionString);
+            using var command = new SqlCommand(query, connection);
+            command.Parameters.AddWithValue("@ManagerId", id);
+            command.Parameters.AddWithValue("@Method", newMethod);
+
+            connection.Open();
+            command.ExecuteNonQuery();
         }
 
         public void UpdateMethodByYearsAndDepartment()
         {
-            throw new NotImplementedException();
+            string query = GenerateQueriesFromQuery(Experiment3Hybrid.Update)[3];
+
+            using var connection = new SqlConnection(_connectionString);
+            using var command = new SqlCommand(query, connection);
+            connection.Open();
+            command.ExecuteNonQuery();
         }
 
         public void UpdatePhoneById(long id, string newPhone)
         {
-            throw new NotImplementedException();
+            string query = GenerateQueriesFromQuery(Experiment3Hybrid.Update)[0];
+
+            using var connection = new SqlConnection(_connectionString);
+            using var command = new SqlCommand(query, connection);
+            command.Parameters.AddWithValue("@EmployeeId", id);
+            command.Parameters.AddWithValue("@Phone", newPhone);
+
+            connection.Open();
+            command.ExecuteNonQuery();
         }
 
         public void UpdateTitleByFullstackAndSeniorityAndYearsExp()
         {
-            throw new NotImplementedException();
+            string query = GenerateQueriesFromQuery(Experiment3Hybrid.Update)[5];
+
+            using var connection = new SqlConnection(_connectionString);
+            using var command = new SqlCommand(query, connection);
+            connection.Open();
+            command.ExecuteNonQuery();
         }
     }
 }
