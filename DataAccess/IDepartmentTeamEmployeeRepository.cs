@@ -3,19 +3,29 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Core.Models.Exp2;
 
 namespace DataAccess
 {
     public interface IDepartmentTeamEmployeeRepository
     {
         // Vrati sve timove i zaposlene po department *
+        public List<DepartmentModel> GetAllDepartmentsBadWay();
         // Vrati sve timove i zaposlene po department naziv
+        public List<DepartmentModel> GetAllDepartments();
         // Vrati sve po timove po department id
+        public List<TeamModel> GetAllTeams(long departmentId);
         // vrati zaposlene po id tima
+        public List<EmployeeModel2> GetAllEmployees(long teamId);
         // vrati zaposlenog po Id
+        public EmployeeModel2 GetEmployee(int id);
         // vrati sve departmenta sa timovima koji su u status Active i sort po nazivu
+        public List<DepartmentModel> GetDepartmentsWithTeamsActiveAndSorted();
         // vrati sve department sa timovima u kojima je sef mladji od 35 g i imaju Engineer
+        public List<DepartmentModel> GetDepartmentsWithTeamsYoungerThan35AndEngineer();
         // vrati department i broj zaposlenih koji su izmedju 30 i 40 godina
+        public List<DepartmentAndTeamAgg> GetDepartmentWithEmployeesYearsBetweenGroupBy();
         // vrati za svaki departemnt vrati timove koje broje zaposlene koji su Engineer i ima vise od 40 i sort
+        public List<DepartmentAndTeamAgg> GetDepartmentWithEmployeeGroupByHavingBy();
     }
 }

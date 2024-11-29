@@ -43,4 +43,16 @@ FROM Department d
 LEFT JOIN Team t ON t.id=d.team_id
 
 --vrati department i broj zaposlenih koji su izmedju 30 i 40 godina
+SELECT d.id DepartmentId, d.name DepartmentName,COUNT(e.id) EmployeesCount
+FROM Department d
+LEFT JOIN Team t ON (d.id=t.department_id) LEFT JOIN Employee e ON (t.id=e.team_id)
+AND DATEDIFF(YEAR, e.birthday, GETDATE()) BETWEEN 30 AND 40
+GROUP BY d.Id,d.name;
 --vrati za svaki departemnt vrati timove koje broje zaposlene koji su Engineer i ima vise od 40 i sort
+SELECT d.id DepartmentId, d.name DepartmentName,t.id TeamId, t.name TeamName, COUNT(e.id) EmployeesCount
+FROM Department d
+LEFT JOIN Team t ON (d.id=t.department_id) LEFT JOIN Employee e ON (t.id=e.team_id)
+WHERE title LIKE '%Engineer%'
+GROUP BY  d.id, d.name,t.id, t.name
+HAVING COUNT(e.id)>10
+ORDER BY COUNT(e.id) DESC;
