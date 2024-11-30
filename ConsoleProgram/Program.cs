@@ -1,6 +1,7 @@
 ﻿using ConsoleProgram.Generator;
 using ConsoleProgram.Setup;
 using Core.Models.Exp1;
+using Core.Models.Exp2;
 using Core.Models.Exp3;
 using Generator;
 using HybridDataAccess.DataSerializator;
@@ -20,6 +21,7 @@ namespace ConsoleProgram
         {
             GeneratorService generatorService = new GeneratorService();
             JsonHandler jsonHandler = new JsonHandler();
+            /*
             HybridEmployeeRepository sqlEmployeeRepository = new HybridEmployeeRepository();
             
             Console.WriteLine("Creating tables ...");
@@ -30,8 +32,12 @@ namespace ConsoleProgram
             sqlEmployeeRepository.InsertManyManager(menagers);
             Console.WriteLine("Inserting developers ...");
             sqlEmployeeRepository.InsertManySoftwareDeveloper(developers);
-            
-            
+            */
+            Console.WriteLine("Generating data ...");
+            var (departments, employees) = generatorService.GenerateDepartmentsAndEmployeers(5, 2);
+            Console.WriteLine("Writting data ...");
+            string json= jsonHandler.SerializeMany<EmployeeModel2>(employees);
+            Console.WriteLine(json);
         }
     }
 }

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Core.Models.Exp1;
+using Core.Models.Exp2;
 using Core.Models.Exp3;
 using Generator;
 
@@ -62,6 +63,30 @@ namespace ConsoleProgram.Generator
         public (List<ManagerModel>,List<SoftwareDeveloperModel>) GenerateDataManagersAndDevelopers(int size)
         {
             return(new ManagerFaker().Generate(size / 2),new SoftwareDeveloperFaker().Generate(size / 2));
+        }
+
+        public (List<DepartmentModel>,List<EmployeeModel2>) GenerateDepartmentsAndEmployeers(int empNum,int teamNum)
+        {
+            
+            int depNum = 20;
+            int teamCount=depNum*teamNum;
+            int empCount=teamCount*empNum;
+            List<DepartmentModel> departments= new DepartmentFaker().Generate(20);
+            List<TeamModel> teams= new TeamFaker().Generate(teamCount);
+            List<EmployeeModel2> employees= new Employee2Faker().Generate(empCount);
+
+            for(int i = 0; i < departments.Count; i++)
+            {
+                int startPosTeam= i*teamNum;
+                departments[i].Teams= teams.Slice(startPosTeam,teamNum);
+            }
+
+            var updatedEmployees = employees.Select((e, i) =>
+            {
+                e.Team = teams[i / empNum];
+                return e;
+            }).ToList();
+            return (departments, updatedEmployees);
         }
     }
 }

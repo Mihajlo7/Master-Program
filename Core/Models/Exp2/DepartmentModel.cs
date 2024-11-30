@@ -11,6 +11,6 @@ namespace Core.Models.Exp2
         public long Id { get; set; }
         public string? Name { get; set; } = null;
         public string? Location { get; set; } = null;
-        public List<TeamModel>? Team { get; set; } = null;
+        public List<TeamModel>? Teams { get; set; } = null;
     }
 }
