@@ -36,18 +36,21 @@ namespace ConsoleProgram
             
             Console.WriteLine("Generating data ...");
             var (departments, employees) = generatorService.GenerateDepartmentsAndEmployeers(10, 25);
-            SqlDepartementTeamEmployeeRepository sql = new();
+            HybridDepartmentTeamEmployeeRepository sql = new();
             Console.WriteLine("Creating tables ...");
-            //sql.ExecuteCreationTable();
+            sql.ExecuteCreationTable();
             Console.WriteLine("Inserting data ...");
-            //sql.InsertDepartmenstWithTeams(departments);
+            sql.InsertDepartmenstWithTeams(departments);
+            sql.InsertEmployees(employees);
+            Console.WriteLine("Complited");
             //sql.InsertEmployees(employees);
-
+            /*
             Console.WriteLine("Reading data ...");
             var departmentsRes = sql.GetDepartmentWithEmployeesYearsBetweenGroupBy();
             Console.WriteLine("Writting data ...");
             string json= jsonHandler.SerializeMany(departmentsRes);
             Console.WriteLine(json);
+            */
         }
     }
 }

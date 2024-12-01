@@ -89,6 +89,17 @@ namespace ConsoleProgram.Generator
                     team.Department = new DepartmentModel { Id = departments[i].Id };
                     //team.Lead= foundLead;
                     team.LeaderId=foundLead.Id;
+                    var teamLead = new EmployeeModel2
+                    {
+                        Id = foundLead.Id,
+                        FirstName = foundLead.FirstName,
+                        LastName = foundLead.LastName,
+                        Email = foundLead.Email,
+                        Phone = foundLead.Phone,
+                        Title = foundLead.Title,
+                        BirthDay = foundLead.BirthDay
+                    };
+                    team.Lead = teamLead;
                 }
             }
 

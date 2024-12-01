@@ -1,5 +1,4 @@
-﻿INSERT INTO Task(id,name,description,priority,deadline,status,responsible,supervisor,employees)
-VALUES(@TaskId,@TaskName,@TaskDescription,@TaskPriority,@TaskDeadline,@TaskStatus,@Responsible,@Supervisor,@Employees);
+﻿INSERT INTO Department (id,name,location,teams) VALUES (@Id,@Name,@Location,@TeamsWithEmployees);
 
 WITH cte AS(
 	SELECT id,[key],teams,value 
