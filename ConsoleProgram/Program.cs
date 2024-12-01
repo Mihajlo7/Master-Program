@@ -33,10 +33,20 @@ namespace ConsoleProgram
             Console.WriteLine("Inserting developers ...");
             sqlEmployeeRepository.InsertManySoftwareDeveloper(developers);
             */
+            
             Console.WriteLine("Generating data ...");
-            var (departments, employees) = generatorService.GenerateDepartmentsAndEmployeers(5, 2);
+            var (departments, employees) = generatorService.GenerateDepartmentsAndEmployeers(10, 25);
+            SqlDepartementTeamEmployeeRepository sql = new();
+            Console.WriteLine("Creating tables ...");
+            //sql.ExecuteCreationTable();
+            Console.WriteLine("Inserting data ...");
+            //sql.InsertDepartmenstWithTeams(departments);
+            //sql.InsertEmployees(employees);
+
+            Console.WriteLine("Reading data ...");
+            var departmentsRes = sql.GetDepartmentWithEmployeesYearsBetweenGroupBy();
             Console.WriteLine("Writting data ...");
-            string json= jsonHandler.SerializeMany<EmployeeModel2>(employees);
+            string json= jsonHandler.SerializeMany(departmentsRes);
             Console.WriteLine(json);
         }
     }

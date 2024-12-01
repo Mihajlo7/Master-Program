@@ -27,7 +27,7 @@ namespace HelperMapper.Mappers
                         Id = departmentId,
                         Name = reader.IsDBNull(1) ? null : reader.GetString(1), // Druga kolona je `name`
                         Location = reader.IsDBNull(2) ? null : reader.GetString(2), // Treća kolona je `location`
-                        Team = new List<TeamModel>()
+                        Teams = new List<TeamModel>()
                     };
                 }
 
@@ -45,11 +45,11 @@ namespace HelperMapper.Mappers
                             Name = reader.IsDBNull(4) ? null : reader.GetString(4), // Peta kolona je `team.name`
                             Status = reader.IsDBNull(5) ? null : reader.GetString(5), // Šesta kolona je `team.status`
                             Description = reader.IsDBNull(6) ? null : reader.GetString(6), // Sedma kolona je `team.description`
-                            Department = department,
-                            LeaderId = reader.IsDBNull(7) ? (long?)null : reader.GetInt64(7) // Osma kolona je `team.leader_id`
+                            //Department = department,
+                            LeaderId = reader.IsDBNull(8) ? (long?)null : reader.GetInt64(8) // Osma kolona je `team.leader_id`
                         };
                         teams[teamId] = nteam;
-                        department.Team.Add(nteam);
+                        department.Teams.Add(nteam);
                     }
 
                     var team = teams[teamId];
@@ -60,29 +60,29 @@ namespace HelperMapper.Mappers
                         team.Lead = new EmployeeModel2
                         {
                             Id = reader.GetInt64(8),
-                            FirstName = reader.IsDBNull(9) ? null : reader.GetString(9), // Deseta kolona je `employee.first_name`
-                            LastName = reader.IsDBNull(10) ? null : reader.GetString(10), // Jedanaesta kolona je `employee.last_name`
-                            Email = reader.IsDBNull(11) ? null : reader.GetString(11), // Dvanaesta kolona je `employee.email`
-                            BirthDay = reader.IsDBNull(12) ? (DateTime?)null : reader.GetDateTime(12), // Trinaesta kolona je `employee.birth_day`
-                            Title = reader.IsDBNull(13) ? null : reader.GetString(13), // Četrnaesta kolona je `employee.title`
-                            Phone = reader.IsDBNull(14) ? null : reader.GetString(14), // Petnaesta kolona je `employee.phone`
-                            Team = team
+                            FirstName = reader.IsDBNull(10) ? null : reader.GetString(10), // Deseta kolona je `employee.first_name`
+                            LastName = reader.IsDBNull(11) ? null : reader.GetString(11), // Jedanaesta kolona je `employee.last_name`
+                            Email = reader.IsDBNull(12) ? null : reader.GetString(12), // Dvanaesta kolona je `employee.email`
+                            BirthDay = reader.IsDBNull(13) ? (DateTime?)null : reader.GetDateTime(13), // Trinaesta kolona je `employee.birth_day`
+                            Title = reader.IsDBNull(14) ? null : reader.GetString(14), // Četrnaesta kolona je `employee.title`
+                            Phone = reader.IsDBNull(15) ? null : reader.GetString(15), // Petnaesta kolona je `employee.phone`
+                            //Team = team
                         };
                     }
 
                     // Mapiranje Employees (članovi tima)
-                    if (!reader.IsDBNull(15)) // Šesnaesta kolona je `employee.id` člana tima
+                    if (!reader.IsDBNull(17)) // Šesnaesta kolona je `employee.id` člana tima
                     {
                         var employee = new EmployeeModel2
                         {
-                            Id = reader.GetInt64(15),
-                            FirstName = reader.IsDBNull(16) ? null : reader.GetString(16), // Sedamnaesta kolona
-                            LastName = reader.IsDBNull(17) ? null : reader.GetString(17), // Osamnaesta kolona
-                            Email = reader.IsDBNull(18) ? null : reader.GetString(18), // Devetnaesta kolona
-                            BirthDay = reader.IsDBNull(19) ? (DateTime?)null : reader.GetDateTime(19), // Dvadeseta kolona
-                            Title = reader.IsDBNull(20) ? null : reader.GetString(20), // Dvadesetprva kolona
-                            Phone = reader.IsDBNull(21) ? null : reader.GetString(21), // Dvadesetdruga kolona
-                            Team = team
+                            Id = reader.GetInt64(17),
+                            FirstName = reader.IsDBNull(18) ? null : reader.GetString(18), // Sedamnaesta kolona
+                            LastName = reader.IsDBNull(19) ? null : reader.GetString(19), // Osamnaesta kolona
+                            Email = reader.IsDBNull(20) ? null : reader.GetString(20), // Devetnaesta kolona
+                            BirthDay = reader.IsDBNull(21) ? (DateTime?)null : reader.GetDateTime(21), // Dvadeseta kolona
+                            Title = reader.IsDBNull(22) ? null : reader.GetString(22), // Dvadesetprva kolona
+                            Phone = reader.IsDBNull(23) ? null : reader.GetString(23), // Dvadesetdruga kolona
+                            //Team = team
                         };
 
                         if (team.Employees == null)
@@ -118,7 +118,7 @@ namespace HelperMapper.Mappers
                         Location = reader.IsDBNull(reader.GetOrdinal("DepartmentLocation"))
                             ? null
                             : reader.GetString(reader.GetOrdinal("DepartmentLocation")),
-                        Team = new List<TeamModel>()
+                        Teams = new List<TeamModel>()
                     };
                 }
 
@@ -142,13 +142,13 @@ namespace HelperMapper.Mappers
                             Description = reader.IsDBNull(reader.GetOrdinal("TeamDescription"))
                                 ? null
                                 : reader.GetString(reader.GetOrdinal("TeamDescription")),
-                            Department = department,
+                            //Department = department,
                             LeaderId = reader.IsDBNull(reader.GetOrdinal("LeadId"))
                                 ? (long?)null
                                 : reader.GetInt64(reader.GetOrdinal("LeadId"))
                         };
                         teams[teamId] = nteam;
-                        department.Team.Add(nteam);
+                        department.Teams.Add(nteam);
                     }
 
                     var team = teams[teamId];
@@ -177,7 +177,7 @@ namespace HelperMapper.Mappers
                             Phone = reader.IsDBNull(reader.GetOrdinal("LeadPhone"))
                                 ? null
                                 : reader.GetString(reader.GetOrdinal("LeadPhone")),
-                            Team = team
+                            //Team = team
                         };
                     }
 
@@ -205,7 +205,7 @@ namespace HelperMapper.Mappers
                             Phone = reader.IsDBNull(reader.GetOrdinal("Phone"))
                                 ? null
                                 : reader.GetString(reader.GetOrdinal("Phone")),
-                            Team = team
+                            //Team = team
                         };
 
                         if (team.Employees == null)
@@ -301,7 +301,7 @@ namespace HelperMapper.Mappers
                         Phone = reader.IsDBNull(reader.GetOrdinal("Phone"))
                             ? null
                             : reader.GetString(reader.GetOrdinal("Phone")),
-                        Team = team
+                        //Team = team
                     };
 
                     team.Employees?.Add(employee);
@@ -364,7 +364,7 @@ namespace HelperMapper.Mappers
                         Location = reader.IsDBNull(reader.GetOrdinal("DepartmentLocation"))
                             ? null
                             : reader.GetString(reader.GetOrdinal("DepartmentLocation")),
-                        Team = new List<TeamModel>()
+                        Teams = new List<TeamModel>()
                     };
                     departments.Add(department);
                 }
@@ -385,7 +385,7 @@ namespace HelperMapper.Mappers
                             ? null
                             : reader.GetString(reader.GetOrdinal("TeamDescription"))
                     };
-                    department.Team?.Add(team);
+                    department.Teams?.Add(team);
                 }
             }
 
@@ -401,15 +401,39 @@ namespace HelperMapper.Mappers
                 var record = new DepartmentAndTeamAgg
                 {
                     DepartmentId = reader.GetInt64(reader.GetOrdinal("DepartmentId")),
+
                     DepartmentName = reader.IsDBNull(reader.GetOrdinal("DepartmentName"))
                         ? null
                         : reader.GetString(reader.GetOrdinal("DepartmentName")),
+
                     TeamId = reader.IsDBNull(reader.GetOrdinal("TeamId"))
                         ? (long?)null
                         : reader.GetInt64(reader.GetOrdinal("TeamId")),
                     TeamName = reader.IsDBNull(reader.GetOrdinal("TeamName"))
                         ? null
                         : reader.GetString(reader.GetOrdinal("TeamName")),
+                    EmployeesCount = reader.GetInt32(reader.GetOrdinal("EmployeesCount"))
+                };
+
+                result.Add(record);
+            }
+
+            return result;
+        }
+        public static List<DepartmentAndTeamAgg> MapDepartmentAndTeamAggregatesBearer(SqlDataReader reader)
+        {
+            var result = new List<DepartmentAndTeamAgg>();
+
+            while (reader.Read())
+            {
+                var record = new DepartmentAndTeamAgg
+                {
+                    DepartmentId = reader.GetInt64(reader.GetOrdinal("DepartmentId")),
+
+                    DepartmentName = reader.IsDBNull(reader.GetOrdinal("DepartmentName"))
+                        ? null
+                        : reader.GetString(reader.GetOrdinal("DepartmentName")),
+
                     EmployeesCount = reader.GetInt32(reader.GetOrdinal("EmployeesCount"))
                 };
 

@@ -13,6 +13,7 @@
   <ItemGroup>
     <ProjectReference Include="..\DataAccess\DataAccess.csproj" />
     <ProjectReference Include="..\Generator\Generator.csproj" />
+    <ProjectReference Include="..\HelperMapper\HelperMapper.csproj" />
   </ItemGroup>
 
   <ItemGroup>
@@ -20,6 +21,11 @@
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
       <DependentUpon>Experiment1Sql.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Queries\Exp2\Experiment2Sql.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Experiment2Sql.resx</DependentUpon>
     </Compile>
     <Compile Update="Queries\Exp3\Experiment3Sql.Designer.cs">
       <DesignTime>True</DesignTime>
@@ -32,6 +38,10 @@
     <EmbeddedResource Update="Queries\Exp1\Experiment1Sql.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Experiment1Sql.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Queries\Exp2\Experiment2Sql.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Experiment2Sql.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Update="Queries\Exp3\Experiment3Sql.resx">
       <Generator>ResXFileCodeGenerator</Generator>

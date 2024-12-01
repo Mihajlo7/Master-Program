@@ -74,18 +74,25 @@ namespace ConsoleProgram.Generator
             List<DepartmentModel> departments= new DepartmentFaker().Generate(20);
             List<TeamModel> teams= new TeamFaker().Generate(teamCount);
             List<EmployeeModel2> employees= new Employee2Faker().Generate(empCount);
-
+            var updatedEmployees = employees.Select((e, i) =>
+                        {
+                            e.Team = teams[i / empNum];
+                            return e;
+                        }).ToList();
             for(int i = 0; i < departments.Count; i++)
             {
                 int startPosTeam= i*teamNum;
                 departments[i].Teams= teams.Slice(startPosTeam,teamNum);
+                foreach(var team in departments[i].Teams)
+                {
+                    var foundLead= updatedEmployees.First(e => e.Team.Id == team.Id);
+                    team.Department = new DepartmentModel { Id = departments[i].Id };
+                    //team.Lead= foundLead;
+                    team.LeaderId=foundLead.Id;
+                }
             }
 
-            var updatedEmployees = employees.Select((e, i) =>
-            {
-                e.Team = teams[i / empNum];
-                return e;
-            }).ToList();
+            
             return (departments, updatedEmployees);
         }
     }
