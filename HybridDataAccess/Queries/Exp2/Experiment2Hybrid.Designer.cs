@@ -79,6 +79,21 @@ namespace HybridDataAccess.Queries.Exp2 {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to -- 0.
+        ///SELECT * FROM Department;
+        ///-- 1.
+        ///SELECT d.id DepartementId,d.name DepartmentName,d.location DepartmentLocation,
+        ///JSON_VALUE(t.value,&apos;$.Id&apos;) TeamId,JSON_VALUE(t.value,&apos;$.Name&apos;) TeamName,JSON_VALUE(t.value,&apos;$.Status&apos;) TeamStatus,JSON_VALUE(t.value,&apos;$.Description&apos;) TeamDescription,
+        ///JSON_VALUE(t.value,&apos;$.Lead.Id&apos;) LeadId,JSON_VALUE(t.value,&apos;$.Lead.FirstName&apos;) LeadFirstName,JSON_VALUE(t.value,&apos;$.Lead.LastName&apos;) LeadLastName,
+        ///JSON_VALUE(t.value,&apos;$.Lead.Email&apos;) LeadEmail,JSON_VALUE(t.value,&apos;$.Lead.BirthD [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string Select {
+            get {
+                return ResourceManager.GetString("Select", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to -- Drop table if exists
         ///ALTER TABLE Employee DROP CONSTRAINT IF EXISTS fk_employee_team;
         ///ALTER TABLE Team DROP CONSTRAINT IF EXISTS fk_team_department;
@@ -95,6 +110,33 @@ namespace HybridDataAccess.Queries.Exp2 {
         internal static string Tables {
             get {
                 return ResourceManager.GetString("Tables", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 
+        ///---------------------------------------
+        ///-- 0.
+        ///WITH cte AS(
+        ///	SELECT [key],teams
+        ///	FROM Department CROSS APPLY OPENJSON(teams)
+        ///	WHERE JSON_VALUE(value,&apos;$.Id&apos;)=2
+        ///)
+        ///UPDATE cte
+        ///SET teams= JSON_MODIFY(teams,&apos;$[&apos;+cte.[key]+&apos;].Status&apos;,&apos;Neki Moj&apos;)
+        ///
+        ///---------------------------------------
+        ///-- 1.
+        ///WITH cte AS(
+        ///	SELECT t.[key] teamKey, e.[key] empKey, teams
+        ///	FROM Department CROSS APPLY OPENJSON(teams) t CROSS APPLY OPENJSON(JSON_QUERY(value,&apos;$.Employees&apos;)) e
+        ///	WHERE JSON_VALUE(e.value,&apos;$.Id&apos;)=@Id
+        ///)
+        ///UPDAT [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string Update {
+            get {
+                return ResourceManager.GetString("Update", resourceCulture);
             }
         }
     }

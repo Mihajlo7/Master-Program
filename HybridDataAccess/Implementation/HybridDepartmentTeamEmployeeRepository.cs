@@ -1,5 +1,6 @@
 ﻿using Core.Models.Exp2;
 using DataAccess;
+using HelperMapper.Mappers;
 using HybridDataAccess.Queries.Exp2;
 using Microsoft.Data.SqlClient;
 using System;
@@ -159,73 +160,165 @@ namespace HybridDataAccess.Implementation
 
         public List<DepartmentModel> GetAllDepartmentsBadWay()
         {
-            //using var connection = new SqlConnection(_connectionString);
-            return null;
+            using var connection = new SqlConnection(_connectionString);
+            using var command= new SqlCommand(GenerateQueriesFromQuery(Experiment2Hybrid.Select)[0], connection);
+
+            connection.Open();
+            using var reader = command.ExecuteReader();
+            List<DepartmentModel> departments = new List<DepartmentModel>();
+            while (reader.Read())
+            {
+                DepartmentModel department = new DepartmentModel();
+                department.Id = reader.GetInt64(0);
+                department.Name = reader.GetString(1);
+                department.Location = reader.GetString(2);
+                department.Teams=_jsonHandler.DeserializeMany<TeamModel>(reader.GetString(3));
+
+                departments.Add(department);
+            }
+
+            return departments;
         }
 
         public List<DepartmentModel> GetAllDepartments()
         {
-            throw new NotImplementedException();
-        }
+            using var connection = new SqlConnection(_connectionString);
+            using var command = new SqlCommand(GenerateQueriesFromQuery(Experiment2Hybrid.Select)[1], connection);
 
-        public List<TeamModel> GetAllTeams(long departmentId)
-        {
-            throw new NotImplementedException();
+            connection.Open();
+            using var reader = command.ExecuteReader();
+            var departmentsWtihTeamsAndEmployees = Exp2HelperMapper.MapDepartmentsWithAliases(reader);
+            return departmentsWtihTeamsAndEmployees;
         }
 
         public List<EmployeeModel2> GetAllEmployees(long teamId)
         {
-            throw new NotImplementedException();
+            using var connection = new SqlConnection(_connectionString);
+            using var command = new SqlCommand(GenerateQueriesFromQuery(Experiment2Hybrid.Select)[3], connection);
+            command.Parameters.AddWithValue("@TeamId", teamId);
+
+            connection.Open();
+            using var reader = command.ExecuteReader();
+            var employees = Exp2HelperMapper.MapEmployees(reader);
+            return employees;
         }
 
-        public EmployeeModel2 GetEmployee(int id)
+        public List<TeamModel> GetAllTeams(long departmentId)
         {
-            throw new NotImplementedException();
+            using var connection = new SqlConnection(_connectionString);
+            using var command = new SqlCommand(GenerateQueriesFromQuery(Experiment2Hybrid.Select)[2], connection);
+            command.Parameters.AddWithValue("@DepartmentId", departmentId);
+
+            connection.Open();
+            using var reader = command.ExecuteReader();
+            var teamsWithEmployees = Exp2HelperMapper.MapTeamsWithAliases(reader);
+            return teamsWithEmployees;
         }
 
         public List<DepartmentModel> GetDepartmentsWithTeamsInBelgradeAndSorted()
         {
-            throw new NotImplementedException();
+            using var connection = new SqlConnection(_connectionString);
+            using var command = new SqlCommand(GenerateQueriesFromQuery(Experiment2Hybrid.Select)[5], connection);
+
+            connection.Open();
+            using var reader = command.ExecuteReader();
+            var departmentsWithTeams = Exp2HelperMapper.MapDepartmentsWithTeams(reader);
+            return departmentsWithTeams;
         }
 
         public List<DepartmentModel> GetDepartmentsWithTeamsYoungerThan35AndEngineer()
         {
-            throw new NotImplementedException();
-        }
+            using var connection = new SqlConnection(_connectionString);
+            using var command = new SqlCommand(GenerateQueriesFromQuery(Experiment2Hybrid.Select)[6], connection);
 
-        public List<DepartmentAndTeamAgg> GetDepartmentWithEmployeesYearsBetweenGroupBy()
-        {
-            throw new NotImplementedException();
+            connection.Open();
+            using var reader = command.ExecuteReader();
+            var departmentsWithTeams = Exp2HelperMapper.MapDepartmentsWithTeams(reader);
+            return departmentsWithTeams;
         }
 
         public List<DepartmentAndTeamAgg> GetDepartmentWithEmployeeGroupByHavingBy()
         {
-            throw new NotImplementedException();
+            using var connection = new SqlConnection(_connectionString);
+            using var command = new SqlCommand(GenerateQueriesFromQuery(Experiment2Hybrid.Select)[8], connection);
+
+            connection.Open();
+            using var reader = command.ExecuteReader();
+            var departmentsWithTeams = Exp2HelperMapper.MapDepartmentAndTeamAggregates(reader);
+            return departmentsWithTeams;
         }
 
-        public void UpdateStatusTeam(long id, string status)
+        public List<DepartmentAndTeamAgg> GetDepartmentWithEmployeesYearsBetweenGroupBy()
         {
-            throw new NotImplementedException();
+            using var connection = new SqlConnection(_connectionString);
+            using var command = new SqlCommand(GenerateQueriesFromQuery(Experiment2Hybrid.Select)[7], connection);
+
+            connection.Open();
+            using var reader = command.ExecuteReader();
+            var departmentsWithTeams = Exp2HelperMapper.MapDepartmentAndTeamAggregatesBearer(reader);
+            return departmentsWithTeams;
         }
 
-        public void UpdateEmployeePhone(long id, string phone)
+        public EmployeeModel2 GetEmployee(int id)
         {
-            throw new NotImplementedException();
-        }
+            using var connection = new SqlConnection(_connectionString);
+            using var command = new SqlCommand(GenerateQueriesFromQuery(Experiment2Hybrid.Select)[4], connection);
+            command.Parameters.AddWithValue("@EmployeeId", id);
 
-        public void UpdateDescriptionTeamsFromPrague(string description)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void UpdateDescriptionTeamsForYoungEmployees()
-        {
-            throw new NotImplementedException();
+            connection.Open();
+            using var reader = command.ExecuteReader();
+            var employees = Exp2HelperMapper.MapEmployees(reader);
+            return employees.First();
         }
 
         public void UpdateDescriptionComplex()
         {
-            throw new NotImplementedException();
+            using var connection = new SqlConnection(_connectionString);
+            using var command = new SqlCommand(GenerateQueriesFromQuery(Experiment2Hybrid.Update)[4], connection);
+
+
+            command.ExecuteNonQuery();
+        }
+
+        public void UpdateDescriptionTeamsForYoungEmployees()
+        {
+            using var connection = new SqlConnection(_connectionString);
+            using var command = new SqlCommand(GenerateQueriesFromQuery(Experiment2Hybrid.Update)[3], connection);
+
+
+            command.ExecuteNonQuery();
+        }
+
+        public void UpdateDescriptionTeamsFromPrague(string description)
+        {
+            using var connection = new SqlConnection(_connectionString);
+            using var command = new SqlCommand(GenerateQueriesFromQuery(Experiment2Hybrid.Update)[2], connection);
+
+            command.Parameters.AddWithValue("@Description", description);
+
+            command.ExecuteNonQuery();
+        }
+
+        public void UpdateEmployeePhone(long id, string phone)
+        {
+            using var connection = new SqlConnection(_connectionString);
+            using var command = new SqlCommand(GenerateQueriesFromQuery(Experiment2Hybrid.Update)[1], connection);
+
+            command.Parameters.AddWithValue("@Phone", phone);
+            command.Parameters.AddWithValue("@Id", id);
+
+            command.ExecuteNonQuery();
+        }
+
+        public void UpdateStatusTeam(long id, string status)
+        {
+            using var connection = new SqlConnection(_connectionString);
+            using var command = new SqlCommand(GenerateQueriesFromQuery(Experiment2Hybrid.Update)[0], connection);
+
+            command.Parameters.AddWithValue("@Status", status);
+            command.Parameters.AddWithValue("@Id", id);
+
+            command.ExecuteNonQuery();
         }
     }
 }
