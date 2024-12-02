@@ -20,5 +20,6 @@ namespace Core.Models.Exp2
         public string? Phone { get; set; } = null;
 
         public TeamModel? Team { get; set; } = null;
+        public long? TeamId { get; set; } = null;
     }
 }
