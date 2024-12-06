@@ -225,17 +225,46 @@ namespace MongoDataAccess.Implementation
 
         public List<SoftwareDevelopersAggModel> GetProgrammingLanguagesCountDevelopersAndAvgYearsExp()
         {
-            throw new NotImplementedException();
+            var pipeline = new[]
+            {
+                // Filtriraj samo SoftwareDeveloper role
+                new BsonDocument("$match", new BsonDocument("Role", "SoftwareDeveloper")),
+        
+                // Grupisanje po programskom jeziku
+                new BsonDocument("$group", new BsonDocument
+                {
+                    { "_id", "$ProgrammingLanguage" }, // Grupisanje po jeziku
+                    { "DeveloperCount", new BsonDocument("$sum", 1) }, // Broj programera
+                    { "AvgExperience", new BsonDocument("$avg", "$YearsOfExperience") } // Prosečna godina iskustva
+                }),
+
+                // Preimenuj "_id" u "ProgrammingLanguage"
+                new BsonDocument("$project", new BsonDocument
+                {
+                    { "ProgrammingLanguage", "$_id" },
+                    { "DeveloperCount", 1 },
+                    { "AvgExperience", 1 },
+                    { "_id", 0 }
+                })
+            };
+
+            return _employeesCollection.Aggregate<SoftwareDevelopersAggModel>(pipeline).ToList();
         }
 
         public void UpdatePhoneById(long id, string newPhone)
         {
-            throw new NotImplementedException();
+            var filterEmployee = Builders<EmployeeModel3>.Filter.Eq(e => e.Id, id);
+            var updateEmployeePhone = Builders<EmployeeModel3>.Update.Set(e => e.Phone, newPhone);
+
+            _employeesCollection.UpdateOne(filterEmployee, updateEmployeePhone);
         }
 
         public void UpdateMethodById(long id, string newMethod)
         {
-            throw new NotImplementedException();
+            var filterManager = Builders<ManagerModel>.Filter.Eq(m => m.Id, id);
+            var updateManagerMethod = Builders<ManagerModel>.Update.Set(m => m.Method, newMethod);
+
+            ManagersCollection.UpdateOne(filterManager, updateManagerMethod);
         }
 
         public void UpdateFullstackById(long id)
