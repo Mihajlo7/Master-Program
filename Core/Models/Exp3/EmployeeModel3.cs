@@ -18,5 +18,6 @@ namespace Core.Models.Exp3
         public DateTime? BirthDay { get; set; } = null;
         public string? Title { get; set; } = null;
         public string? Phone { get; set; } = null;
+        public string ? Role { get; set; } = null;
     }
 }
