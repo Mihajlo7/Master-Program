@@ -35,21 +35,23 @@ namespace ConsoleProgram
             */
             
             Console.WriteLine("Generating data ...");
-            var (departments, employees) = generatorService.GenerateDepartmentsAndEmployeers(10, 25);
-            MongoDepartmentTeamEmployeeRepository sql = new();
-            Console.WriteLine("Creating tables ...");
+            var (managers, softDevs) = generatorService.GenerateDataManagersAndDevelopers(5000);
+            MongoEmployeeRepository sql = new();
+            //Console.WriteLine("Creating tables ...");
             //sql.ExecuteCreationTable();
-            Console.WriteLine("Inserting data ...");
-            //sql.InsertDepartmenstWithTeams(departments);
-            //sql.InsertEmployees(employees);
-            Console.WriteLine("Complited");
+            //Console.WriteLine("Inserting data ...");
+            //sql.InsertManyManager(managers);
+            //sql.InsertManySoftwareDeveloper(softDevs);
+            //Console.WriteLine("Complited");
             //sql.InsertEmployees(employees);
             
             Console.WriteLine("Reading data ...");
-            var departmentsRes = sql.GetDepartmentWithEmployeesYearsBetweenGroupBy();
+            //var departmentsRes = sql.UpdatePhoneById();
+            sql.UpdateTitleByFullstackAndSeniorityAndYearsExp();
             Console.WriteLine("Writting data ...");
-            string json= jsonHandler.SerializeMany(departmentsRes);
-            Console.WriteLine(json);
+            //string json= jsonHandler.SerializeMany(departmentsRes);
+            //Console.ForegroundColor = ConsoleColor.Magenta;
+            //Console.WriteLine(json);
             
         }
     }

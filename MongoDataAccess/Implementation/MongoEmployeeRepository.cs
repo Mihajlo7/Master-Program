@@ -269,22 +269,58 @@ namespace MongoDataAccess.Implementation
 
         public void UpdateFullstackById(long id)
         {
-            throw new NotImplementedException();
+            var filterSoftwareDev = Builders<SoftwareDeveloperModel>.Filter.Eq(m => m.Id, id);
+            var updateFullstack = Builders<SoftwareDeveloperModel>.Update.Set(m => m.IsFullStack, true);
+
+            SoftwareCollection.UpdateOne(filterSoftwareDev, updateFullstack);
         }
 
         public void UpdateMethodByYearsAndDepartment()
         {
-            throw new NotImplementedException();
+            var filterManager = Builders<ManagerModel>.Filter.And(
+                Builders<ManagerModel>.Filter.In(m => m.Department,new []{ "IT", "Logistics" }),
+                Builders<ManagerModel>.Filter.Gt(m=>m.BirthDay,DateTime.UtcNow.AddYears(-50)),
+                Builders<ManagerModel>.Filter.Lt(m=>m.BirthDay,DateTime.UtcNow.AddYears(-40))
+                );
+            var updateMethod = Builders<ManagerModel>.Update.Set(m => m.Method, "Lean");
+
+            ManagersCollection.UpdateMany(filterManager, updateMethod);
         }
 
         public void UpdateFullStackByExpYearsAndTitle()
         {
-            throw new NotImplementedException();
+            var filterSoftwareDevs = Builders<SoftwareDeveloperModel>.Filter.And(
+                Builders<SoftwareDeveloperModel>.Filter.Gt(sd=>sd.YearsOfExperience,10),
+                Builders<SoftwareDeveloperModel>.Filter.Regex(sd=>sd.Title,new BsonRegularExpression("Engineer","i"))
+                );
+            var updateFullstack = Builders<SoftwareDeveloperModel>.Update.Set(m => m.IsFullStack, true);
+
+            SoftwareCollection.UpdateMany(filterSoftwareDevs, updateFullstack);
         }
 
         public void UpdateTitleByFullstackAndSeniorityAndYearsExp()
         {
-            throw new NotImplementedException();
+            var filter = Builders<SoftwareDeveloperModel>.Filter.And(
+                Builders<SoftwareDeveloperModel>.Filter.Gt(sd => sd.YearsOfExperience, 20),
+                Builders<SoftwareDeveloperModel>.Filter.Eq(sd => sd.Seniority, "Senior"),
+                Builders<SoftwareDeveloperModel>.Filter.Eq(sd => sd.IsFullStack, true)
+            );
+
+            var update = Builders<SoftwareDeveloperModel>.Update
+                .Set("Title", new BsonDocument("$concat", new BsonArray { "Principle ", "$Title" }));
+
+            var pipeline =
+
+                new BsonDocument("$set", new BsonDocument
+                {
+                    { "Title", new BsonDocument("$concat", new BsonArray { "Principle ", "$Title" }) }
+                });
+            
+
+            // Pokretanje updateMany sa agregacijom
+            //SoftwareCollection
+                ;
+                
         }
     }
 }

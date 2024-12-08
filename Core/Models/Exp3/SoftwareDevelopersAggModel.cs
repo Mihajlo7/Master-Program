@@ -10,6 +10,6 @@ namespace Core.Models.Exp3
     {
         public string ProgrammingLanguage { get; set; }
         public int DeveloperCount { get; set; }
-        public int AvgExperience { get; set; }
+        public double AvgExperience { get; set; }
     }
 }
