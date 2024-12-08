@@ -77,6 +77,7 @@ namespace ConsoleProgram.Generator
             var updatedEmployees = employees.Select((e, i) =>
                         {
                             e.Team = teams[i / empNum];
+                            e.TeamId = teams[i / empNum].Id;
                             return e;
                         }).ToList();
             for(int i = 0; i < departments.Count; i++)

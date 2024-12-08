@@ -114,7 +114,7 @@ namespace HybridDataAccess.Implementation
             {
                 var result = new SoftwareDevelopersAggModel
                 {
-                    ProgrammingLanguage = reader.GetString(reader.GetOrdinal("programmingLanguage")), // Preporuka: Korišćenje naziva kolona
+                    ProgrammingLanguage = reader.GetString(reader.GetOrdinal("programmingLanguage")), 
                     DeveloperCount = reader.GetInt32(reader.GetOrdinal("DeveloperCount")),
                     AvgExperience = reader.GetInt32(reader.GetOrdinal("AvgExperience"))
                 };
