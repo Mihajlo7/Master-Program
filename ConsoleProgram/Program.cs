@@ -36,7 +36,7 @@ namespace ConsoleProgram
             
             Console.WriteLine("Generating data ...");
             var (managers, softDevs) = generatorService.GenerateDataManagersAndDevelopers(5000);
-            MongoEmployeeRepository sql = new();
+            MongoDepartmentTeamEmployeeRepository sql = new();
             //Console.WriteLine("Creating tables ...");
             //sql.ExecuteCreationTable();
             //Console.WriteLine("Inserting data ...");
@@ -47,7 +47,7 @@ namespace ConsoleProgram
             
             Console.WriteLine("Reading data ...");
             //var departmentsRes = sql.UpdatePhoneById();
-            sql.UpdateTitleByFullstackAndSeniorityAndYearsExp();
+            sql.UpdateDescriptionTeamsForYoungEmployees();
             Console.WriteLine("Writting data ...");
             //string json= jsonHandler.SerializeMany(departmentsRes);
             //Console.ForegroundColor = ConsoleColor.Magenta;

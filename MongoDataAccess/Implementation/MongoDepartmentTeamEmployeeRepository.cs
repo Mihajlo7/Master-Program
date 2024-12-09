@@ -368,27 +368,82 @@ namespace MongoDataAccess.Implementation
 
         public void UpdateStatusTeam(long id, string status)
         {
-            throw new NotImplementedException();
+            var filter = Builders<DepartmentModel>.Filter
+                .ElemMatch<TeamModel>("Teams", Builders<TeamModel>.Filter.Eq("_id", id));
+            var update = Builders<DepartmentModel>.Update.Set("Teams.$.status", status);
+
+            _departmentCollection.UpdateOne(filter, update);
         }
 
         public void UpdateEmployeePhone(long id, string phone)
         {
-            throw new NotImplementedException();
+            var filter = Builders<EmployeeModel2>.Filter.Eq("_id", id);
+            var update = Builders<EmployeeModel2>.Update.Set("Phone", phone);
+
+            _employeesCollection.UpdateOne(filter,update);
         }
 
         public void UpdateDescriptionTeamsFromPrague(string description)
         {
-            throw new NotImplementedException();
+            var filter = Builders<DepartmentModel>.Filter.Eq("Location", "Prague");
+            var update = Builders<DepartmentModel>.Update.Set("Teams.$.Description", description);
+
+            _departmentCollection.UpdateMany(filter,update);
         }
 
         public void UpdateDescriptionTeamsForYoungEmployees()
         {
-            throw new NotImplementedException();
+            var teamsIds = _employeesCollection
+                .Find(Builders<EmployeeModel2>.Filter.Gt(emp=>emp.BirthDay,DateTime.UtcNow.AddYears(-18)))
+                .Project(Builders<EmployeeModel2>.Projection.Include("TeamId"))
+                .ToList();
+
+            var formatedTeamsIds= teamsIds.Select(doc => doc["TeamId"].AsInt64).Distinct().ToList();
+
+            var filter = Builders<DepartmentModel>.Filter.In("Teams._id",formatedTeamsIds);
+            var update = Builders<DepartmentModel>.Update.Set("Teams.$[].Description", "Very very Young");
+
+            _departmentCollection.UpdateMany(filter,update);
         }
 
         public void UpdateDescriptionComplex()
         {
-            throw new NotImplementedException();
+            // Pronadji timove sa 5 inzenjera
+            var engineerTeams = _employeesCollection
+                .Aggregate()
+                .Match(Builders<EmployeeModel2>.Filter.Regex("Title", new BsonRegularExpression("Engineer", "i")))
+                .Group(new BsonDocument
+                {
+                    {"_id","$TeamId" },
+                    {"count",new BsonDocument("$sum",1) }
+                })
+                .Match(Builders<BsonDocument>.Filter.Gt("count", 5))
+                .ToList();
+
+            // Vrati samo id timova
+            var teamIds = engineerTeams.Select(doc => doc["_id"].AsInt64).Distinct().ToList();
+
+            // Pronadji departmente
+            var departmentFilter = Builders<DepartmentModel>.Filter.Or(
+                Builders<DepartmentModel>.Filter.Eq("location", "London"),
+                Builders<DepartmentModel>.Filter.Regex("name", new BsonRegularExpression("^H", "i"))
+            );
+
+            var update = Builders<DepartmentModel>.Update.Set("Teams.$[Team].Description", Builders<BsonDocument>.Update.Combine(
+               Builders<BsonDocument>.Update.Set("Description", new BsonString(" SuperTeam"))
+            ));
+
+            var arrayFilters = new List<ArrayFilterDefinition>
+            {
+                new JsonArrayFilterDefinition<BsonDocument>($"{{ 'team.id': {{ $in: {teamIds.ToJson()} }} }}")
+            };
+
+            var updateOptions = new UpdateOptions
+            {
+                ArrayFilters = arrayFilters
+            };
+
+            _departmentCollection.UpdateMany(departmentFilter, update, updateOptions);
         }
     }
 }
