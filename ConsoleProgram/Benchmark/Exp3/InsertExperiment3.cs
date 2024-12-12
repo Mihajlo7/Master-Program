@@ -28,7 +28,7 @@ namespace ConsoleProgram.Benchmark.Exp3
             repository = new SqlEmployeeRepository();
             (managers, softwareDevelopers) = generatorService.GenerateDataManagersAndDevelopers(employeeSize);
         }
-
+        [IterationSetup] public void IterationSetup() => repository.ExecuteCreationTable();
         [Benchmark] public void InsertManager() => repository.InsertManager(managers.First());
         [Benchmark] public void InsertSoftwareDevs() => repository.InsertSoftwareDeveloper(softwareDevelopers.First());
 
