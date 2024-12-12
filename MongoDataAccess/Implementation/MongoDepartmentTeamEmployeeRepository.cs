@@ -33,6 +33,8 @@ namespace MongoDataAccess.Implementation
 
         public void ExecuteCreationTable()
         {
+            _database.DropCollection(_departmentsCollectionName);
+            _database.DropCollection(_employeesCollectionName);
             _database.CreateCollection(_departmentsCollectionName);
             _database.CreateCollection(_employeesCollectionName);
         }

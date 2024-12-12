@@ -25,7 +25,8 @@ namespace MongoDataAccess.Implementation
 
         public void ExecuteCreationTable()
         {
-            //_database.CreateCollection("NovaCollection");
+            _database.DropCollection(_collectionName);
+            _database.CreateCollection(_collectionName);
         }
 
         public void ExecuteCreationAdditional()

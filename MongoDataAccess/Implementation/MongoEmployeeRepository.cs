@@ -71,6 +71,7 @@ namespace MongoDataAccess.Implementation
 
         public void ExecuteCreationTable()
         {
+            _database.DropCollection(_EMPLOYEE_COLLECTION);
             _database.CreateCollection(_EMPLOYEE_COLLECTION);
         }
 
