@@ -63,6 +63,14 @@ namespace HybridDataAccess.Queries {
         /// <summary>
         ///   Looks up a localized string similar to INSERT INTO Task(id,name,description,priority,deadline,status,responsible,supervisor,employees)
         ///VALUES(@TaskId,@TaskName,@TaskDescription,@TaskPriority,@TaskDeadline,@TaskStatus,@Responsible,@Supervisor,@Employees);
+        ///
+        ///WITH cte AS(
+        ///	SELECT id,[key],teams,value 
+        ///	FROM Department CROSS APPLY OPENJSON(teams)
+        ///	WHERE JSON_VALUE(value,&apos;$.Id&apos;)=@TeamId
+        ///)
+        ///UPDATE cte
+        ///SET teams= JSON_MODIFY(teams,&apos;$[&apos;+cte.[key]+&apos;].Employees&apos;,JSON_QUERY(@Employees));
         ///.
         /// </summary>
         internal static string Insert {
@@ -136,6 +144,26 @@ namespace HybridDataAccess.Queries {
         internal static string Tables {
             get {
                 return ResourceManager.GetString("Tables", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to -- 1. Update Task expired and pedning
+        ///UPDATE dbo.Task SET Status = &apos;Cancelled&apos; WHERE Deadline &lt; GETDATE() AND Status = &apos;Pending&apos;;
+        ///-- 2. Update deadline for priority and deadline
+        ///UPDATE dbo.Task
+        ///SET Deadline = DATEADD(DAY, 5, Deadline) 
+        ///WHERE Priority &lt; 4 
+        ///  AND Deadline BETWEEN GETDATE() AND DATEADD(DAY, 3, GETDATE());
+        ///-- 3. Update Deadline by LastName
+        ///UPDATE dbo.Task
+        ///SET deadline= DATEADD(DAY,3,deadline)
+        ///WHERE JSON_VALUE(responsible,&apos;$.LastName&apos;) LIKE &apos;M%&apos;;
+        ///-- 4. Update Deadline By Responsible T [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string Update {
+            get {
+                return ResourceManager.GetString("Update", resourceCulture);
             }
         }
     }

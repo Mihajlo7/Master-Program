@@ -14,7 +14,7 @@ namespace SqlDataAccess.Implementation
 {
     public class SqlEmployeeTasksRepository : SqlRepository, IEmployeeTasksRepository
     {
-        public SqlEmployeeTasksRepository():base("exp1_db"){ }
+        public SqlEmployeeTasksRepository():base("exp_db"){ }
         public SqlEmployeeTasksRepository(string database) : base(database) { }
 
 
@@ -70,7 +70,11 @@ namespace SqlDataAccess.Implementation
 
             copy.WriteToServer(dt);
             List<EmployeeTaskModel> list = new List<EmployeeTaskModel>();
-            list= tasks.SelectMany(t=>t.Employees).ToList();
+            list = tasks.SelectMany(t => t.Employees.Select(e =>
+            {
+                e.TaskId = t.Id;
+                return e;
+            })).ToList();
 
             copy.ColumnMappings.Clear();
 
@@ -82,7 +86,7 @@ namespace SqlDataAccess.Implementation
             dt2.Columns.Add("taskId",typeof(long));
             foreach(var l in list)
             {
-                dt2.Rows.Add(l.EmployeeId, l.TaskId);
+                dt2.Rows.Add(l.Employee.Id, l.TaskId);
             }
             copy.WriteToServer(dt2);
         }
@@ -176,8 +180,8 @@ namespace SqlDataAccess.Implementation
                 foreach (var employeeTask in newTask.Employees)
                 {
                     commandEmployeeTask.Parameters.Clear();
-                    commandEmployeeTask.Parameters.AddWithValue("@TaskId", employeeTask.TaskId);
-                    commandEmployeeTask.Parameters.AddWithValue("@EmployeeId", employeeTask.EmployeeId);
+                    commandEmployeeTask.Parameters.AddWithValue("@TaskId", newTask.Id);
+                    commandEmployeeTask.Parameters.AddWithValue("@EmployeeId", employeeTask.Employee.Id);
 
                     commandEmployeeTask.ExecuteNonQuery();
 

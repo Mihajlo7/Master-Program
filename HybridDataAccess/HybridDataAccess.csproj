@@ -13,6 +13,7 @@
   <ItemGroup>
     <ProjectReference Include="..\DataAccess\DataAccess.csproj" />
     <ProjectReference Include="..\HelperMapper\HelperMapper.csproj" />
+    <ProjectReference Include="..\SqlDataAccess\SqlDataAccess.csproj" />
   </ItemGroup>
 
   <ItemGroup>

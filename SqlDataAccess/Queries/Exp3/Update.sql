@@ -7,7 +7,7 @@ UPDATE SoftwareDeveloper SET isFullStack = 1 WHERE id = @SoftwareDeveloperId;
 UPDATE Manager 
 SET method = 'Lean'
 WHERE department IN ('IT','Logistics')
-AND id IN (SELECT id FROM Employee WHERE DATEDIFF(YEAR, e.birthday, GETDATE()) BETWEEN 40 AND 50);
+AND id IN (SELECT e.id FROM Employee e WHERE DATEDIFF(YEAR, e.birthday, GETDATE()) BETWEEN 40 AND 50);
 
 UPDATE SoftwareDeveloper
 SET isFullStack = 1
@@ -16,5 +16,5 @@ AND id IN(SELECT id FROM Employee WHERE title LIKE '%Engineer%');
 
 UPDATE Employee
 SET title = 'Principle ' + title
-WHERE id IN (SELECT id FROM Developer WHERE seniority='Senior' AND yearsOfExperienced>20)
+WHERE id IN (SELECT id FROM Developer WHERE seniority='Senior' AND yearsOfExperience>20)
 AND id IN (SELECT id FROM SoftwareDeveloper WHERE isFullStack=1);

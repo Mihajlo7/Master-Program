@@ -2,10 +2,12 @@
 using DataAccess;
 using HybridDataAccess.Queries;
 using Microsoft.Data.SqlClient;
+using SqlDataAccess.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -13,7 +15,7 @@ namespace HybridDataAccess.Implementation
 {
     public sealed class HybridEmployeeTasksRepository : HybridRepository, IEmployeeTasksRepository
     {
-        public HybridEmployeeTasksRepository() : base("exp_db")
+        public HybridEmployeeTasksRepository() : base("exp_hybrid_db")
         {
             
         }
@@ -67,47 +69,148 @@ namespace HybridDataAccess.Implementation
 
         public List<TaskModel> GetAllTasksByDeadilineAndNotComplited(int day)
         {
-            throw new NotImplementedException();
+            string query = GenerateQueriesFromQuery(Experiment1Hybrid.Select)[5];
+
+            using var connection = new SqlConnection(_connectionString);
+            using var command = new SqlCommand(query, connection);
+            command.Parameters.AddWithValue("@Day", day);
+
+            connection.Open();
+            using var reader = command.ExecuteReader();
+            var tasks = TaskEmployeeHelper.ToTaskWithResponsibleHibrid(reader);
+
+            return tasks;
         }
 
         public List<TaskModel> GetAllTasksByResponsibleNameAndSupervisorBirthday(string firstname, DateTime birthday)
         {
-            throw new NotImplementedException();
+            string query = GenerateQueriesFromQuery(Experiment1Hybrid.Select)[6];
+
+            using var connection = new SqlConnection(_connectionString);
+            using var command = new SqlCommand(query, connection);
+            command.Parameters.AddWithValue("@Firstname", $"{firstname}%");
+            command.Parameters.AddWithValue("@Birthday", birthday);
+
+            connection.Open();
+            using var reader = command.ExecuteReader();
+
+            var tasks = TaskEmployeeHelper.ToTaskOnly(reader);
+            return tasks;
         }
 
         public List<TaskModel> GetAllTasksWithEmployees()
         {
-            throw new NotImplementedException();
+            string query = GenerateQueriesFromQuery(Experiment1Hybrid.Select)[1];
+
+            using var connection = new SqlConnection(_connectionString);
+            using var command = new SqlCommand(query, connection);
+
+            connection.Open();
+            using var reader = command.ExecuteReader();
+            var tasks = TaskEmployeeHelper.ToTasksFullFromSelectHybrid(reader);
+            return tasks;
         }
 
         public List<TaskModel> GetAllTasksWithEmployeesBadWay()
         {
-            throw new NotImplementedException();
+            string query = GenerateQueriesFromQuery(Experiment1Hybrid.Select)[0];
+
+            using var connection = new SqlConnection(_connectionString);
+            using var command = new SqlCommand(query, connection);
+
+            connection.Open();
+            using var reader = command.ExecuteReader();
+            List<TaskModel> tasks = new List<TaskModel>();
+            while (reader.Read())
+            {
+                var taskSupervisorValue = reader["TaskSupervisor"]; // Čitanje vrednosti iz baze
+                EmployeeModel supervisor = taskSupervisorValue == DBNull.Value
+                    ? null
+                    : _jsonHandler.DeserializeOne<EmployeeModel>(taskSupervisorValue.ToString());
+                TaskModel task = new TaskModel()
+                {
+                    Id = reader.GetInt64("TaskId"),
+                    Name = reader.GetString("TaskName"),
+                    Description = reader.GetString("TaskDescription"),
+                    Priority = reader.GetInt32("TaskPriority"),
+                    Deadline = reader.GetDateTime("TaskDeadline"),
+                    Status = reader.GetString("TaskStatus"),
+                    Responsible = _jsonHandler.DeserializeOne<EmployeeModel>(reader.GetString("TaskResponsible")),
+                    Supervisor = supervisor,
+                    Employees = _jsonHandler.DeserializeMany<EmployeeTaskModel>(reader.GetString("TaskEmployees"))
+                };
+                tasks.Add(task);
+
+            }
+            return tasks;
         }
 
         public List<TaskModel> GetAllTasksWithEmployeesByPriorityAndStatus(int priority)
         {
-            throw new NotImplementedException();
+            string query = GenerateQueriesFromQuery(Experiment1Hybrid.Select)[4];
+
+            using var connection = new SqlConnection(_connectionString);
+            using var command = new SqlCommand(query, connection);
+            command.Parameters.AddWithValue("@Priority", priority);
+
+            connection.Open();
+            using var reader = command.ExecuteReader();
+            var tasks = TaskEmployeeHelper.ToTasksFullFromSelectHybrid(reader);
+            return tasks;
         }
 
         public List<TaskModel> GetAllTasksWithEmployeesSorted()
         {
-            throw new NotImplementedException();
+            string query = GenerateQueriesFromQuery(Experiment1Hybrid.Select)[2];
+
+            using var connection = new SqlConnection(_connectionString);
+            using var command = new SqlCommand(query, connection);
+
+            connection.Open();
+            using var reader = command.ExecuteReader();
+            var tasks = TaskEmployeeHelper.ToTasksFullFromSelectHybrid(reader);
+            return tasks;
         }
 
         public List<EmployeeWithCountTasksModel> GetEmployeesWithCountTasks()
         {
-            throw new NotImplementedException();
+            string query = GenerateQueriesFromQuery(Experiment1Hybrid.Select)[7];
+
+            using var connection = new SqlConnection(_connectionString);
+            using var command = new SqlCommand(query, connection);
+
+            connection.Open();
+            using var reader = command.ExecuteReader();
+            var employeesWithTasks = TaskEmployeeHelper.ToEmployeeWithTasksHybrid(reader);
+            return employeesWithTasks;
         }
 
         public List<EmployeeWithCountTasksModel> GetEmployeesWithCountTasksHavingAndOrder(int numOfTasks)
         {
-            throw new NotImplementedException();
+            string query = GenerateQueriesFromQuery(Experiment1Hybrid.Select)[8];
+
+            using var connection = new SqlConnection(_connectionString);
+            using var command = new SqlCommand(query, connection);
+            command.Parameters.AddWithValue("@NumOfEmployees", numOfTasks);
+
+            connection.Open();
+            using var reader = command.ExecuteReader();
+            var employeesWithTasks = TaskEmployeeHelper.ToEmployeeWithTasksHybrid(reader);
+            return employeesWithTasks;
         }
 
         public TaskModel GetTaskWithEmployeesById(long id)
         {
-            throw new NotImplementedException();
+            string query = GenerateQueriesFromQuery(Experiment1Hybrid.Select)[3];
+
+            using var connection = new SqlConnection(_connectionString);
+            using var command = new SqlCommand(query, connection);
+            command.Parameters.AddWithValue("@TaskId", id);
+
+            connection.Open();
+            using var reader = command.ExecuteReader();
+            var tasks = TaskEmployeeHelper.ToTasksFullFromSelectHybrid(reader);
+            return tasks.First();
         }
 
         public void InsertBulk(List<TaskModel> tasks)
@@ -203,37 +306,89 @@ namespace HybridDataAccess.Implementation
 
         public int UpdateDeadlineByPriorityByDeadline(int priority, int day)
         {
-            throw new NotImplementedException();
+            string query = GenerateQueriesFromQuery(Experiment1Hybrid.Update)[1];
+
+            using var connection = new SqlConnection(_connectionString);
+            using var command = new SqlCommand(query, connection);
+
+            connection.Open();
+            var result = command.ExecuteNonQuery();
+            return result;
         }
 
         public int UpdateDeadlineByResponsibleLastName(string lastName)
         {
-            throw new NotImplementedException();
+            string query = GenerateQueriesFromQuery(Experiment1Hybrid.Update)[2];
+
+            using var connection = new SqlConnection(_connectionString);
+            using var command = new SqlCommand(query, connection);
+
+            connection.Open();
+            var result = command.ExecuteNonQuery();
+            return result;
         }
 
         public int UpdateDeadlineByResponsibleTitleAndBirthday()
         {
-            throw new NotImplementedException();
+            string query = GenerateQueriesFromQuery(Experiment1Hybrid.Update)[3];
+
+            using var connection = new SqlConnection(_connectionString);
+            using var command = new SqlCommand(query, connection);
+
+            connection.Open();
+            var result = command.ExecuteNonQuery();
+            return result;
         }
 
         public int UpdateExpiredTaskByDeadline()
         {
-            throw new NotImplementedException();
+            string query = GenerateQueriesFromQuery(Experiment1Hybrid.Update)[0];
+
+            using var connection = new SqlConnection(_connectionString);
+            using var command = new SqlCommand(query, connection);
+
+            connection.Open();
+            var result = command.ExecuteNonQuery();
+            return result;
         }
 
         public int UpdatePhoneByEmail(string phone, string email)
         {
-            throw new NotImplementedException();
+            using var connection = new SqlConnection(_connectionString);
+            using var command = new SqlCommand("UpdateEmployeePhoneByEmail",connection);
+            command.CommandType = CommandType.StoredProcedure;
+            command.Parameters.AddWithValue("@Email",email);
+            command.Parameters.AddWithValue("@Phone",phone);
+
+            connection.Open();
+            int res =command.ExecuteNonQuery();
+            return res;
         }
 
         public int UpdatePhoneById(string phone, long id)
         {
-            throw new NotImplementedException();
+            using var connection = new SqlConnection(_connectionString);
+            using var command = new SqlCommand("UpdateEmployeePhoneById", connection);
+            command.CommandType = CommandType.StoredProcedure;
+            command.Parameters.AddWithValue("@Id", id);
+            command.Parameters.AddWithValue("@Phone", phone);
+
+            connection.Open();
+            int res = command.ExecuteNonQuery();
+            return res;
         }
 
         public int UpdateTasksFromOneEmployeeToOther(long fromEmployee, long toEmployee)
         {
-            throw new NotImplementedException();
+            using var connection = new SqlConnection(_connectionString);
+            using var command = new SqlCommand("UpdateTasksFromOneEmployeeToAnother", connection);
+            command.CommandType = CommandType.StoredProcedure;
+            command.Parameters.AddWithValue("@FromEmployee", fromEmployee);
+            command.Parameters.AddWithValue("@ToEmployee", toEmployee);
+
+            connection.Open();
+            int res = command.ExecuteNonQuery();
+            return res;
         }
     }
 }

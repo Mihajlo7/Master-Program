@@ -6,6 +6,7 @@ using SqlDataAccess.Queries.Exp2;
 using SqlDataAccess.Queries.Exp3;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -145,13 +146,118 @@ namespace SqlDataAccess.Implementation
         {
             var teams= departments.SelectMany(d=>d.Teams).ToList();
 
-            InsertBulkPriv("Department", Exp2HelperMapper.CreateDepartmentDataTable(departments));
-            InsertBulkPriv("Team", Exp2HelperMapper.CreateTeamDataTable(teams));
+            using (var connection = new SqlConnection(_connectionString))
+            {
+                connection.Open();
+
+                using (var transaction = connection.BeginTransaction())
+                {
+                    try
+                    {
+                        // Kreiraj DataTable za Department
+                        var departmentTable = new DataTable();
+                        departmentTable.Columns.Add("id", typeof(long));
+                        departmentTable.Columns.Add("name", typeof(string));
+                        departmentTable.Columns.Add("location", typeof(string));
+
+                        foreach (var dept in departments)
+                        {
+                            departmentTable.Rows.Add(dept.Id, dept.Name, dept.Location);
+                        }
+
+                        // Ubaci podatke u tabelu Department
+                        using (var bulkCopy = new SqlBulkCopy(connection, SqlBulkCopyOptions.Default, transaction))
+                        {
+                            bulkCopy.DestinationTableName = "Department";
+                            bulkCopy.WriteToServer(departmentTable);
+                        }
+
+                        // Kreiraj DataTable za Team
+                        var teamTable = new DataTable();
+                        teamTable.Columns.Add("id", typeof(long));
+                        teamTable.Columns.Add("name", typeof(string));
+                        teamTable.Columns.Add("status", typeof(string));
+                        teamTable.Columns.Add("description", typeof(string));
+                        teamTable.Columns.Add("department_id", typeof(long));
+                        teamTable.Columns.Add("leader_id", typeof(long));
+
+                        foreach (var dept in departments)
+                        {
+                            if (dept.Teams != null)
+                            {
+                                foreach (var team in dept.Teams)
+                                {
+                                    teamTable.Rows.Add(
+                                        team.Id,
+                                        team.Name,
+                                        team.Status,
+                                        team.Description,
+                                        dept.Id, // department_id
+                                        team.LeaderId // leader_id
+                                    );
+                                }
+                            }
+                        }
+
+                        // Ubaci podatke u tabelu Team
+                        using (var bulkCopy = new SqlBulkCopy(connection, SqlBulkCopyOptions.Default, transaction))
+                        {
+                            
+                            bulkCopy.DestinationTableName = "Team";
+                            bulkCopy.WriteToServer(teamTable);
+                        }
+
+                        // Commit transakciju
+                        transaction.Commit();
+                    }
+                    catch (Exception ex)
+                    {
+                        transaction.Rollback();
+                        Console.WriteLine($"Error: {ex.Message}");
+                        throw;
+                    }
+                }
+            }
         }
 
         public void InsertBulkEmployees(List<EmployeeModel2> employees)
         {
-            InsertBulkPriv("Employees",Exp2HelperMapper.CreateEmployeeDataTable(employees));
+            var employeeTable = new DataTable();
+            employeeTable.Columns.Add("id", typeof(long));
+            employeeTable.Columns.Add("first_name", typeof(string));
+            employeeTable.Columns.Add("last_name", typeof(string));
+            employeeTable.Columns.Add("email", typeof(string));
+            employeeTable.Columns.Add("birth_day", typeof(DateTime));
+            employeeTable.Columns.Add("title", typeof(string));
+            employeeTable.Columns.Add("phone", typeof(string));
+            employeeTable.Columns.Add("team_id", typeof(long));
+
+            foreach (var employee in employees)
+            {
+                employeeTable.Rows.Add(
+                    employee.Id,
+                    employee.FirstName,
+                    employee.LastName,
+                    employee.Email,
+                    employee.BirthDay ?? (object)DBNull.Value,
+                    employee.Title,
+                    employee.Phone,
+                    employee.TeamId // team_id
+                );
+            }
+            using var connection = new SqlConnection(_connectionString);
+            connection.Open();
+            using var transaction = connection.BeginTransaction();
+
+            using (var bulkCopy = new SqlBulkCopy(connection, SqlBulkCopyOptions.Default, transaction))
+            {
+                bulkCopy.DestinationTableName = "Employee";
+                bulkCopy.WriteToServer(employeeTable);
+            }
+
+            // Commit transakciju
+            transaction.Commit();
+
         }
 
         public void InsertDepartmenstWithTeams(List<DepartmentModel> departments)
@@ -221,7 +327,7 @@ namespace SqlDataAccess.Implementation
             using var connection = new SqlConnection(_connectionString);
             using var command = new SqlCommand(GenerateQueriesFromQuery(Experiment2Sql.Update)[4], connection);
 
-
+            connection.Open();
             command.ExecuteNonQuery();
         }
 
@@ -230,7 +336,7 @@ namespace SqlDataAccess.Implementation
             using var connection = new SqlConnection(_connectionString);
             using var command = new SqlCommand(GenerateQueriesFromQuery(Experiment2Sql.Update)[3], connection);
 
-
+            connection.Open();
             command.ExecuteNonQuery();
         }
 
@@ -241,6 +347,7 @@ namespace SqlDataAccess.Implementation
 
             command.Parameters.AddWithValue("@Description", description);
 
+            connection.Open();
             command.ExecuteNonQuery();
         }
 
@@ -252,6 +359,7 @@ namespace SqlDataAccess.Implementation
             command.Parameters.AddWithValue("@Phone", phone);
             command.Parameters.AddWithValue("@Id", id);
 
+            connection.Open();
             command.ExecuteNonQuery();
         }
 
@@ -263,6 +371,7 @@ namespace SqlDataAccess.Implementation
             command.Parameters.AddWithValue("@Status",status);
             command.Parameters.AddWithValue("@Id",id);
 
+            connection.Open();
             command.ExecuteNonQuery();
         }
     }

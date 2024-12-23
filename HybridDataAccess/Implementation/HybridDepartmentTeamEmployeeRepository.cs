@@ -108,6 +108,7 @@ namespace HybridDataAccess.Implementation
                         Team = group.Key,
                         Employees = group.ToList()
                     });
+            
             string query = GenerateQueriesFromQuery(Experiment2Hybrid.Insert)[1];
 
             using var connection = new SqlConnection(_connectionString);
@@ -130,13 +131,13 @@ namespace HybridDataAccess.Implementation
 
         public void InsertBulkDepartmenstWithTeams(List<DepartmentModel> departments)
         {
-            var dataTable = new DataTable("Department");
+            var dataTable = new DataTable();
 
             // Definišemo kolone
-            dataTable.Columns.Add("Id", typeof(long));
-            dataTable.Columns.Add("Name", typeof(string));
-            dataTable.Columns.Add("Location", typeof(string));
-            dataTable.Columns.Add("Teams", typeof(string));
+            dataTable.Columns.Add("id", typeof(long));
+            dataTable.Columns.Add("name", typeof(string));
+            dataTable.Columns.Add("location", typeof(string));
+            dataTable.Columns.Add("teams", typeof(string));
 
             // Popunjavamo redove
             foreach (var department in departments)
@@ -149,7 +150,17 @@ namespace HybridDataAccess.Implementation
                 );
             }
 
-            InsertBulkPriv("Department", dataTable);
+            using var copy = new SqlBulkCopy(_connectionString);
+
+            copy.DestinationTableName = "dbo.Department";
+
+            copy.ColumnMappings.Add(nameof(DepartmentModel.Id), "id");
+            copy.ColumnMappings.Add(nameof(DepartmentModel.Name), "name");
+            copy.ColumnMappings.Add(nameof(DepartmentModel.Location), "location");
+            copy.ColumnMappings.Add(nameof(DepartmentModel.Teams), "teams");
+
+            copy.WriteToServer(dataTable);
+            
 
         }
 
@@ -276,7 +287,7 @@ namespace HybridDataAccess.Implementation
             using var connection = new SqlConnection(_connectionString);
             using var command = new SqlCommand(GenerateQueriesFromQuery(Experiment2Hybrid.Update)[4], connection);
 
-
+            connection.Open();
             command.ExecuteNonQuery();
         }
 
@@ -285,7 +296,7 @@ namespace HybridDataAccess.Implementation
             using var connection = new SqlConnection(_connectionString);
             using var command = new SqlCommand(GenerateQueriesFromQuery(Experiment2Hybrid.Update)[3], connection);
 
-
+            connection.Open();
             command.ExecuteNonQuery();
         }
 
@@ -296,6 +307,7 @@ namespace HybridDataAccess.Implementation
 
             command.Parameters.AddWithValue("@Description", description);
 
+            connection.Open();
             command.ExecuteNonQuery();
         }
 
@@ -307,6 +319,7 @@ namespace HybridDataAccess.Implementation
             command.Parameters.AddWithValue("@Phone", phone);
             command.Parameters.AddWithValue("@Id", id);
 
+            connection.Open();
             command.ExecuteNonQuery();
         }
 
@@ -318,6 +331,7 @@ namespace HybridDataAccess.Implementation
             command.Parameters.AddWithValue("@Status", status);
             command.Parameters.AddWithValue("@Id", id);
 
+            connection.Open();
             command.ExecuteNonQuery();
         }
     }

@@ -7,7 +7,7 @@ UPDATE Employee SET phone=@Phone WHERE id=@Id;
 -- 3. By Location
 UPDATE Team 
 SET description=@Description 
-WHERE t.department_id IN (SELECT id FROM Department WHERE location='Prague');
+WHERE department_id IN (SELECT id FROM Department WHERE location='Prague');
 
 -- 4. 
 UPDATE Team

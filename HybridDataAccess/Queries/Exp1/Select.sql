@@ -157,7 +157,7 @@ ORDER BY t.deadline ASC;
 SELECT t.id TaskId,t.name TaskName, t.description TaskDescription, t.priority TaskPriority,t.deadline TaskDeadline,t.status TaskStatus
 FROM dbo.Task t
 WHERE JSON_VALUE(t.responsible,'$.FirstName') LIKE @FirstName
-AND JSON_VALUE(t.supervisor,'$.BirthDay')<@Birthday;
+AND TRY_CAST(JSON_VALUE(t.supervisor,'$.BirthDay') AS DATETIME)<@Birthday;
 
 -- 8. Get Employee And All Tasks
 SELECT JSON_VALUE(em.value,'$.Employee.Id') Id,JSON_VALUE(em.value,'$.Employee.Email') Email, COUNT (t.id) TaskCount

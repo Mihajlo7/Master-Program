@@ -7,7 +7,7 @@ WITH cte AS(
 	WHERE JSON_VALUE(value,'$.Id')=2
 )
 UPDATE cte
-SET teams= JSON_MODIFY(teams,'$['+cte.[key]+'].Status','Neki Moj')
+SET teams= JSON_MODIFY(teams,'$['+cte.[key]+'].Status','Neki Moj');
 
 ---------------------------------------
 -- 1.
@@ -17,7 +17,7 @@ WITH cte AS(
 	WHERE JSON_VALUE(e.value,'$.Id')=@Id
 )
 UPDATE cte
-SET teams= JSON_MODIFY(teams,'$['+cte.teamKey+'].Employees['+cte.empKey+'].Phone',@Phone)
+SET teams= JSON_MODIFY(teams,'$['+cte.teamKey+'].Employees['+cte.empKey+'].Phone',@Phone);
 
 ---------------------------------------
 -- 2.
@@ -27,7 +27,7 @@ WITH cte AS(
 	WHERE location='Prague'
 )
 UPDATE cte
-SET teams= JSON_MODIFY(teams,'$['+teamKey+'].Description',@Description)
+SET teams= JSON_MODIFY(teams,'$['+teamKey+'].Description',@Description);
 
 ----------------------------------------
 -- 3.
@@ -38,7 +38,7 @@ WITH cte AS(
 	--GROUP BY t.[key] , teams
 )
 UPDATE cte
-SET teams= JSON_MODIFY(teams,'$['+cte.teamKey+'].Description','Very Young')
+SET teams= JSON_MODIFY(teams,'$['+cte.teamKey+'].Description','Very Young');
 
 ----------------------------------------
 -- 4.

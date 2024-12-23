@@ -10,7 +10,7 @@ namespace Generator
 {
     public sealed class TeamFaker : Faker<TeamModel>
     {
-        private static long id = 1;
+        private  long id = 1;
         public TeamFaker()
         {
             RuleFor(t => t.Id,_=> id++);

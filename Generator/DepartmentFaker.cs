@@ -34,8 +34,8 @@ namespace Generator
             "Data Analytics"
         };
         string[] cities = { "Belgrade","Novi Sad","Berlin","London","Prague"};
-        private static long id = 1;
-        private static int i = 0;
+        private  long id = 1;
+        private int i = 0;
         public DepartmentFaker() 
         {
             RuleFor(d => d.Name, _ => departments[i++]);

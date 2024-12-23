@@ -137,7 +137,7 @@ namespace SqlDataAccess.Queries.Exp2 {
         ///-- 3. By Location
         ///UPDATE Team 
         ///SET description=@Description 
-        ///WHERE t.department_id IN (SELECT id FROM Department WHERE location=&apos;Prague&apos;);
+        ///WHERE department_id IN (SELECT id FROM Department WHERE location=&apos;Prague&apos;);
         ///
         ///-- 4. 
         ///UPDATE Team
@@ -149,7 +149,7 @@ namespace SqlDataAccess.Queries.Exp2 {
         ///    WHERE DATEDIFF(YEAR, e.birth_day, GETDATE()) &lt; 20
         ///);
         ///-- 5.
-        ///UPDATE  [rest of string was truncated]&quot;;.
+        ///UPDATE Te [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string Update {
             get {

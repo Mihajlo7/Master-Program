@@ -1,54 +1,131 @@
 ﻿-- 0.
 SELECT * FROM Department;
 -- 1.
-SELECT d.id DepartementId,d.name DepartmentName,d.location DepartmentLocation,
-JSON_VALUE(t.value,'$.Id') TeamId,JSON_VALUE(t.value,'$.Name') TeamName,JSON_VALUE(t.value,'$.Status') TeamStatus,JSON_VALUE(t.value,'$.Description') TeamDescription,
-JSON_VALUE(t.value,'$.Lead.Id') LeadId,JSON_VALUE(t.value,'$.Lead.FirstName') LeadFirstName,JSON_VALUE(t.value,'$.Lead.LastName') LeadLastName,
-JSON_VALUE(t.value,'$.Lead.Email') LeadEmail,JSON_VALUE(t.value,'$.Lead.BirthDay') LeadBirthDay,JSON_VALUE(t.value,'$.Lead.Phone') LeadTitle,JSON_VALUE(t.value,'$.Lead.Phone') LeadPhone,
-JSON_VALUE(e.value,'$.Id') Id,JSON_VALUE(e.value,'$.FirstName') FirstName,JSON_VALUE(e.value,'$.LastName') LastName,JSON_VALUE(e.value,'$.Email') Email, 
-JSON_VALUE(e.value,'$.BirthDay') BirthDay,JSON_VALUE(e.value,'$.Title') Title,JSON_VALUE(e.value,'$.Phone') Phone
-FROM Department d CROSS APPLY OPENJSON(teams) t
-CROSS APPLY OPENJSON(JSON_QUERY(value,'$.Employees')) e;
+SELECT 
+    d.id AS DepartementId,
+    d.name AS DepartmentName,
+    d.location AS DepartmentLocation,
+    CAST(JSON_VALUE(t.value, '$.Id') AS BIGINT) AS TeamId,
+    JSON_VALUE(t.value, '$.Name') AS TeamName,
+    JSON_VALUE(t.value, '$.Status') AS TeamStatus,
+    JSON_VALUE(t.value, '$.Description') AS TeamDescription,
+    CAST(JSON_VALUE(t.value, '$.Lead.Id') AS BIGINT) AS LeadId,
+    JSON_VALUE(t.value, '$.Lead.FirstName') AS LeadFirstName,
+    JSON_VALUE(t.value, '$.Lead.LastName') AS LeadLastName,
+    JSON_VALUE(t.value, '$.Lead.Email') AS LeadEmail,
+    TRY_CAST(LEFT(JSON_VALUE(t.value, '$.Lead.BirthDay'), 19) AS DATETIME) AS LeadBirthDay, -- Bez vremenske zone
+    JSON_VALUE(t.value, '$.Lead.Phone') AS LeadTitle,
+    JSON_VALUE(t.value, '$.Lead.Phone') AS LeadPhone,
+    CAST(JSON_VALUE(e.value, '$.Id') AS BIGINT) AS Id,
+    JSON_VALUE(e.value, '$.FirstName') AS FirstName,
+    JSON_VALUE(e.value, '$.LastName') AS LastName,
+    JSON_VALUE(e.value, '$.Email') AS Email,
+    TRY_CAST(LEFT(JSON_VALUE(e.value, '$.BirthDay'), 19) AS DATETIME) AS BirthDay, -- Bez vremenske zone
+    JSON_VALUE(e.value, '$.Title') AS Title,
+    JSON_VALUE(e.value, '$.Phone') AS Phone
+FROM 
+    Department d
+CROSS APPLY 
+    OPENJSON(teams) t
+CROSS APPLY 
+    OPENJSON(JSON_QUERY(value, '$.Employees')) e;
 ---------------------------------------------------------------
 -- 2.
-SELECT JSON_VALUE(t.value,'$.Id') TeamId,JSON_VALUE(t.value,'$.Name') TeamName,JSON_VALUE(t.value,'$.Status') TeamStatus,JSON_VALUE(t.value,'$.Description') TeamDescription,
-JSON_VALUE(t.value,'$.Lead.Id') LeadId,JSON_VALUE(t.value,'$.Lead.FirstName') LeadFirstName,JSON_VALUE(t.value,'$.Lead.LastName') LeadLastName,
-JSON_VALUE(t.value,'$.Lead.Email') LeadEmail,JSON_VALUE(t.value,'$.Lead.BirthDay') LeadBirthDay,JSON_VALUE(t.value,'$.Lead.Phone') LeadTitle,JSON_VALUE(t.value,'$.Lead.Phone') LeadPhone,
-JSON_VALUE(e.value,'$.Id') Id,JSON_VALUE(e.value,'$.FirstName') FirstName,JSON_VALUE(e.value,'$.LastName') LastName,JSON_VALUE(e.value,'$.Email') Email, 
-JSON_VALUE(e.value,'$.BirthDay') BirthDay,JSON_VALUE(e.value,'$.Title') Title,JSON_VALUE(e.value,'$.Phone') Phone
-FROM Department d CROSS APPLY OPENJSON(teams) t
-CROSS APPLY OPENJSON(JSON_QUERY(value,'$.Employees')) e
-WHERE id=@DepartmentId;
+SELECT 
+    TRY_CAST(JSON_VALUE(t.value, '$.Id') AS BIGINT) AS TeamId,
+    JSON_VALUE(t.value, '$.Name') AS TeamName,
+    JSON_VALUE(t.value, '$.Status') AS TeamStatus,
+    JSON_VALUE(t.value, '$.Description') AS TeamDescription,
+    TRY_CAST(JSON_VALUE(t.value, '$.Lead.Id') AS BIGINT) AS LeadId,
+    JSON_VALUE(t.value, '$.Lead.FirstName') AS LeadFirstName,
+    JSON_VALUE(t.value, '$.Lead.LastName') AS LeadLastName,
+    JSON_VALUE(t.value, '$.Lead.Email') AS LeadEmail,
+    TRY_CAST(LEFT(JSON_VALUE(t.value, '$.Lead.BirthDay'), 19) AS DATETIME) AS LeadBirthDay,
+    JSON_VALUE(t.value, '$.Lead.Phone') AS LeadTitle,
+    JSON_VALUE(t.value, '$.Lead.Phone') AS LeadPhone,
+    TRY_CAST(JSON_VALUE(e.value, '$.Id') AS BIGINT) AS Id,
+    JSON_VALUE(e.value, '$.FirstName') AS FirstName,
+    JSON_VALUE(e.value, '$.LastName') AS LastName,
+    JSON_VALUE(e.value, '$.Email') AS Email,
+    TRY_CAST(LEFT(JSON_VALUE(e.value, '$.BirthDay'), 19) AS DATETIME) AS BirthDay,
+    JSON_VALUE(e.value, '$.Title') AS Title,
+    JSON_VALUE(e.value, '$.Phone') AS Phone
+FROM 
+    Department d
+CROSS APPLY 
+    OPENJSON(teams) t
+CROSS APPLY 
+    OPENJSON(JSON_QUERY(value, '$.Employees')) e
+WHERE 
+    d.id = @DepartmentId;
 
 ----------------------------------------------------------------
 -- 3.
-SELECT JSON_VALUE(e.value,'$.Id') Id,JSON_VALUE(e.value,'$.FirstName') FirstName,JSON_VALUE(e.value,'$.LastName') LastName,JSON_VALUE(e.value,'$.Email') Email, 
-JSON_VALUE(e.value,'$.BirthDay') BirthDay,JSON_VALUE(e.value,'$.Title') Title,JSON_VALUE(e.value,'$.Phone') Phone
-FROM Department d CROSS APPLY OPENJSON(teams) t
-CROSS APPLY OPENJSON(JSON_QUERY(value,'$.Employees')) e
-WHERE JSON_VALUE(t.value,'$.Id')=@TeamId;
+SELECT 
+    TRY_CAST(JSON_VALUE(e.value, '$.Id') AS BIGINT) AS Id,
+    JSON_VALUE(e.value, '$.FirstName') AS FirstName,
+    JSON_VALUE(e.value, '$.LastName') AS LastName,
+    JSON_VALUE(e.value, '$.Email') AS Email,
+    TRY_CAST(LEFT(JSON_VALUE(e.value, '$.BirthDay'), 19) AS DATETIME) AS BirthDay,
+    JSON_VALUE(e.value, '$.Title') AS Title,
+    JSON_VALUE(e.value, '$.Phone') AS Phone
+FROM 
+    Department d
+CROSS APPLY 
+    OPENJSON(teams) t
+CROSS APPLY 
+    OPENJSON(JSON_QUERY(value, '$.Employees')) e
+WHERE 
+    TRY_CAST(JSON_VALUE(t.value, '$.Id') AS BIGINT) = @TeamId;
 
 ----------------------------------------------------------------
 -- 4.
-SELECT JSON_VALUE(e.value,'$.Id') Id,JSON_VALUE(e.value,'$.FirstName') FirstName,JSON_VALUE(e.value,'$.LastName') LastName,JSON_VALUE(e.value,'$.Email') Email, 
-JSON_VALUE(e.value,'$.BirthDay') BirthDay,JSON_VALUE(e.value,'$.Title') Title,JSON_VALUE(e.value,'$.Phone') Phone
-FROM Department d CROSS APPLY OPENJSON(teams) t
-CROSS APPLY OPENJSON(JSON_QUERY(value,'$.Employees')) e
-WHERE JSON_VALUE(e.value,'$.Id')=@EmployeeId;
+SELECT 
+    TRY_CAST(JSON_VALUE(e.value, '$.Id') AS BIGINT) AS Id,
+    JSON_VALUE(e.value, '$.FirstName') AS FirstName,
+    JSON_VALUE(e.value, '$.LastName') AS LastName,
+    JSON_VALUE(e.value, '$.Email') AS Email,
+    TRY_CAST(LEFT(JSON_VALUE(e.value, '$.BirthDay'), 19) AS DATETIME) AS BirthDay,
+    JSON_VALUE(e.value, '$.Title') AS Title,
+    JSON_VALUE(e.value, '$.Phone') AS Phone
+FROM 
+    Department d
+CROSS APPLY 
+    OPENJSON(teams) t
+CROSS APPLY 
+    OPENJSON(JSON_QUERY(value, '$.Employees')) e
+WHERE 
+    TRY_CAST(JSON_VALUE(e.value, '$.Id') AS BIGINT) = @EmployeeId;
 
 ----------------------------------------------------------------
 -- 5.
-SELECT d.id DepartementId,d.name DepartmentName,d.location DepartmentLocation,
-JSON_VALUE(t.value,'$.Id') TeamId,JSON_VALUE(t.value,'$.Name') TeamName,JSON_VALUE(t.value,'$.Status') TeamStatus,JSON_VALUE(t.value,'$.Description') TeamDescription
-FROM Department d CROSS APPLY OPENJSON(teams) t
---CROSS APPLY OPENJSON(JSON_QUERY(value,'$.Employees')) e
-WHERE d.location='Belgrade'
-ORDER BY JSON_VALUE(t.value,'$.Name') ASC;
+SELECT 
+    d.id AS DepartementId,
+    d.name AS DepartmentName,
+    d.location AS DepartmentLocation,
+    TRY_CAST(JSON_VALUE(t.value, '$.Id') AS BIGINT) AS TeamId,
+    JSON_VALUE(t.value, '$.Name') AS TeamName,
+    JSON_VALUE(t.value, '$.Status') AS TeamStatus,
+    JSON_VALUE(t.value, '$.Description') AS TeamDescription
+FROM 
+    Department d
+CROSS APPLY 
+    OPENJSON(teams) t
+WHERE 
+    d.location = 'Belgrade'
+ORDER BY 
+    JSON_VALUE(t.value, '$.Name') ASC;
 
 -----------------------------------------------------------------
 -- 6. 
-SELECT DISTINCT d.id DepartementId,d.name DepartmentName,d.location DepartmentLocation,
-JSON_VALUE(t.value,'$.Id') TeamId,JSON_VALUE(t.value,'$.Name') TeamName,JSON_VALUE(t.value,'$.Status') TeamStatus,JSON_VALUE(t.value,'$.Description') TeamDescription
+SELECT 
+    DISTINCT d.id DepartementId,
+    d.name DepartmentName,
+    d.location DepartmentLocation,
+    TRY_CAST(JSON_VALUE(t.value,'$.Id')AS BIGINT) TeamId,
+    JSON_VALUE(t.value,'$.Name') TeamName,
+    JSON_VALUE(t.value,'$.Status') TeamStatus,
+    JSON_VALUE(t.value,'$.Description') TeamDescription
 FROM Department d CROSS APPLY OPENJSON(teams) t
 CROSS APPLY OPENJSON(JSON_QUERY(value,'$.Employees')) e
 WHERE DATEDIFF(YEAR,JSON_VALUE(t.value,'$.Lead.BirthDay'),GETDATE()) <35
@@ -64,8 +141,12 @@ GROUP BY d.Id,d.name;
 
 -------------------------------------------------------------------
 -- 8.
-SELECT  d.id DepartmentId, d.name DepartmentName,
-JSON_VALUE(t.value,'$.Id') TeamId,JSON_VALUE(t.value,'$.Name') TeamName,COUNT(JSON_VALUE(e.value,'$.Id')) EmployeesCount
+SELECT  
+    d.id DepartmentId, 
+    d.name DepartmentName,
+    TRY_CAST(JSON_VALUE(t.value,'$.Id') AS BIGINT) TeamId,
+    JSON_VALUE(t.value,'$.Name') TeamName,
+    COUNT(JSON_VALUE(e.value,'$.Id')) EmployeesCount
 FROM Department d CROSS APPLY OPENJSON(teams) t
 CROSS APPLY OPENJSON(JSON_QUERY(value,'$.Employees')) e
 WHERE JSON_VALUE(e.value,'$.Title') LIKE '%Engineer%'

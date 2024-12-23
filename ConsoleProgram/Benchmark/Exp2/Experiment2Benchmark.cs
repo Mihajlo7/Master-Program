@@ -8,6 +8,7 @@ using BenchmarkDotNet.Engines;
 using ConsoleProgram.Generator;
 using Core.Models.Exp2;
 using DataAccess;
+using HybridDataAccess.Implementation;
 using SqlDataAccess.Implementation;
 
 namespace ConsoleProgram.Benchmark.Exp2
@@ -21,35 +22,57 @@ namespace ConsoleProgram.Benchmark.Exp2
         public List<DepartmentModel> departments;
         public List<EmployeeModel2> employees;
 
-        const int emp_size = 50;
-        const int team_size = 20;
+        const int emp_size = 20;
+        const int team_size = 1250;
 
         [GlobalSetup]
         public void GlobalSetup()
         {
-            repository = new SqlDepartementTeamEmployeeRepository();
+            repository = new HybridDepartmentTeamEmployeeRepository();
             (departments, employees) = generatorService.GenerateDepartmentsAndEmployeers(emp_size, team_size);
         }
 
         [IterationSetup (Targets = new[] 
         {
-            nameof(InsertDepartmentWithTeams),
+            //nameof(InsertDepartmentWithTeams),
             nameof(InsertEmployee),
-            nameof(InsertDepartmentsWithTeams),
+            //nameof(InsertDepartmentsWithTeams),
             nameof(InsertEmployees),
-            nameof(InsertBulkDepartmentsWithTeams),
-            nameof(InsertBulkEmployees)
+            //nameof(InsertBulkDepartmentsWithTeams),
+            //nameof(InsertBulkEmployees)
         })] 
-        public void IterationSetup() => repository.ExecuteCreationTable();
+        public void IterationSetupEmployees()
+        {
+            generatorService = new();
+            (departments, employees) = 
+                generatorService.GenerateDepartmentsAndEmployeers(emp_size, team_size);
+            repository.ExecuteCreationTable();
+            repository.InsertBulkDepartmenstWithTeams(departments);
+        }
+
+        [IterationSetup(Targets = new[]
+        {
+            nameof(InsertDepartmentWithTeams),
+            //nameof(InsertEmployee),
+            nameof(InsertDepartmentsWithTeams),
+            //nameof(InsertEmployees),
+            nameof(InsertBulkDepartmentsWithTeams),
+            //nameof(InsertBulkEmployees)
+        })]
+        public void IterationSetupDT()
+        {
+            repository.ExecuteCreationTable();
+            //repository.InsertBulkEmployees(employees);
+        }
 
 
 
         [Benchmark] public void InsertDepartmentWithTeams() => repository.InsertDepartmentWithTeams(departments.First());
         [Benchmark] public void InsertEmployee() => repository.InsertEmployee(employees.First());
         [Benchmark] public void InsertDepartmentsWithTeams() => repository.InsertDepartmenstWithTeams(departments);
-        [Benchmark] public void InsertEmployees() => repository.InsertEmployees(employees);
         [Benchmark] public void InsertBulkDepartmentsWithTeams() => repository.InsertBulkDepartmenstWithTeams(departments);
-        [Benchmark] public void InsertBulkEmployees() => repository.InsertBulkEmployees(employees);
+        [Benchmark] public void InsertEmployees() => repository.InsertEmployees(employees);
+        //[Benchmark] public void InsertBulkEmployees() => repository.InsertBulkEmployees(employees);
         [Benchmark] public void GetAllDepartmentsBadWay() => repository.GetAllDepartmentsBadWay();
         [Benchmark] public void GetAllDepartments() => repository.GetAllDepartments();
         [Benchmark] public void GetAllTeams() => repository.GetAllTeams(departments.First().Id);

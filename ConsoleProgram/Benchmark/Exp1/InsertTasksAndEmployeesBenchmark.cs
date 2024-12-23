@@ -4,6 +4,8 @@ using ConsoleProgram.Generator;
 using ConsoleProgram.Setup;
 using Core.Models.Exp1;
 using DataAccess;
+using HybridDataAccess.Implementation;
+using MongoDataAccess.Implementation;
 using SqlDataAccess.Implementation;
 using System;
 using System.Collections.Generic;
@@ -15,22 +17,25 @@ namespace ConsoleProgram.Benchmark.Exp1
 {
     [SimpleJob(RunStrategy.Monitoring, launchCount: 1,
      warmupCount: 2, iterationCount: 5)]
-    internal class InsertTasksAndEmployeesBenchmark
+    public class InsertTasksAndEmployeesBenchmark
     {
         public IEmployeeTasksRepository repository;
         public GeneratorService generatorService;
         public List<TaskModel> tasks;
         public List<EmployeeModel> employees;
-        const int size= 10;
+        const int size= 50000;
         [GlobalSetup]
         public void Setup() 
         {
-            repository = new SqlEmployeeTasksRepository();
-            (employees, tasks) = generatorService.GenerateDataTaskWithEmployeers(size,2,4);
+            generatorService = new GeneratorService();
+            repository = new MongoEmployeeTasksRepository();
+            (employees, tasks) = generatorService.GenerateDataTaskWithEmployeers(size,1,20);
+            //repository.InsertEmployeeBulk(employees);
+            //repository.InsertBulk(tasks);
         }
 
         [IterationSetup (Targets = new[] {nameof(InsertOne), nameof(InsertMany), nameof(InsertBulk) })] 
-        public void IterationSetup() => repository.DeleteAllTasks();
+        public void IterationSetup() { repository.ExecuteCreationTable(); repository.InsertEmployeeBulk(employees); }
 
         [Benchmark] public void InsertOne() => repository.InsertOne(tasks.First());
         [Benchmark] public void InsertMany() => repository.InsertMany(tasks);

@@ -135,12 +135,12 @@ namespace SqlDataAccess.Queries.Exp3 {
         ///UPDATE Manager 
         ///SET method = &apos;Lean&apos;
         ///WHERE department IN (&apos;IT&apos;,&apos;Logistics&apos;)
-        ///AND id IN (SELECT id FROM Employee WHERE DATEDIFF(YEAR, e.birthday, GETDATE()) BETWEEN 40 AND 50);
+        ///AND id IN (SELECT e.id FROM Employee e WHERE DATEDIFF(YEAR, e.birthday, GETDATE()) BETWEEN 40 AND 50);
         ///
         ///UPDATE SoftwareDeveloper
         ///SET isFullStack = 1
         ///WHERE id IN(SELECT id FROM Developer WHERE yearsOfExperience &gt; 10)
-        ///AND id IN(SE [rest of string was truncated]&quot;;.
+        ///AND id I [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string Update {
             get {

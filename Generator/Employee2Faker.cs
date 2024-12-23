@@ -10,7 +10,7 @@ namespace Generator
 {
     public sealed class Employee2Faker : Faker<EmployeeModel2>
     {
-        private static long idEmployee = 1;
+        private  long idEmployee = 1;
         public Employee2Faker()
         {
             RuleFor(c => c.Id, _ => idEmployee++);

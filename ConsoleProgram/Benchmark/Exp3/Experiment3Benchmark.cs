@@ -37,11 +37,16 @@ namespace ConsoleProgram.Benchmark.Exp3
             nameof(Benchmark_InsertManyManager),
             nameof(Benchmark_InsertManySoftwareDeveloper),
             nameof(Benchmark_InsertBulkManager),
-            nameof(Benchmark_InsertBulkSoftwareDeveloper),
+            //nameof(Benchmark_InsertBulkSoftwareDeveloper),
 
         })]
         public void IterationSetup() => _repository.ExecuteCreationTable();
-
+        [IterationSetup(Target = nameof(Benchmark_InsertBulkSoftwareDeveloper))]
+        public void IterationSetupS()
+        {
+            _repository.ExecuteCreationTable();
+            _repository.InsertBulkManager(managers);
+        }
         [Benchmark] public void Benchmark_InsertManager() => _repository.InsertManager(managers.First());
         [Benchmark] public void Benchmark_InsertSoftwareDeveloper() => _repository.InsertSoftwareDeveloper(softwareDevelopers.First());
         [Benchmark] public void Benchmark_InsertManyManager() => _repository.InsertManyManager(managers);
