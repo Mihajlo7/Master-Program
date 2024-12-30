@@ -120,15 +120,15 @@ namespace HybridDataAccess.Queries.Exp3 {
         /// <summary>
         ///   Looks up a localized string similar to UPDATE Employee SET phone = @Phone WHERE id = @EmployeeId;
         ///
-        ///UPDATE Employee SET method = JSON_MODIFY(manager,@Method,&apos;$.Method&apos;) WHERE id = @ManagerId AND manager is not null;
+        ///UPDATE Employee SET manager = JSON_MODIFY(manager,&apos;$.Method&apos;,@Method) WHERE id = @ManagerId AND manager is not null;
         ///
-        ///UPDATE Developer SET isFullStack = JSON_MODIFY(softwareDeveloper,1,&apos;$.IsFullStack&apos;) 
+        ///UPDATE Developer SET softwareDeveloper = JSON_MODIFY(softwareDeveloper,&apos;$.IsFullStack&apos;,1) 
         ///WHERE id = @SoftwareDeveloperId AND softwareDeveloper is not null;
         ///
         ///UPDATE Employee 
-        ///SET method = JSON_MODIFY(manager,&apos;Lean&apos;,&apos;$.Method&apos;)
+        ///SET manager = JSON_MODIFY(manager,&apos;$.Method&apos;,&apos;Lean&apos;)
         ///WHERE JSON_VALUE(manager,&apos;$.Department&apos;) IN (&apos;IT&apos;,&apos;Logistics&apos;) AND
-        ///DATEDIFF(YEAR, e.birthday, GETDATE() [rest of string was truncated]&quot;;.
+        ///DATEDIFF(YEAR, birthday, GET [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string Update {
             get {

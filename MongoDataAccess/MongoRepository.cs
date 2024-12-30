@@ -19,8 +19,14 @@ namespace MongoDataAccess
         protected MongoRepository(string database)
         {
             _mongoUrl="mongodb+srv://pavmihajlo:Master@cluster0.a9sgb.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
+            //_mongoUrl = "mongodb://localhost:27017";
             _databaseName=database;
-            _client = new MongoClient(_mongoUrl);
+            var settings = MongoClientSettings.FromUrl(new MongoUrl(_mongoUrl));
+            settings.MaxConnectionPoolSize = 200; // Povećajte limit konekcija
+            settings.ConnectTimeout = TimeSpan.FromHours(2);
+            settings.SocketTimeout = TimeSpan.FromHours(2);
+            settings.ServerSelectionTimeout = TimeSpan.FromHours(3);
+            _client = new MongoClient(settings);
             _database = _client.GetDatabase(_databaseName);
         }
 

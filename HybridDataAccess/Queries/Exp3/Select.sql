@@ -14,7 +14,7 @@ INNER JOIN Developer d ON e.id = d.id
 CROSS APPLY OPENJSON(softwareDeveloper) WITH (
 	Programminglanguage NVARCHAR(30) '$.ProgrammingLanguage',
 	IDE NVARCHAR(30) '$.IDE',
-	IsFullStack NVARCHAR(30) '$.isFullStack'
+	IsFullStack BIT '$.IsFullStack'
 ) AS sd;
 
 SELECT * FROM Employee WHERE id = @EmployeeId;
@@ -34,7 +34,7 @@ INNER JOIN Developer d ON e.id = d.id
 CROSS APPLY OPENJSON(softwareDeveloper) WITH (
 	Programminglanguage NVARCHAR(30) '$.ProgrammingLanguage',
 	IDE NVARCHAR(30) '$.IDE',
-	IsFullStack NVARCHAR(30) '$.isFullStack'
+	IsFullStack BIT '$.IsFullStack'
 ) AS sd
 WHERE d.isRemote = 1 AND sd.ide = 'Visual Studio';
 
@@ -44,7 +44,7 @@ INNER JOIN Developer d ON e.id = d.id
 CROSS APPLY OPENJSON(softwareDeveloper) WITH (
 	Programminglanguage NVARCHAR(30) '$.ProgrammingLanguage',
 	IDE NVARCHAR(30) '$.IDE',
-	IsFullStack NVARCHAR(30) '$.isFullStack'
+	IsFullStack BIT '$.IsFullStack'
 ) AS sd
 WHERE DATEDIFF(YEAR, e.birthday, GETDATE()) > 25 AND d.seniority = 'Medior' AND sd.programmingLanguage IN ('Java','C#') 
 ORDER BY d.yearsOfExperience DESC;
@@ -53,12 +53,12 @@ SELECT m.Method, COUNT(*)
 FROM Employee CROSS APPLY OPENJSON(manager) WITH(
 	Method NVARCHAR(30) '$.Method'
 ) AS m
-ORDER BY m.Method;
+GROUP BY m.Method;
 
 SELECT JSON_VALUE(d.softwareDeveloper,'$.ProgrammingLanguage') AS ProgrammingLanguage, 
 COUNT(*) AS DeveloperCount, 
-AVG(d.yearsOfExperince) AS AvgExperience 
+AVG(d.yearsOfExperience) AS AvgExperience 
 FROM Developer d
 GROUP BY JSON_VALUE(d.softwareDeveloper,'$.ProgrammingLanguage') 
 HAVING COUNT(*) > 10
-ORDER BY AVG(d.yearsOfExperince) DESC; 
+ORDER BY AVG(d.yearsOfExperience) DESC; 

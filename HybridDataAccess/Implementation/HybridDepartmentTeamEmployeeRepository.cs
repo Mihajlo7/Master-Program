@@ -18,7 +18,7 @@ namespace HybridDataAccess.Implementation
         {
         }
 
-        public HybridDepartmentTeamEmployeeRepository() : base("exp2_db")
+        public HybridDepartmentTeamEmployeeRepository() : base("exp2_hybrid_db")
         {
         }
 

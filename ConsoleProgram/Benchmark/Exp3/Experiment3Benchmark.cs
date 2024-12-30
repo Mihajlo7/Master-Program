@@ -8,6 +8,8 @@ using BenchmarkDotNet.Engines;
 using ConsoleProgram.Generator;
 using Core.Models.Exp3;
 using DataAccess;
+using HybridDataAccess.Implementation;
+using MongoDataAccess.Implementation;
 using SqlDataAccess.Implementation;
 
 namespace ConsoleProgram.Benchmark.Exp3
@@ -21,7 +23,7 @@ namespace ConsoleProgram.Benchmark.Exp3
         public List<ManagerModel> managers;
         public List<SoftwareDeveloperModel> softwareDevelopers;
 
-        const int employeeSize = 5000;
+        const int employeeSize = 50000;
 
         [GlobalSetup]
         public void GlobalSetup()
@@ -29,17 +31,20 @@ namespace ConsoleProgram.Benchmark.Exp3
             _repository = new SqlEmployeeRepository();
             (managers, softwareDevelopers) = generatorService.GenerateDataManagersAndDevelopers(employeeSize);
         }
-
+        
         [IterationSetup (Targets = new[]
         {
+            
             nameof(Benchmark_InsertManager),
             nameof(Benchmark_InsertSoftwareDeveloper),
             nameof(Benchmark_InsertManyManager),
             nameof(Benchmark_InsertManySoftwareDeveloper),
             nameof(Benchmark_InsertBulkManager),
             //nameof(Benchmark_InsertBulkSoftwareDeveloper),
+            
 
-        })]
+            })
+        ]
         public void IterationSetup() => _repository.ExecuteCreationTable();
         [IterationSetup(Target = nameof(Benchmark_InsertBulkSoftwareDeveloper))]
         public void IterationSetupS()
@@ -47,12 +52,17 @@ namespace ConsoleProgram.Benchmark.Exp3
             _repository.ExecuteCreationTable();
             _repository.InsertBulkManager(managers);
         }
+        
+        
         [Benchmark] public void Benchmark_InsertManager() => _repository.InsertManager(managers.First());
         [Benchmark] public void Benchmark_InsertSoftwareDeveloper() => _repository.InsertSoftwareDeveloper(softwareDevelopers.First());
         [Benchmark] public void Benchmark_InsertManyManager() => _repository.InsertManyManager(managers);
         [Benchmark] public void Benchmark_InsertManySoftwareDeveloper() => _repository.InsertManySoftwareDeveloper(softwareDevelopers);
         [Benchmark] public void Benchmark_InsertBulkManager() => _repository.InsertBulkManager(managers);
+        
         [Benchmark] public void Benchmark_InsertBulkSoftwareDeveloper() => _repository.InsertBulkSoftwareDeveloper(softwareDevelopers);
+        
+        
         [Benchmark] public void Benchmark_GetAllEmployees() => _repository.GetAllEmployees();
         [Benchmark] public void Benchmark_GetAllManagers() => _repository.GetAllManagers();
         [Benchmark] public void Benchmark_GetAllSoftwareDevelopers() => _repository.GetAllSoftwareDevelopers();
@@ -68,5 +78,6 @@ namespace ConsoleProgram.Benchmark.Exp3
         [Benchmark] public void Benchmark_UpdateMethodByYearsAndDepartment() => _repository.UpdateMethodByYearsAndDepartment();
         [Benchmark] public void Benchmark_UpdateFullStackByExpYearsAndTitle() => _repository.UpdateFullStackByExpYearsAndTitle();
         [Benchmark] public void Benchmark_UpdateTitleByFullstackAndSeniorityAndYearsExp() => _repository.UpdateTitleByFullstackAndSeniorityAndYearsExp();
-    }
+        
+     }
 }

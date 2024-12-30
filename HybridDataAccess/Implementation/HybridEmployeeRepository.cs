@@ -15,7 +15,7 @@ namespace HybridDataAccess.Implementation
 {
     public sealed class HybridEmployeeRepository : HybridRepository,IEmployeeRepository
     {
-        public HybridEmployeeRepository(): base("exp_db")
+        public HybridEmployeeRepository(): base("exp_hybrid_db")
         {
             
         }
@@ -61,7 +61,25 @@ namespace HybridDataAccess.Implementation
 
         public List<ManagerAggModel> GetAllMethodsWithCountManagers()
         {
-            throw new NotImplementedException();
+            string query = GenerateQueriesFromQuery(Experiment3Hybrid.Select)[8];
+
+            using var connection = new SqlConnection(_connectionString);
+            using var command = new SqlCommand(query, connection);
+
+            connection.Open();
+            using var reader = command.ExecuteReader();
+            var list = new List<ManagerAggModel>();
+
+            while (reader.Read())
+            {
+                var manager= new ManagerAggModel()
+                {
+                    Method= reader.GetString(0),
+                    ManagerCount= reader.GetInt32(1)
+                };
+                list.Add(manager);
+            }
+            return list;
         }
 
         public List<SoftwareDeveloperModel> GetAllSoftwareDevelopers()
@@ -343,7 +361,7 @@ namespace HybridDataAccess.Implementation
 
         public void UpdateTitleByFullstackAndSeniorityAndYearsExp()
         {
-            string query = GenerateQueriesFromQuery(Experiment3Hybrid.Update)[5];
+            string query = GenerateQueriesFromQuery(Experiment3Hybrid.Update)[4];
 
             using var connection = new SqlConnection(_connectionString);
             using var command = new SqlCommand(query, connection);

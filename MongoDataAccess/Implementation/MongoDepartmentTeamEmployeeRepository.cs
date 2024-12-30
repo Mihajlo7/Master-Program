@@ -387,11 +387,15 @@ namespace MongoDataAccess.Implementation
 
         public void UpdateDescriptionTeamsFromPrague(string description)
         {
-            var filter = Builders<DepartmentModel>.Filter.Eq("Location", "Prague");
-            var update = Builders<DepartmentModel>.Update.Set("Teams.$.Description", description);
+            
+            var filter = Builders<DepartmentModel>.Filter.Eq(d=> d.Location, "Prague");
+            var update = Builders<DepartmentModel>.Update.Set("Teams.$[].Description", description);
 
             _departmentCollection.UpdateMany(filter,update);
+            
+
         }
+        
 
         public void UpdateDescriptionTeamsForYoungEmployees()
         {
@@ -427,17 +431,18 @@ namespace MongoDataAccess.Implementation
 
             // Pronadji departmente
             var departmentFilter = Builders<DepartmentModel>.Filter.Or(
-                Builders<DepartmentModel>.Filter.Eq("location", "London"),
-                Builders<DepartmentModel>.Filter.Regex("name", new BsonRegularExpression("^H", "i"))
+                Builders<DepartmentModel>.Filter.Eq("Location", "London"),
+                Builders<DepartmentModel>.Filter.Regex("Name", new BsonRegularExpression("^H", "i"))
             );
-
-            var update = Builders<DepartmentModel>.Update.Set("Teams.$[Team].Description", Builders<BsonDocument>.Update.Combine(
+            // moyda u zagradi treba Team
+            var update = Builders<DepartmentModel>.Update.Set("Teams.$[teamId].Description", Builders<BsonDocument>.Update.Combine(
                Builders<BsonDocument>.Update.Set("Description", new BsonString(" SuperTeam"))
             ));
-
+            
             var arrayFilters = new List<ArrayFilterDefinition>
             {
-                new JsonArrayFilterDefinition<BsonDocument>($"{{ 'team.id': {{ $in: {teamIds.ToJson()} }} }}")
+                new JsonArrayFilterDefinition<BsonDocument>($"{{ 'teamId': {{ $in: {teamIds.ToJson()} }} }}")
+                 
             };
 
             var updateOptions = new UpdateOptions

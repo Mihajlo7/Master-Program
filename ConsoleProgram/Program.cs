@@ -25,19 +25,35 @@ namespace ConsoleProgram
     {
         static void Main(string[] args)
         {
-            BenchmarkRunner.Run<Experiment2Benchmark>();
-
-
             
+            BenchmarkRunner.Run<Experiment3Benchmark>();
+
+            /*
+            Console.WriteLine("START");
             GeneratorService generatorService = new GeneratorService();
             JsonHandler jsonHandler = new JsonHandler();
-            var (departments, employees) = generatorService.GenerateDepartmentsAndEmployeers(20,1250);
-            var employeesRepository = new HybridDepartmentTeamEmployeeRepository();
+            Console.WriteLine("GENERATING DATA ...");
+            var(departments, employees) =
+              generatorService.GenerateDepartmentsAndEmployeers(20, 1250);
+            Console.WriteLine("DATA GENERATED");
+            var employeesRepository = new MongoDepartmentTeamEmployeeRepository();
+            Console.WriteLine("CLEANING DATA ...");
             employeesRepository.ExecuteCreationTable();
-            employeesRepository.InsertBulkDepartmenstWithTeams(departments);
-            employeesRepository.InsertEmployees(employees);
+            Console.WriteLine("DEPARTMNETS ...");
+            employeesRepository.InsertDepartmenstWithTeams(departments);
+            Console.WriteLine("EMPLOYEES ...");
             Console.WriteLine("**********************************************************");
-            
+            const int size = 10_000;
+            for(int i = 0;i< 50;i++)
+            {
+                Console.WriteLine($"Iteration: {i}");
+                employeesRepository = new();
+                employeesRepository.InsertEmployees(employees.GetRange(i*size,size-1));
+                Console.WriteLine("Inserted 10_000 employees");
+            }
+            Console.WriteLine("END");
+            Console.WriteLine("**********************************************************");
+            */
             
             //Console.WriteLine(jsonHandler.SerializeMany<TaskModel>(tasks));
             /*
